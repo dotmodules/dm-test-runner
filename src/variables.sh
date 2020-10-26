@@ -54,29 +54,8 @@ fi
 DM_TEST__FILE_UNDER_EXECUTION=""
 DM_TEST__TEST_UNDER_EXECUTION=""
 
-#==============================================================================
-# TEST SUBSHELL COMMUNICATION CACHING FILES
-#==============================================================================
-
-# Test files are executed in a subshell and error reporting is happening there.
-# This temporary file will be the link between the subshell and the top level
-# shell. Absolute path is necessary as the subshell starts with a directory
-# change.
-
-DM_TEST__ERROR_CACHE="dm.test.errors.tmp"
-DM_TEST__ERROR_CACHE="$(pwd)/$DM_TEST__ERROR_CACHE"
-
-# In order to capture the currently executed test case output it has to be run
-# in a subshell (subshell in a subshell as the test case is already running in
-# its own subshell), and there is no easier way reaching the test result change
-# than with this temporary file that will be reset before every test case
-# execution. Before executing the test it's value is set to sucess, and in the
-# assert function it is set to failure in case of assertion error.
-
-DM_TEST__TEST_RESULT_CACHE="dm.test.result.tmp"
-DM_TEST__TEST_RESULT_CACHE="$(pwd)/$DM_TEST__TEST_RESULT_CACHE"
-DM_TEST__TEST_RESULT_SUCCESS="1"
-DM_TEST__TEST_RESULT_FAILURE="0"
+DM_TEST__TEST_RESULT__SUCCESS="0"
+DM_TEST__TEST_RESULT__FAILURE="1"
 
 #==============================================================================
 # TEST STATISTICS

@@ -59,8 +59,8 @@ validate_config() {
 }
 
 report_configuration_error() {
-  variable="$1"
-  echo "ERROR: Mandatory configuration variable was not configured: '${variable}'!"
+  ___variable="$1"
+  echo "ERROR: Mandatory configuration variable was not configured: '${___variable}'!"
   exit 1
 }
 

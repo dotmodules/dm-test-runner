@@ -69,10 +69,10 @@ _dm_test__get_test_files() {
 # - !0 : error
 #==============================================================================
 _dm_test__get_test_cases() {
-  test_file_path="$1"
+  ___test_file_path="$1"
   grep -E --only-matching \
     "^${DM_TEST__TEST_CASE_PREFIX}[^\(]+" \
-    "$test_file_path"
+    "$___test_file_path"
 }
 
 #==============================================================================
@@ -84,7 +84,7 @@ _dm_test__get_test_cases() {
 # INPUT
 #==============================================================================
 # Global variables
-# - DM_TEST__ERROR_CACHE
+# - DM_TEST__CACHE__ERRORS
 # Arguments
 # - None
 # StdIn
@@ -103,45 +103,22 @@ _dm_test__get_test_cases() {
 # -  1 : there were errors during execution - the script terminates
 #==============================================================================
 _dm_test__print_report() {
-  if [ -s "$DM_TEST__ERROR_CACHE" ]
-  then
-    echo ""
-    cat "$DM_TEST__ERROR_CACHE"
-    echo ""
-    _dm_test__clean_up
-    exit 1
-  fi
-  _dm_test__clean_up
-}
+  echo ""
+  echo "${BOLD}$(cat "$DM_TEST__CACHE__GLOBAL_COUNT") tests, $(cat "$DM_TEST__CACHE__GLOBAL_RESULT") failed"
 
-#==============================================================================
-# Cleans up all potentially generated temporary files.
-#==============================================================================
-# INPUT
-#==============================================================================
-# Global variables
-# - DM_TEST__ERROR_CACHE
-# - DM_TEST__TEST_RESULT_CACHE
-# Arguments
-# - None
-# StdIn
-# - None
-#==============================================================================
-# OUTPUT
-#==============================================================================
-# Output variables
-# - None
-# StdOut
-# - None
-# StdErr
-# - None
-# Status
-# -  0 : ok
-# - !0 : error
-#==============================================================================
-_dm_test__clean_up() {
-  rm -f "$DM_TEST__ERROR_CACHE"
-  rm -f "$DM_TEST__TEST_RESULT_CACHE"
+  if ! grep --silent "$DM_TEST__TEST_RESULT__SUCCESS" "$DM_TEST__CACHE__GLOBAL_RESULT"
+  then
+    echo "${BOLD}Result: ${RED}FAILURE${RESET}"
+    echo ""
+    if [ -s "$DM_TEST__CACHE__ERRORS" ]
+    then
+      cat "$DM_TEST__CACHE__ERRORS"
+    fi
+    exit 1
+  else
+    echo "${BOLD}Result: ${GREEN}SUCCESS${RESET}"
+    echo ""
+  fi
 }
 
 #==============================================================================
@@ -174,9 +151,9 @@ _dm_test__clean_up() {
 # - !0 : error
 #==============================================================================
 _dm_test__get_hook_flag() {
-  pattern="$1"
-  test_file_path="$2"
-  grep --count "$pattern" "$test_file_path" || true
+  ___pattern="$1"
+  ___test_file_path="$2"
+  grep --count "$___pattern" "$___test_file_path" || true
 }
 
 #==============================================================================
@@ -210,11 +187,11 @@ _dm_test__get_hook_flag() {
 # - !0 : error
 #==============================================================================
 _dm_test__run_hook() {
-  flag="$1"
-  hook="$2"
-  if [ "$flag" -ne '0' ]
+  ___flag="$1"
+  ___hook="$2"
+  if [ "$___flag" -ne '0' ]
   then
-    "$hook"
+    "$___hook"
   fi
 }
 
@@ -248,17 +225,17 @@ _dm_test__run_hook() {
 # - !0 : error
 #==============================================================================
 _dm_test__execute_test_case() {
-  test_file_path="$1"
-  test_case="$2"
+  ___test_file_path="$1"
+  ___test_case="$2"
 
-  _dm_test__initialize_test_case_environment "$test_file_path" "$test_case"
+  _dm_test__initialize_test_case_environment "$___test_file_path" "$___test_case"
   _dm_test__initialize_test_result
   _dm_test__print_test_case_identifier
 
-  output="$(_dm_test__run_test_case)"
+  ___output="$(_dm_test__run_test_case)"
 
   _dm_test__print_test_case_result
-  _dm_test__print_if_has_content "$output"
+  _dm_test__print_if_has_content "$___output"
 }
 
 #==============================================================================
@@ -290,12 +267,12 @@ _dm_test__execute_test_case() {
 # - !0 : error
 #==============================================================================
 _dm_test__initialize_test_case_environment() {
-  test_file_path="$1"
-  test_case="$2"
+  ___test_file_path="$1"
+  ___test_case="$2"
 
   # Setting up global variables for the error reporting.
-  DM_TEST__FILE_UNDER_EXECUTION="$(basename "$test_file_path" | cut -d '.' -f 1)"
-  DM_TEST__TEST_UNDER_EXECUTION="$test_case"
+  DM_TEST__FILE_UNDER_EXECUTION="$(basename "$___test_file_path" | cut -d '.' -f 1)"
+  DM_TEST__TEST_UNDER_EXECUTION="$___test_case"
 }
 
 #==============================================================================
@@ -324,35 +301,43 @@ _dm_test__initialize_test_case_environment() {
 # - !0 : error
 #==============================================================================
 _dm_test__run_test_case() {
-  rm -f tmp_err
-  if output="$("$DM_TEST__TEST_UNDER_EXECUTION" 2>tmp_err)"
-  then
-    # Test case succeded without an error status. At this point we might have
-    # standard output and standard error content that needs to be displayed.
+  ___tmp_error_file="$(dm_test__cache__create_temp_file)"
 
-    _dm_test__print_if_has_content "$output"
-    # Standard error content should indicate that an error is happened during
-    # execution, regardless of the returned status code.
-    if [ -s tmp_err ]
+  # Color used for printing out the optional output and the error messages
+  # collected from the standard error.
+  ___color=""
+
+  # We are doing three things here while executing the test case:
+  # 1. Capturing the standard output to the ___output variable.
+  # 2. Deciding if the test case succeeded or not based on the status code.
+  # 3. Capturing the standard error into a temporary file.
+  if ___output="$("$DM_TEST__TEST_UNDER_EXECUTION" 2>"${___tmp_error_file}")"
+  then
+    # The test casse succeeded, no error based on the status, but that means,
+    # that none of the assertions were failed. There could be failed commands
+    # that not altering the status code, but print on the standard error. In
+    # that case we are considering the test case as failed.
+    if [ -s "$___tmp_error_file" ]
     then
-      echo "${RED}$(cat tmp_err)${RESET}"
       _dm_test__set_test_case_failed
+      ___color="$RED"
     fi
-    rm -f tmp_err
   else
-    # The test case failed with a non zero error status, so we are reporting an
-    # error here changing the test case status. We need ot indicate it also by
-    # printing with red.
+    # Test case failed with a nonzero status code.
     _dm_test__set_test_case_failed
-    if [ -n "$output" ]
-    then
-      echo "${RED}${output}${RESET}"
-      if [ -s tmp_err ]
-      then
-        echo "${RED}$(cat tmp_err)${RESET}"
-      fi
-    fi
-    rm -f tmp_err
+    ___color="$RED"
+  fi
+
+  # Print out the output if needed with the predefined color.
+  if [ -n "$___output" ]
+  then
+    echo "${___color}${___output}${RESET}"
+  fi
+
+  # Print out the error messages if needed with the predefined color.
+  if [ -s "$___tmp_error_file" ]
+  then
+    echo "${___color}$(cat "$___tmp_error_file")${RESET}"
   fi
 }
 
@@ -364,8 +349,8 @@ _dm_test__run_test_case() {
 # INPUT
 #==============================================================================
 # Global variables
-# - DM_TEST__TEST_RESULT_CACHE
-# - DM_TEST__TEST_RESULT_SUCCESS
+# - DM_TEST__CACHE__TEST_RESULT
+# - DM_TEST__TEST_RESULT__SUCCESS
 # Arguments
 # - None
 # StdIn
@@ -384,7 +369,7 @@ _dm_test__run_test_case() {
 # - !0 : error
 #==============================================================================
 _dm_test__initialize_test_result() {
-  echo "$DM_TEST__TEST_RESULT_SUCCESS" > "$DM_TEST__TEST_RESULT_CACHE"
+  echo "$DM_TEST__TEST_RESULT__SUCCESS" > "$DM_TEST__CACHE__TEST_RESULT"
 }
 
 #==============================================================================
@@ -394,8 +379,8 @@ _dm_test__initialize_test_result() {
 # INPUT
 #==============================================================================
 # Global variables
-# - DM_TEST__TEST_RESULT_CACHE
-# - DM_TEST__TEST_RESULT_FAILURE
+# - DM_TEST__CACHE__TEST_RESULT
+# - DM_TEST__TEST_RESULT__FAILURE
 # Arguments
 # - None
 # StdIn
@@ -414,7 +399,7 @@ _dm_test__initialize_test_result() {
 # - !0 : error
 #==============================================================================
 _dm_test__set_test_case_failed() {
-  echo "$DM_TEST__TEST_RESULT_FAILURE" > "$DM_TEST__TEST_RESULT_CACHE"
+  echo "$DM_TEST__TEST_RESULT__FAILURE" > "$DM_TEST__CACHE__TEST_RESULT"
 }
 
 #==============================================================================
@@ -457,8 +442,8 @@ _dm_test__print_test_case_identifier() {
 # INPUT
 #==============================================================================
 # Global variables
-# - DM_TEST__TEST_RESULT_CACHE
-# - DM_TEST__TEST_RESULT_SUCCESS
+# - DM_TEST__CACHE__TEST_RESULT
+# - DM_TEST__TEST_RESULT__SUCCESS
 # - GREEN
 # - RED
 # - BOLD
@@ -482,12 +467,14 @@ _dm_test__print_test_case_identifier() {
 #==============================================================================
 _dm_test__print_test_case_result() {
   # Evaluating the test result cache.
-  if grep --silent "$DM_TEST__TEST_RESULT_SUCCESS" "$DM_TEST__TEST_RESULT_CACHE"
+  if grep --silent "$DM_TEST__TEST_RESULT__SUCCESS" "$DM_TEST__CACHE__TEST_RESULT"
   then
     echo "  ${BOLD}${GREEN}ok${RESET}"
   else
     echo "  ${BOLD}${RED}not ok${RESET}"
+    _dm_test__increase_file_content "$DM_TEST__CACHE__GLOBAL_RESULT"
   fi
+  _dm_test__increase_file_content "$DM_TEST__CACHE__GLOBAL_COUNT"
 }
 
 #==============================================================================
@@ -515,53 +502,23 @@ _dm_test__print_test_case_result() {
 # - !0 : error
 #==============================================================================
 _dm_test__print_if_has_content() {
-  content="$1"
-  if [ -n "$content" ]
+  ___content="$1"
+  if [ -n "$___content" ]
   then
-    echo "$content"
+    echo "$___content"
   fi
 }
 
 #==============================================================================
-# Creates a temporary directory for the currently executing test file. For each
-# test file a new temporary directory will be created. This test file can be
-# used to generate test artifacts that are used in the file level or in the
-# test case level, it depends on the user.
+# Increases the content number of the given file by one. It expects a file with
+# only a single number in it.
 #==============================================================================
 # INPUT
 #==============================================================================
 # Global variables
 # - None
 # Arguments
-# - None
-# StdIn
-# - None
-#==============================================================================
-# OUTPUT
-#==============================================================================
-# Output variables
-# - DM_TEST__TMP_TEST_DIR
-# StdOut
-# - None
-# StdErr
-# - None
-# Status
-# -  0 : ok
-# - !0 : error
-#==============================================================================
-_dm_test__create_tmp_directory() {
-  DM_TEST__TMP_TEST_DIR="$(mktemp -d -t 'dm.test.XXXXXXXXXX')"
-}
-
-#==============================================================================
-# Deletes the previously created temporary directory.
-#==============================================================================
-# INPUT
-#==============================================================================
-# Global variables
-# - DM_TEST__TMP_TEST_DIR
-# Arguments
-# - None
+# - file_path - File that content needs to be increased.
 # StdIn
 # - None
 #==============================================================================
@@ -572,11 +529,17 @@ _dm_test__create_tmp_directory() {
 # StdOut
 # - None
 # StdErr
-# - None
+# - Errors during execution.
 # Status
 # -  0 : ok
 # - !0 : error
 #==============================================================================
-_dm_test__cleanup_tmp_directory() {
-  rm -rf "$DM_TEST__TMP_TEST_DIR"
+_dm_test__increase_file_content() {
+  ___file_path="$1"
+  if [ -s "$___file_path" ]
+  then
+    ___content="$(cat "$___file_path")"
+    ___content=$(( ___content + 1 ))
+    echo "$___content" > "$___file_path"
+  fi
 }

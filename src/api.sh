@@ -424,11 +424,9 @@ dm_test__utils__get_line_from_output_by_index() {
 # INPUT
 #==============================================================================
 # Global variables
-# - DM_TEST__TEST_RESULT_FAILURE
-# - DM_TEST__TEST_RESULT_CACHE
 # - DM_TEST__FILE_UNDER_EXECUTION
 # - DM_TEST__TEST_UNDER_EXECUTION
-# - DM_TEST__ERROR_CACHE
+# - DM_TEST__CACHE__ERRORS
 # - RED
 # - RESET
 # Arguments
@@ -453,8 +451,7 @@ _dm_test__report_failure() {
   ___subject="$1"
   ___reason="$2"
 
-  # Overwriting the test result cache file with error.
-  echo "$DM_TEST__TEST_RESULT_FAILURE" > "$DM_TEST__TEST_RESULT_CACHE"
+  _dm_test__set_test_case_failed
 
   # Appending the current error report to the error cache file.
   ___test_case="${DM_TEST__FILE_UNDER_EXECUTION}.${DM_TEST__TEST_UNDER_EXECUTION}"
@@ -466,11 +463,11 @@ _dm_test__report_failure() {
     # shellcheck disable=SC2059
     printf "${RED}${___reason}${RESET}\n" | sed 's/^/    /';
     echo "";
-  } >> "$DM_TEST__ERROR_CACHE"
+  } >> "$DM_TEST__CACHE__ERRORS"
 
   # Only the first  assertion error should be reported, the latter ones could
   # be the direct result of the first one, so they have minimal new information
-  # content. So exiting after the first report. This should end the testcase
-  # subprocess inside the test file subprocess.
+  # content. Explicitly exiting after the first report. This should end the
+  # testcase subprocess inside the test file subprocess.
   exit 1
 }
