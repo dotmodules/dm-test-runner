@@ -132,11 +132,6 @@ dm_test__cache__cleanup() {
     | xargs --null --replace='{}' rm -rf '{}'
 }
 
-# Trappinf the cache file deletion here, to be able to clean up even if there
-# are an unexpected event occured.
-# https://unix.stackexchange.com/a/520041
-trap 'dm_test__cache__cleanup; trap - EXIT; exit' EXIT INT HUP TERM
-
 #==============================================================================
 # Creates a temporary file in the cache directory and returns its path.
 #==============================================================================

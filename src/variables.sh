@@ -24,23 +24,17 @@
 # shellcheck disable=SC2086
 if command -v tput > /dev/null && [ ! -s ${TERM+x} ]
 then
-  # shellcheck disable=SC2034
   RED="$(tput setaf 1)"
-  # shellcheck disable=SC2034
   GREEN="$(tput setaf 2)"
-  # shellcheck disable=SC2034
   RESET="$(tput sgr0)"
-  # shellcheck disable=SC2034
   BOLD="$(tput bold)"
+  DIM="$(tput dim)"
 else
-  # shellcheck disable=SC2034
   RED=""
-  # shellcheck disable=SC2034
   GREEN=""
-  # shellcheck disable=SC2034
   RESET=""
-  # shellcheck disable=SC2034
   BOLD=""
+  DIM=""
 fi
 
 #==============================================================================

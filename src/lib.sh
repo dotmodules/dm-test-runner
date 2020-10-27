@@ -9,6 +9,51 @@
 #================|_|===========================================================
 
 #==============================================================================
+# Prints the header for the test suite with executing environment information
+# in it.
+#==============================================================================
+# INPUT
+#==============================================================================
+# Global variables
+# - None
+# Arguments
+# - None
+# StdIn
+# - None
+#==============================================================================
+# OUTPUT
+#==============================================================================
+# Output variables
+# - None
+# StdOut
+# - Execution header.
+# StdErr
+# - None
+# Status
+# -  0 : ok
+# - !0 : error
+#==============================================================================
+_dm_test__print_header() {
+  echo -n "$DIM"
+  echo "---------------------------------------------------------------------------------"
+  echo ">> DM TEST <<"
+  echo "---------------------------------------------------------------------------------"
+  echo "\$ dm.test.sh --config"
+  echo "DM_TEST__SUBMODULE_PATH_PREFIX='${DM_TEST__SUBMODULE_PATH_PREFIX}'"
+  echo "DM_TEST__TEST_CASES_ROOT='${DM_TEST__TEST_CASES_ROOT}'"
+  echo "DM_TEST__TEST_FILE_PREFIX='${DM_TEST__TEST_FILE_PREFIX}'"
+  echo "DM_TEST__TEST_CASE_PREFIX='${DM_TEST__TEST_CASE_PREFIX}'"
+  echo "---------------------------------------------------------------------------------"
+  echo "\$ uname --kernel-name --kernel-release --machine --operating-system"
+  echo "$(uname --kernel-name --kernel-release --machine --operating-system)"
+  echo "---------------------------------------------------------------------------------"
+  echo "\$ /bin/sh --version"
+  echo "$(/bin/sh --version)"
+  echo "---------------------------------------------------------------------------------"
+  echo -n "$RESET"
+}
+
+#==============================================================================
 # Getting all the test files located in the predefined test cases root
 # directory. Test files are matched based on the predefined test file prefix
 # config variable.
@@ -471,7 +516,7 @@ _dm_test__print_test_case_result() {
   then
     echo "  ${BOLD}${GREEN}ok${RESET}"
   else
-    echo "  ${BOLD}${RED}not ok${RESET}"
+    echo "  ${BOLD}${RED}NOT OK${RESET}"
     _dm_test__increase_file_content "$DM_TEST__CACHE__GLOBAL_RESULT"
   fi
   _dm_test__increase_file_content "$DM_TEST__CACHE__GLOBAL_COUNT"

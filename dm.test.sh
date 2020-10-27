@@ -30,6 +30,8 @@ set -u  # prevent unset variable expansion
 . "${DM_TEST__SUBMODULE_PATH_PREFIX}/src/lib.sh"
 # shellcheck source=./src/cache.sh
 . "${DM_TEST__SUBMODULE_PATH_PREFIX}/src/cache.sh"
+# shellcheck source=./src/trap.sh
+. "${DM_TEST__SUBMODULE_PATH_PREFIX}/src/trap.sh"
 
 #==============================================================================
 # API FUNCTIONS
@@ -61,6 +63,7 @@ set -u  # prevent unset variable expansion
 # - !0 : error
 #==============================================================================
 dm_test__run_suite() {
+  _dm_test__print_header
   dm_test__cache__init
 
   # Using a named pipe here to be able to safely iterate over the file names.
