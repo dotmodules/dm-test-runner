@@ -47,8 +47,8 @@ _dm_test__print_header() {
   echo "\$ uname --kernel-name --kernel-release --machine --operating-system"
   echo "$(uname --kernel-name --kernel-release --machine --operating-system)"
   echo "---------------------------------------------------------------------------------"
-  echo "\$ /bin/sh --version"
-  echo "$(/bin/sh --version)"
+  echo "\$ command -v sh"
+  echo "$(command -v sh)"
   echo "---------------------------------------------------------------------------------"
   echo -n "$RESET"
 }
