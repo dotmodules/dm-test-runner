@@ -465,6 +465,9 @@ _dm_test__report_failure() {
     echo "";
   } >> "$DM_TEST__CACHE__ERRORS"
 
+  # Report the concise error report to the standard error.
+  >&2 echo "Aborting due to failed assertion: '${___subject}'"
+
   # Only the first  assertion error should be reported, the latter ones could
   # be the direct result of the first one, so they have minimal new information
   # content. Explicitly exiting after the first report. This should end the

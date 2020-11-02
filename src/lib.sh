@@ -320,6 +320,15 @@ _dm_test__initialize_test_case_environment() {
   DM_TEST__TEST_UNDER_EXECUTION="$___test_case"
 }
 
+_dm_test__process_output() {
+  domain="$1"
+  color="$2"
+  while read -r line
+  do
+    echo "$(date +'%s%N') ${color}${domain} | ${line}${RESET}"
+  done
+}
+
 #==============================================================================
 # Function that executes the given test case defined in the global execution
 # environment.
@@ -346,43 +355,85 @@ _dm_test__initialize_test_case_environment() {
 # - !0 : error
 #==============================================================================
 _dm_test__run_test_case() {
-  ___tmp_error_file="$(dm_test__cache__create_temp_file)"
+  # Creating the temporary file names in the cache that will hold the processed
+  # output contents.
+  ___tmp_file__fd1="$(dm_test__cache__create_temp_file)"
+  ___tmp_file__fd2="$(dm_test__cache__create_temp_file)"
+  ___tmp_file__fd3="$(dm_test__cache__create_temp_file)"
 
-  # Color used for printing out the optional output and the error messages
-  # collected from the standard error.
-  ___color=""
+  # Creating the temporary fifo names in the cache that will be used for the
+  # output processing to connect the processor functions to the executing test
+  # case.
+  ___tmp_fifo__fd1="$(dm_test__cache__create_temp_file)"
+  ___tmp_fifo__fd2="$(dm_test__cache__create_temp_file)"
+  ___tmp_fifo__fd3="$(dm_test__cache__create_temp_file)"
 
-  # We are doing three things here while executing the test case:
-  # 1. Capturing the standard output to the ___output variable.
-  # 2. Deciding if the test case succeeded or not based on the status code.
-  # 3. Capturing the standard error into a temporary file.
-  if ___output="$("$DM_TEST__TEST_UNDER_EXECUTION" 2>"${___tmp_error_file}")"
+  mkfifo "$___tmp_fifo__fd1"
+  mkfifo "$___tmp_fifo__fd2"
+  mkfifo "$___tmp_fifo__fd3"
+
+  # Starting the processor functions in the background and storing they pids to
+  # be able to wait for them later on.
+  #
+  # NOTE: the exact time correct ordering is unfortunately not possible with
+  # this setup. If two event happens too close to each other, the real order
+  # could be inverted or mixed. This is due to the fact how the OS scheduler
+  # handles the fifo write events. It can be tested by echoing out a simple
+  # text from the test case in sequence to all available outputs, and
+  # inspecting the order in the report, ie:
+  # >&1 echo 'FD1'
+  # >&2 echo 'FD2'
+  # >&3 echo 'FD3'
+  # >&1 echo 'FD1'
+  # >&2 echo 'FD2'
+  # >&3 echo 'FD3'
+  # Usually this is not a problem though, as between the printouts there are
+  # usually some other code to execute, that allows the background processes to
+  # process the outputs in the correct order.
+  _dm_test__process_output "stdout" "$BLUE" <"$___tmp_fifo__fd1" >>"$___tmp_file__fd1" &
+  ___pid__fd1="$!"
+  _dm_test__process_output "stderr" "$RED" <"$___tmp_fifo__fd2" >>"$___tmp_file__fd2" &
+  ___pid__fd2="$!"
+  _dm_test__process_output "debug3" "$DIM" <"$___tmp_fifo__fd3" >>"$___tmp_file__fd3" &
+  ___pid__fd3="$!"
+
+  # We are doing four things here while executing the test case:
+  # 1. Blocking the terminate on error global setting by executing the test
+  #    case in an if statement while capturing the status code.
+  # 2. Capturing the standard output to a temporary file.
+  # 3. Capturing the standard error to a temporary file.
+  # 4. Capturing the optional file descriptor 3 assuming it is the debugger
+  #    output.
+  if ( \
+    $DM_TEST__TEST_UNDER_EXECUTION \
+      1>"${___tmp_fifo__fd1}" \
+      2>"${___tmp_fifo__fd2}" \
+      3>"${___tmp_fifo__fd3}" \
+  )
   then
-    # The test casse succeeded, no error based on the status, but that means,
-    # that none of the assertions were failed. There could be failed commands
-    # that not altering the status code, but print on the standard error. In
-    # that case we are considering the test case as failed.
-    if [ -s "$___tmp_error_file" ]
-    then
-      _dm_test__set_test_case_failed
-      ___color="$RED"
-    fi
+    ___status="$?"
   else
-    # Test case failed with a nonzero status code.
+    ___status="$?"
+  fi
+
+  # Waiting for the output processor background processes to finish. After
+  # this, the outputs are available in the temporary files.
+  wait "$___pid__fd1" "$___pid__fd2" "$___pid__fd3"
+
+  # If the status is nonzero or there is any standard error content, the
+  # testcase is considered as failed.
+  if [ "$___status" -ne "0" ] || [ -s "$___tmp_file__fd2" ]
+  then
     _dm_test__set_test_case_failed
-    ___color="$RED"
-  fi
 
-  # Print out the output if needed with the predefined color.
-  if [ -n "$___output" ]
-  then
-    echo "${___color}${___output}${RESET}"
-  fi
-
-  # Print out the error messages if needed with the predefined color.
-  if [ -s "$___tmp_error_file" ]
-  then
-    echo "${___color}$(cat "$___tmp_error_file")${RESET}"
+    # In this case, printing all the collected output information, that could
+    # help the debugging. Using the timestamps preceding every line, then
+    # removing it.
+    {
+      cat "$___tmp_file__fd1"
+      cat "$___tmp_file__fd2"
+      cat "$___tmp_file__fd3"
+    } | sort | sed -E 's/^[[:digit:]]+\s//'
   fi
 }
 

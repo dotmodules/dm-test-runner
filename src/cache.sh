@@ -158,7 +158,6 @@ dm_test__cache__cleanup() {
 #==============================================================================
 dm_test__cache__create_temp_file() {
   ___path="${DM_TEST__CACHE__TEMP_FILE_PATH}/dm.tmp.$(date +'%s%N')"
-  touch "$___path"
   echo "$___path"
 }
 

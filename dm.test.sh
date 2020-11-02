@@ -116,5 +116,5 @@ dm_test__run_suite() {
   rm -f ___temp_pipe
 
   _dm_test__print_report
-  dm_test__cache__cleanup
+  # dm_test__cache__cleanup
 }
