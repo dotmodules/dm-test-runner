@@ -34,31 +34,79 @@ DM_TEST__TEST_CASE_PREFIX="${DM_TEST__TEST_CASE_PREFIX:=__unconfigured__}"
 # CONFIGURATION VALIDATION
 #==============================================================================
 
+#==============================================================================
 # Configuration variables are mandatory, therefore a check need to be executed
 # to ensure that the configuration is complete.
-validate_config() {
+#------------------------------------------------------------------------------
+# Globals:
+#   DM_TEST__SUBMODULE_PATH_PREFIX
+#   DM_TEST__TEST_CASES_ROOT
+#   DM_TEST__TEST_FILE_PREFIX
+#   DM_TEST__TEST_CASE_PREFIX
+# Arguments:
+#   None
+# STDIN:
+#   None
+#------------------------------------------------------------------------------
+# Output variables:
+#   None
+# STDOUT:
+#   Content that is passed to the function.
+# STDERR:
+#   None
+# Status:
+#   0 - Other status is not expected.
+# Tools:
+#   None
+#==============================================================================
+_dm_test__validate_config() {
   if [ "$DM_TEST__SUBMODULE_PATH_PREFIX" = "__unconfigured__" ]
   then
-    report_configuration_error "DM_TEST__SUBMODULE_PATH_PREFIX"
+    _report_configuration_error "DM_TEST__SUBMODULE_PATH_PREFIX"
   fi
 
   if [ "$DM_TEST__TEST_CASES_ROOT" = "__unconfigured__" ]
   then
-    report_configuration_error "DM_TEST__TEST_CASES_ROOT"
+    _report_configuration_error "DM_TEST__TEST_CASES_ROOT"
   fi
 
   if [ "$DM_TEST__TEST_FILE_PREFIX" = "__unconfigured__" ]
   then
-    report_configuration_error "DM_TEST__TEST_FILE_PREFIX"
+    _report_configuration_error "DM_TEST__TEST_FILE_PREFIX"
   fi
 
   if [ "$DM_TEST__TEST_CASE_PREFIX" = "__unconfigured__" ]
   then
-    report_configuration_error "DM_TEST__TEST_CASE_PREFIX"
+    _report_configuration_error "DM_TEST__TEST_CASE_PREFIX"
   fi
 }
 
-report_configuration_error() {
+#==============================================================================
+# Error reporting helper function. Prints out the error message, then exits
+# with error.
+#------------------------------------------------------------------------------
+# Globals:
+#   DM_TEST__SUBMODULE_PATH_PREFIX
+#   DM_TEST__TEST_CASES_ROOT
+#   DM_TEST__TEST_FILE_PREFIX
+#   DM_TEST__TEST_CASE_PREFIX
+# Arguments:
+#   [1] variable - Missing variable name.
+# STDIN:
+#   None
+#------------------------------------------------------------------------------
+# Output variables:
+#   None
+# STDOUT:
+#   Error message about the missing configuration variable.
+# STDERR:
+#   None
+# Status:
+#   1 - Exiting with error after printed out the issue.
+# Tools:
+#   None
+#==============================================================================
+_dm_test__report_configuration_error() {
   ___variable="$1"
   echo "ERROR: Mandatory configuration variable was not configured: '${___variable}'!"
   exit 1
@@ -68,4 +116,4 @@ report_configuration_error() {
 # VALIDATION ENTRY POINT
 #==============================================================================
 
-validate_config
+_dm_test__validate_config

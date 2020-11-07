@@ -12,27 +12,24 @@
 # Trap function that executes before the exit call finishes. It caches the exit
 # signal, and replays it at the end. Its main purpose is to delete the cache
 # directory.
-#==============================================================================
-# INPUT
-#==============================================================================
-# Global variables
-# - None
-# Arguments
-# - None
-# StdIn
-# - None
-#==============================================================================
-# OUTPUT
-#==============================================================================
-# Output variables
-# - None
-# StdOut
-# - None
-# StdErr
-# - None
-# Status
-# -  0 : ok
-# - !0 : error
+#------------------------------------------------------------------------------
+# Globals:
+#   None
+# Arguments:
+#   None
+# STDIN:
+#   None
+#------------------------------------------------------------------------------
+# Output variables:
+#   None
+# STDOUT:
+#   None
+# STDERR:
+#   None
+# Status:
+#   Status code saved and replayed from the called level.
+# Tools:
+#   trap exit
 #==============================================================================
 _dm_test__exit_trap() {
   ___exit_code_backup="$?"
@@ -41,4 +38,4 @@ _dm_test__exit_trap() {
   exit "$___exit_code_backup"
 }
 
-# trap '_dm_test__exit_trap' EXIT INT HUP TERM
+trap '_dm_test__exit_trap' EXIT INT HUP TERM

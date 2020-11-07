@@ -9,7 +9,14 @@
 #==============================================================================
 
 #==============================================================================
-# TARGET RUNNER
+# This file contains the API functions that the test cases can use to test
+# their functionality. Most of the assertion functions require the usage of the
+# provided `run` function to run the testable function with in order to capture
+# the output and status of the testable function.
+#==============================================================================
+
+#==============================================================================
+# TARGET FUNCTION RUNNER
 #==============================================================================
 #   ____
 #  |  _ \ _   _ _ __
@@ -20,38 +27,41 @@
 #==============================================================================
 
 #==============================================================================
-# Function under test runner. It excepts a list of parameters that will be
-# executed while the output and the status will be captured and will be put
-# into output variables.
-# Calling the testable feature in this way is necessary if we want tot use the
-# advanced assertion functions.
-#==============================================================================
-# INPUT
-#==============================================================================
-# Global variables
-# - None
-# Arguments
-# - Expects a list of arguments that will be evaluated.
-# StdIn
-# - None
-#==============================================================================
-# OUTPUT
-#==============================================================================
-# Output variables
-# - output - Captured output of the evaluated command passedin as a paremeter
-#            list.
-# - status - Captured status of the evaluated command.
-# StdOut
-# - None
-# StdErr
-# - None
-# Status
-# -  0 : ok
-# - !0 : error
+# Function under test capturer API function. It excepts a list of parameters
+# that will be executed while the output and the status will be captured and
+# will be put into test case level global output variables. Calling the
+# testable function in this way is necessary if we want to use the advanced
+# assertion functions, as those are working on the output variables of this
+# function.
+#------------------------------------------------------------------------------
+# Globals:
+#   None
+# Arguments:
+#   Expects a list of arguments that will be evaluated.
+# STDIN:
+#   None
+#------------------------------------------------------------------------------
+# Output variables:
+#   ___output - Captured output of the evaluated command passed in as a
+#               paremeter list.
+#   ___status - Captured status of the evaluated command.
+# STDOUT:
+#   None
+# STDERR:
+#   None
+# Status:
+#   0 - Other status is not expected, as the status of the given command is
+#       captured.
+# Tools:
+#   None
 #==============================================================================
 run() {
-  ___output="$("$@")"
-  ___status="$?"
+  if ___output="$("$@")"
+  then
+    ___status="$?"
+  else
+    ___status="$?"
+  fi
 }
 
 #==============================================================================
@@ -69,30 +79,28 @@ run() {
 # Simple assertion helper function that expects a list of parameters that will
 # be interpreted as a test command. Based on that evaluation the assertion
 # result will be decided. It is common to use the 'test' command to write
-# simple assertions, but in general anything can be used.
-# This is the only assertion function that does not require a prior call to the
-# 'run' command to have the test output variables set.
-#==============================================================================
-# INPUT
-#==============================================================================
-# Global variables
-# - None
-# Arguments
-# - Expects a list of arguments that will be evaluated.
-# StdIn
-# - None
-#==============================================================================
-# OUTPUT
-#==============================================================================
-# Output variables
-# - None
-# StdOut
-# - None
-# StdErr
-# - None
-# Status
-# -  0 : ok
-# - !0 : error
+# simple assertions, but in general anything can be used. This assertion
+# function that does not require a prior call to the 'run' command to have the
+# test output variables set.
+#------------------------------------------------------------------------------
+# Globals:
+#   None
+# Arguments:
+#   Expects a list of arguments that will be evaluated.
+# STDIN:
+#   None
+#------------------------------------------------------------------------------
+# Output variables:
+#   None
+# STDOUT:
+#   None
+# STDERR:
+#   None
+# Status:
+#   0 - Assertion succeeded.
+#  !0 - Assertion failed.
+# Tools:
+#   None
 #==============================================================================
 assert() {
   # Disabling SC2124 here as we won't modify the assigned 'commands' variable.
@@ -109,34 +117,32 @@ assert() {
 }
 
 #==============================================================================
-# Simple assertion that checks if the given file path is valid and it is for a
-# file.
-#==============================================================================
-# INPUT
-#==============================================================================
-# Global variables
-# - None
-# Arguments
-# - Expects a list of arguments that will be evaluated.
-# StdIn
-# - None
-#==============================================================================
-# OUTPUT
-#==============================================================================
-# Output variables
-# - None
-# StdOut
-# - None
-# StdErr
-# - None
-# Status
-# -  0 : ok
-# - !0 : error
+# Simple assertion that checks if the given file path is valid and there is a
+# file behind. This assertion function that does not require a prior call to
+# the 'run' command to have the test output variables set.
+#------------------------------------------------------------------------------
+# Globals:
+#   None
+# Arguments:
+#   [1] file_path - Path that needs to be tested in this function.
+# STDIN:
+#   None
+#------------------------------------------------------------------------------
+# Output variables:
+#   None
+# STDOUT:
+#   None
+# STDERR:
+#   None
+# Status:
+#   0 - Assertion succeeded.
+#  !0 - Assertion failed.
+# Tools:
+#   None
 #==============================================================================
 assert_file() {
-  # Disabling SC2124 here as we won't modify the assigned 'commands' variable.
-  # shellcheck disable=SC2124
   ___file_path="$1"
+
   if [ -f "$___file_path" ]
   then
     :
@@ -148,34 +154,33 @@ assert_file() {
 }
 
 #==============================================================================
-# Advanced assertion command that will evaluate the previously set 'output'
-# variable by the 'run' function.
-#==============================================================================
-# INPUT
-#==============================================================================
-# Global variables
+# Advanced assertion function that will evaluate the previously set output
+# variables by the 'run' function.
+#------------------------------------------------------------------------------
+# Globals:
+#   ___output
+# Arguments:
+#   [1] expected_output - Expected output of the previously run function.
+# STDIN:
+#   None
+#------------------------------------------------------------------------------
+# Output variables:
 # - None
-# Arguments
-# - expected_output - Expected output of the previously run function.
-# StdIn
-# - None
-#==============================================================================
-# OUTPUT
-#==============================================================================
-# Output variables
-# - None
-# StdOut
-# - None
-# StdErr
-# - None
-# Status
-# -  0 : ok
-# - !0 : error
+# STDOUT:
+#   None
+# STDERR:
+#   None
+# Status:
+#   0 - Assertion succeeded.
+#  !0 - Assertion failed.
+# Tools:
+#   None
 #==============================================================================
 assert_output() {
   ___expected="$1"
   ___result="$___output"
-  if test "$___result" = "$___expected"
+
+  if [ "$___result" = "$___expected" ]
   then
     :
   else
@@ -186,34 +191,32 @@ assert_output() {
 }
 
 #==============================================================================
-# Advanced assertion command to check the line count of the command output
+# Advanced assertion function to check the line count of the command output
 # runned with the 'run' function.
-#==============================================================================
-# INPUT
-#==============================================================================
-# Global variables
-# - None
-# Arguments
-# - expected_line_count - Expected output line count.
-# StdIn
-# - None
-#==============================================================================
-# OUTPUT
-#==============================================================================
-# Output variables
-# - None
-# StdOut
-# - None
-# StdErr
-# - None
-# Status
-# -  0 : ok
-# - !0 : error
+#------------------------------------------------------------------------------
+# Globals:
+#   ___output
+# Arguments:
+#   [1] expected_line_count - Expected output line count.
+# STDIN:
+#   None
+#------------------------------------------------------------------------------
+# Output variables:
+#   None
+# STDOUT:
+#   None
+# STDERR:
+#   None
+# Status:
+#   0 - Assertion succeeded.
+#  !0 - Assertion failed.
+# Tools:
+#   echo wc
 #==============================================================================
 assert_output_line_count() {
   ___expected="$1"
   ___result="$(echo "$___output" | wc --lines)"
-  if test "$___result" -eq "$___expected"
+  if [ "$___result" -eq "$___expected" ]
   then
     :
   else
@@ -224,48 +227,37 @@ assert_output_line_count() {
 }
 
 #==============================================================================
-# Advanced assertion command that compares the output line indexed by the index
+# Advanced assertion function that compares the output line indexed by the index
 # parameter with the expected parameter.
-#==============================================================================
-# INPUT
-#==============================================================================
-# Global variables
-# - None
-# Arguments
-# - line_index - One-based line index.
-# - expected - Expected content of the given line without the new line
-#              character.
-# StdIn
-# - None
-#==============================================================================
-# OUTPUT
-#==============================================================================
-# Output variables
-# - None
-# StdOut
-# - None
-# StdErr
-# - None
-# Status
-# -  0 : ok
-# - !0 : error
+#------------------------------------------------------------------------------
+# Globals:
+#   ___output
+# Arguments:
+#   [1] line_index - One-based line index.
+#   [2] expected - Expected content of the given line without the new line
+#                  character.
+# STDIN:
+#   None
+#------------------------------------------------------------------------------
+# Output variables:
+#   None
+# STDOUT:
+#   None
+# STDERR:
+#   None
+# Status:
+#   0 - Assertion succeeded.
+#  !0 - Assertion failed.
+# Tools:
+#   None
 #==============================================================================
 assert_line_at_index() {
   ___index="$1"
   ___expected="$2"
 
-  ___line_count="$(echo "$___output" | wc --lines)"
-  if [ "$___index" -gt "$___line_count" ]
-  then
-    ___subject="Line index is out of range"
-    ___reason="max line index: '${___line_count}'\n   given index: '${___index}'"
-    _dm_test__report_failure "$___subject" "$___reason"
-  fi
+  ___line="$(dm_test__utils__get_line_from_output_by_index "$___index" "$___output")"
 
-  # Getting the indexed line.
-  ___line="$(echo "$___output" | sed "${___index}q;d")"
-
-  if test "$___line" = "$___expected"
+  if [ "$___line" = "$___expected" ]
   then
     :
   else
@@ -276,37 +268,35 @@ assert_line_at_index() {
 }
 
 #==============================================================================
-# Advanced assertion command that compares the output line indexed by the index
-# parameter with the expected parameter.
-#==============================================================================
-# INPUT
-#==============================================================================
-# Global variables
-# - None
-# Arguments
-# - line_index - One-based line index.
-# - expected - Expected content of the given line without the new line
-#              character.
-# StdIn
-# - None
-#==============================================================================
-# OUTPUT
-#==============================================================================
-# Output variables
-# - None
-# StdOut
-# - None
-# StdErr
-# - None
-# Status
-# -  0 : ok
-# - !0 : error
+# Advanced assertion function that compares the output line indexed by the index
+# parameter with the expected parameter. The line has to partially match only.
+#------------------------------------------------------------------------------
+# Globals:
+#   ___output
+# Arguments:
+#   [1] line_index - One-based line index.
+#   [2] expected - Expected content of the given line without the new line
+#                  character.
+# STDIN:
+#   None
+#------------------------------------------------------------------------------
+# Output variables:
+#   None
+# STDOUT:
+#   None
+# STDERR:
+#   None
+# Status:
+#   0 - Assertion succeeded.
+#  !0 - Assertion failed.
+# Tools:
+#   echo grep
 #==============================================================================
 assert_line_partially_at_index() {
   ___index="$1"
   ___expected="$2"
 
-  ___line="$(dm_test__utils__get_line_from_output_by_index "$___index")"
+  ___line="$(dm_test__utils__get_line_from_output_by_index "$___index" "$___output")"
 
   if echo "$___line" | grep --silent "$___expected"
   then
@@ -319,34 +309,33 @@ assert_line_partially_at_index() {
 }
 
 #==============================================================================
-# Advanced assertion command that will evaluate the previously set 'status'
+# Advanced assertion function that will evaluate the previously set 'status'
 # variable by the 'run' function.
-#==============================================================================
-# INPUT
-#==============================================================================
-# Global variables
-# - None
-# Arguments
-# - expected_status - Expected status of the previously run function.
-# StdIn
-# - None
-#==============================================================================
-# OUTPUT
-#==============================================================================
-# Output variables
-# - None
-# StdOut
-# - None
-# StdErr
-# - None
-# Status
-# -  0 : ok
-# - !0 : error
+#------------------------------------------------------------------------------
+# Globals:
+#   ___status
+# Arguments:
+#   [1] expected_status - Expected status of the previously run function.
+# STDIN:
+#   None
+#------------------------------------------------------------------------------
+# Output variables:
+#   None
+# STDOUT:
+#   None
+# STDERR:
+#   None
+# Status:
+#   0 - Assertion succeeded.
+#  !0 - Assertion failed.
+# Tools:
+#   None
 #==============================================================================
 assert_status() {
   ___expected="$1"
   ___result="$___status"
-  if test "$___result" = "$___expected"
+
+  if [ "$___result" = "$___expected" ]
   then
     :
   else
@@ -369,42 +358,44 @@ assert_status() {
 
 #==============================================================================
 # Utility function to get the Nth line of the output while validating the given
-# one-based index.
-#==============================================================================
-# INPUT
-#==============================================================================
-# Global variables
-# - None
-# Arguments
-# - line_index - One-based line index.
-# StdIn
-# - None
-#==============================================================================
-# OUTPUT
-#==============================================================================
-# Output variables
-# - None
-# StdOut
-# - Indexed line from the globally captured output.
-# StdErr
-# - None
-# Status
-# -  0 : ok
-# - !0 : error
+# one-based index. If the index is invalid, it will behave as a failed
+# assertion. This function can be used in the test cases as a helper function
+# to access specific lines in the output.
+#------------------------------------------------------------------------------
+# Globals:
+#   None
+# Arguments:
+#   [1] line_index - One-based line index.
+#   [2] lines - Multiline string the line should be selected from.
+# STDIN:
+#   None
+#------------------------------------------------------------------------------
+# Output variables:
+#   None
+# STDOUT:
+#   Indexed line from the globally captured output.
+# STDERR:
+#   None
+# Status:
+#   0 - Line extraction succeeded.
+#  !0 - Line extraction failed.
+# Tools:
+#   echo wc sed
 #==============================================================================
 dm_test__utils__get_line_from_output_by_index() {
-  ___index="$1"
+  ___line_index="$1"
+  ___lines="$2"
 
-  ___line_count="$(echo "$___output" | wc --lines)"
-  if [ "$___index" -gt "$___line_count" ]
+  ___line_count="$(echo "$___lines" | wc --lines)"
+  if [ "$___line_index" -gt "$___line_count" ]
   then
     ___subject="Line index is out of range"
-    ___reason="max line index: '${___line_count}'\n   given index: '${___index}'"
+    ___reason="max line index: '${___line_count}'\n   given index: '${___line_index}'"
     _dm_test__report_failure "$___subject" "$___reason"
   fi
 
   # Getting the indexed line.
-  echo "$___output" | sed "${___index}q;d"
+  echo "$___lines" | sed "${___line_index}q;d"
 }
 
 #==============================================================================
@@ -419,39 +410,37 @@ dm_test__utils__get_line_from_output_by_index() {
 #==============================================================================
 
 #==============================================================================
-# Common failure reporting helper function.
-#==============================================================================
-# INPUT
-#==============================================================================
-# Global variables
-# - DM_TEST__FILE_UNDER_EXECUTION
-# - DM_TEST__TEST_UNDER_EXECUTION
-# - DM_TEST__CACHE__ERRORS
-# - RED
-# - RESET
-# Arguments
-# - subject - Subject of the failure.
-# - reason - Reason of the failure.
-# StdIn
-# - None
-#==============================================================================
-# OUTPUT
-#==============================================================================
-# Output variables
-# - None
-# StdOut
-# - None
-# StdErr
-# - None
-# Status
-# -  0 : ok
-# - !0 : error
+# Common failure reporting helper function. It sets the test case to failed,
+# generates the error report, appends it to the global error list, then exits
+# the test case. There is no point to check further assertions.
+#------------------------------------------------------------------------------
+# Globals:
+#   DM_TEST__FILE_UNDER_EXECUTION
+#   DM_TEST__TEST_UNDER_EXECUTION
+#   RED
+#   RESET
+# Arguments:
+#   [1] subject - Subject of the failure.
+#   [2] reason - Reason of the failure.
+# STDIN:
+#   None
+#------------------------------------------------------------------------------
+# Output variables:
+#   None
+# STDOUT:
+#   None
+# STDERR:
+#   None
+# Status:
+#   1 - This function will exit the caller process with status 1.
+# Tools:
+#   echo printf sed
 #==============================================================================
 _dm_test__report_failure() {
   ___subject="$1"
   ___reason="$2"
 
-  _dm_test__set_test_case_failed
+  dm_test__cache__set_test_case_failed
 
   # Appending the current error report to the error cache file.
   ___test_case="${DM_TEST__FILE_UNDER_EXECUTION}.${DM_TEST__TEST_UNDER_EXECUTION}"
@@ -463,7 +452,7 @@ _dm_test__report_failure() {
     # shellcheck disable=SC2059
     printf "${RED}${___reason}${RESET}\n" | sed 's/^/    /';
     echo "";
-  } >> "$DM_TEST__CACHE__ERRORS"
+  } | dm_test__cache__errors__write_errors
 
   # Report the concise error report to the standard error.
   >&2 echo "Aborting due to failed assertion: '${___subject}'"
