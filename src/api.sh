@@ -363,10 +363,9 @@ assert_status() {
 # to access specific lines in the output.
 #------------------------------------------------------------------------------
 # Globals:
-#   None
+#   ___output
 # Arguments:
 #   [1] line_index - One-based line index.
-#   [2] lines - Multiline string the line should be selected from.
 # STDIN:
 #   None
 #------------------------------------------------------------------------------
@@ -384,7 +383,7 @@ assert_status() {
 #==============================================================================
 dm_test__utils__get_line_from_output_by_index() {
   ___line_index="$1"
-  ___lines="$2"
+  ___lines="$___output"
 
   ___line_count="$(echo "$___lines" | wc --lines)"
   if [ "$___line_index" -gt "$___line_count" ]
