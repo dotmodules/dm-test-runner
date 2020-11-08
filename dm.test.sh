@@ -32,8 +32,20 @@ set -u  # prevent unset variable expansion
 . "${DM_TEST__SUBMODULE_PATH_PREFIX}/src/test_case.sh"
 # shellcheck source=./src/hooks.sh
 . "${DM_TEST__SUBMODULE_PATH_PREFIX}/src/hooks.sh"
-# shellcheck source=./src/cache.sh
-. "${DM_TEST__SUBMODULE_PATH_PREFIX}/src/cache.sh"
+
+# shellcheck source=./src/cache/base.sh
+. "${DM_TEST__SUBMODULE_PATH_PREFIX}/src/cache/base.sh"
+# shellcheck source=./src/cache/global_error.sh
+. "${DM_TEST__SUBMODULE_PATH_PREFIX}/src/cache/global_error.sh"
+# shellcheck source=./src/cache/test_result.sh
+. "${DM_TEST__SUBMODULE_PATH_PREFIX}/src/cache/test_result.sh"
+# shellcheck source=./src/cache/global_count.sh
+. "${DM_TEST__SUBMODULE_PATH_PREFIX}/src/cache/global_count.sh"
+# shellcheck source=./src/cache/global_failure.sh
+. "${DM_TEST__SUBMODULE_PATH_PREFIX}/src/cache/global_failure.sh"
+# shellcheck source=./src/cache/test_directory.sh
+. "${DM_TEST__SUBMODULE_PATH_PREFIX}/src/cache/test_directory.sh"
+
 # shellcheck source=./src/trap.sh
 . "${DM_TEST__SUBMODULE_PATH_PREFIX}/src/trap.sh"
 
@@ -99,7 +111,7 @@ dm_test__run_suite() {
       # shellcheck disable=SC1090
       . "./$(basename "$___test_file_path")"
 
-      dm_test__cache__create_tmp_directory
+      dm_test__cache__create_temp_test_directory
       dm_test__run_hook "$___flag__setup_file" 'setup_file'
 
       for ___test_case in $___test_cases
@@ -112,7 +124,7 @@ dm_test__run_suite() {
       done
 
       dm_test__run_hook "$___flag__teardown_file" 'teardown_file'
-      dm_test__cache__cleanup_tmp_directory
+      dm_test__cache__cleanup_temp_test_directory
     ) # End of the subshell.
 
   done < "$___tmp_pipe"
