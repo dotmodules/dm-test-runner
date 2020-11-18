@@ -9,10 +9,6 @@
 #==============================================================================
 
 #==============================================================================
-# This file contains the management scripts of the caching features of dm.test.
-#==============================================================================
-
-#==============================================================================
 #   ____                    ____           _            ____  _
 #  | __ )  __ _ ___  ___   / ___|__ _  ___| |__   ___  |  _ \(_)_ __
 #  |  _ \ / _` / __|/ _ \ | |   / _` |/ __| '_ \ / _ \ | | | | | '__|
@@ -25,15 +21,15 @@
 
 #==============================================================================
 # The cache directory located in the /tmp directory is created on startup.
-# Every generated files will be located there. After the test suite finished,
-# the cache directory will be removed. Therefore sub-cache systems don't need
-# to worry about cleaning up after themselves.
+# Every generated files will be located in there. After the test suite
+# finished, the cache directory will be removed. Therefore sub-cache systems
+# don't need to worry about cleaning up after themselves.
 #==============================================================================
 
 # Prefix that every cache directory will have. This uniform prefix would make
 # it easy to recover from an unexpected event when the cache cleanup couldn't
 # be executed, by deleting all temporary directories with this prefix.
-DM_TEST__CACHE__DIRECTORY_PREFIX="dm.test.temporary.cache"
+DM_TEST__CACHE__DIRECTORY_PREFIX="dm_test_cache"
 
 # Cache directory prefix extended with the necessary `mktemp` compatible
 # template. This variable will be used to create a unique cache directory each
@@ -45,8 +41,7 @@ DM_TEST__CACHE__MKTEMP_TEMPLATE="$( \
 )"
 
 # Global variable that holds the path to the currently operational cache
-# directory. Each sub-cache system has to use this base path to generate their
-# artifacts.
+# directory.
 DM_TEST__CACHE__PATH="__INVALID__"
 
 #==============================================================================
@@ -71,10 +66,14 @@ DM_TEST__CACHE__PATH="__INVALID__"
 # Tools:
 #   mktemp
 #==============================================================================
-_dm_test__cache__create_cache_directory() {
+_dm_test__cache__create_base_cache_directory() {
   DM_TEST__CACHE__PATH="$( \
     mktemp --directory -t "$DM_TEST__CACHE__MKTEMP_TEMPLATE" \
   )"
+
+  dm_test__debug \
+    '_dm_test__cache__create_base_cache_directory' \
+    "base cache directory created: '${DM_TEST__CACHE__PATH}'"
 }
 
 #==============================================================================
@@ -107,6 +106,10 @@ dm_test__cache__cleanup() {
     -print0 2>/dev/null | \
   xargs --null --replace='{}' \
     rm --recursive --force '{}'
+
+  dm_test__debug \
+    'dm_test__cache__cleanup' \
+    'cache cleaned up'
 }
 
 #==============================================================================
@@ -129,7 +132,7 @@ dm_test__cache__cleanup() {
 
 # Variable that holds the name of the temporary files directory. This variable
 # is not intended for accessing the directory.
-DM_TEST__CACHE__TEMP_FILES_PATH_NAME="dm_test__temp_files"
+DM_TEST__CACHE__TEMP_FILES_PATH_NAME="temp_files"
 
 # Variable thar holds the runtime path of the temporary files directory. This
 # variable should be used for writing or reading purposes.
@@ -164,11 +167,15 @@ _dm_test__cache__init__temp_files_base_directory() {
     echo "${DM_TEST__CACHE__PATH}/${DM_TEST__CACHE__TEMP_FILES_PATH_NAME}" \
   )"
   mkdir --parents "$DM_TEST__CACHE__TEMP_FILES_PATH"
+
+  dm_test__debug \
+    '_dm_test__cache__init__temp_files_base_directory' \
+    "temp files base directory created: '${DM_TEST__CACHE__TEMP_FILES_PATH}'"
 }
 
 #==============================================================================
 # Creates a temporary file path in the cache directory and returns its path.
-# Note: only a filepath will be created, the caller is responsible to create
+# Note: only a filepath will be created, the caller is responsible for creating
 # the file.
 #------------------------------------------------------------------------------
 # Globals:
@@ -181,7 +188,7 @@ _dm_test__cache__init__temp_files_base_directory() {
 # Output variables:
 #   None
 # STDOUT:
-# - None
+# - Temporary file's path.
 # STDERR:
 #   None
 # Status:
@@ -191,8 +198,12 @@ _dm_test__cache__init__temp_files_base_directory() {
 #==============================================================================
 dm_test__cache__create_temp_file() {
   ___postfix="$(_dm_test__cache__generate_postfix)"
-  ___file="${DM_TEST__CACHE__TEMP_FILES_PATH}/dm.tmp.${___postfix}"
+  ___file="${DM_TEST__CACHE__TEMP_FILES_PATH}/${___postfix}"
   echo "$___file"
+
+  dm_test__debug \
+    'dm_test__cache__create_temp_file' \
+    "temp file created: '${___file}'"
 }
 
 #==============================================================================
@@ -215,7 +226,7 @@ dm_test__cache__create_temp_file() {
 
 # Variable that holds the name of the temporary directories directory. This
 # variable is not intended for accessing the directory.
-DM_TEST__CACHE__TEMP_DIRS_PATH_NAME="dm_test__temp_directories"
+DM_TEST__CACHE__TEMP_DIRS_PATH_NAME="temp_directories"
 
 # Variable thar holds the runtime path of the temporary direcotories directory.
 # This variable should be used for writing or reading purposes.
@@ -250,6 +261,10 @@ _dm_test__cache__init__temp_directories_base_directory() {
     echo "${DM_TEST__CACHE__PATH}/${DM_TEST__CACHE__TEMP_DIRS_PATH_NAME}" \
   )"
   mkdir --parents "$DM_TEST__CACHE__TEMP_DIRS_PATH"
+
+  dm_test__debug \
+    '_dm_test__cache__init__temp_directories_base_directory' \
+    "temporary directories directory created: '${DM_TEST__CACHE__TEMP_DIRS_PATH}'"
 }
 
 #==============================================================================
@@ -265,19 +280,23 @@ _dm_test__cache__init__temp_directories_base_directory() {
 # Output variables:
 #   None
 # STDOUT:
-# - None
+# - Temporary directory's path.
 # STDERR:
 #   None
 # Status:
 #   0 - Other status is not expected.
 # Tools:
-#   date echo
+#   mkdir echo
 #==============================================================================
 dm_test__cache__create_temp_directory() {
   ___postfix="$(_dm_test__cache__generate_postfix)"
-  ___dir="${DM_TEST__CACHE__TEMP_DIRS_PATH}/dm.tmp.${___postfix}"
+  ___dir="${DM_TEST__CACHE__TEMP_DIRS_PATH}/${___postfix}"
   mkdir --parents "$___dir"
   echo "$___dir"
+
+  dm_test__debug \
+    'dm_test__cache__create_temp_directory' \
+    "temporary directory created: '${___dir}'"
 }
 
 #==============================================================================
@@ -314,18 +333,26 @@ dm_test__cache__create_temp_directory() {
 #   None
 #==============================================================================
 dm_test__cache__init() {
+  dm_test__debug \
+    'dm_test__cache__init' \
+    'initializing cache system..'
+
   dm_test__cache__cleanup
 
   # Base cache system initialization.
-  _dm_test__cache__create_cache_directory
+  _dm_test__cache__create_base_cache_directory
   _dm_test__cache__init__temp_files_base_directory
   _dm_test__cache__init__temp_directories_base_directory
 
   # Sub-cache system initialization.
-  _dm_test__cache__init__errors
-  _dm_test__cache__init__test_result
-  _dm_test__cache__init__global_result
-  _dm_test__cache__init__global_count
+  _dm_test__cache__global_count__init
+  _dm_test__cache__global_errors__init
+  _dm_test__cache__global_failures__init
+  _dm_test__cache__test_result__init
+
+  dm_test__debug \
+    'dm_test__cache__init' \
+    'cache system initialized'
 }
 
 #==============================================================================
@@ -362,5 +389,10 @@ dm_test__cache__init() {
 #   date
 #==============================================================================
 _dm_test__cache__generate_postfix() {
-  date +'%s%N'
+  ___postfix="$(date +'%s%N')"
+  echo "$___postfix"
+
+  dm_test__debug \
+    '_dm_test__cache__generate_postfix' \
+    "postfix generated: '${___postfix}'"
 }

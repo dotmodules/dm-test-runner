@@ -37,6 +37,11 @@
 dm_test__get_hook_flag() {
   ___pattern="$1"
   ___test_file_path="$2"
+
+  dm_test__debug \
+    'dm_test__get_hook_flag' \
+    "checking hook '${___pattern}' in test file '${___test_file_path}'"
+
   grep --count "$___pattern" "$___test_file_path" || true
 }
 
@@ -71,8 +76,14 @@ dm_test__get_hook_flag() {
 dm_test__run_hook() {
   ___flag="$1"
   ___hook="$2"
+
   if [ "$___flag" -ne '0' ]
   then
+
+    dm_test__debug \
+      'dm_test__run_hook' \
+      "executing hook '${___hook}'"
+
     "$___hook"
   fi
 }

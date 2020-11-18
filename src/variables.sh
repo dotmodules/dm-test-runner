@@ -23,6 +23,7 @@ if command -v tput >/dev/null && tput init >/dev/null 2>&1
 then
   RED="$(tput setaf 1)"
   GREEN="$(tput setaf 2)"
+  BLUE="$(tput setaf 4)"
   RESET="$(tput sgr0)"
   BOLD="$(tput bold)"
   DIM="$(tput dim)"
@@ -45,12 +46,9 @@ fi
 DM_TEST__FILE_UNDER_EXECUTION=""
 DM_TEST__TEST_UNDER_EXECUTION=""
 
-DM_TEST__TEST_RESULT__SUCCESS="0"
-DM_TEST__TEST_RESULT__FAILURE="1"
-
 #==============================================================================
-# TEST STATISTICS
+# GLOBAL CONSTANTS
 #==============================================================================
 
-DM_TEST__STATISTICS__COUNT="0"
-DM_TEST__STATISTICS__FAILED="0"
+DM_TEST__CONSTANT__TEST_RESULT__SUCCESS="0"
+DM_TEST__CONSTANT__TEST_RESULT__FAILURE="1"

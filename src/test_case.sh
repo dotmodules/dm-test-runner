@@ -14,8 +14,8 @@
 # config variable.
 #------------------------------------------------------------------------------
 # Globals:
-#   DM_TEST__TEST_CASES_ROOT
-#   DM_TEST__TEST_FILE_PREFIX
+#   DM_TEST__CONFIG__TEST_CASES_ROOT
+#   DM_TEST__CONFIG__TEST_FILE_PREFIX
 # Arguments:
 #   None
 # STDIN:
@@ -33,10 +33,23 @@
 #   find
 #==============================================================================
 dm_test__get_test_files() {
-  find \
-    "$DM_TEST__TEST_CASES_ROOT" \
+  dm_test__debug \
+    'dm_test__get_test_files' \
+    'gathering test files..'
+
+  ___test_files="$( \
+    find \
+    "$DM_TEST__CONFIG__TEST_CASES_ROOT" \
     -type f \
-    -name "${DM_TEST__TEST_FILE_PREFIX}*"
+    -name "${DM_TEST__CONFIG__TEST_FILE_PREFIX}*" \
+  )"
+
+  dm_test__debug_list \
+    'dm_test__get_test_files' \
+    'test files found:' \
+    "$___test_files"
+
+  echo "$___test_files"
 }
 
 #==============================================================================
@@ -44,7 +57,7 @@ dm_test__get_test_files() {
 # predefined test case prefix configuration variable.
 #------------------------------------------------------------------------------
 # Globals:
-#   DM_TEST__TEST_CASE_PREFIX
+#   DM_TEST__CONFIG__TEST_CASE_PREFIX
 # Arguments:
 #   [1] test_file_path - Path of the given test file the test cases should be
 #       collected from.
@@ -65,9 +78,22 @@ dm_test__get_test_files() {
 dm_test__get_test_cases() {
   ___test_file_path="$1"
 
-  grep -E --only-matching \
-    "^${DM_TEST__TEST_CASE_PREFIX}[^\(]+" \
-    "$___test_file_path"
+  dm_test__debug \
+    'dm_test__get_test_cases' \
+    "gathering test cases in test file '${___test_file_path}'.."
+
+  ___test_cases="$( \
+    grep -E --only-matching \
+      "^${DM_TEST__CONFIG__TEST_CASE_PREFIX}[^\(]+" \
+      "$___test_file_path" \
+  )"
+
+  dm_test__debug_list \
+    'dm_test__get_test_cases' \
+    'test cases found:' \
+    "$___test_cases"
+
+  echo "$___test_cases"
 }
 
 #==============================================================================
@@ -106,8 +132,12 @@ dm_test__execute_test_case() {
   ___flag__setup="$3"
   ___flag__teardown="$4"
 
+  dm_test__debug \
+    'dm_test__execute_test_case' \
+    "executing test case '${___test_case}'"
+
   _dm_test__initialize_test_case_environment "$___test_file_path" "$___test_case"
-  dm_test__cache__initialize_test_result
+  dm_test__cache__test_result__init
   _dm_test__print_test_case_identifier
 
   ___output="$( \
@@ -119,7 +149,7 @@ dm_test__execute_test_case() {
 
   _dm_test__print_test_case_result
   _dm_test__update_global_counters
-  dm_test__print_if_has_content "$___output"
+  dm_test__print_output_if_has_content "$___output"
 }
 
 #==============================================================================
@@ -154,6 +184,13 @@ _dm_test__initialize_test_case_environment() {
   # Setting up global variables for the error reporting.
   DM_TEST__FILE_UNDER_EXECUTION="$(basename "$___test_file_path" | cut -d '.' -f 1)"
   DM_TEST__TEST_UNDER_EXECUTION="$___test_case"
+
+  dm_test__debug '_dm_test__initialize_test_case_environment' \
+    'test case environment initialized:'
+  dm_test__debug '_dm_test__initialize_test_case_environment' \
+    "- DM_TEST__FILE_UNDER_EXECUTION='${DM_TEST__FILE_UNDER_EXECUTION}'"
+  dm_test__debug '_dm_test__initialize_test_case_environment' \
+    "- DM_TEST__TEST_UNDER_EXECUTION='${DM_TEST__TEST_UNDER_EXECUTION}'"
 }
 
 #==============================================================================
@@ -187,18 +224,30 @@ _dm_test__initialize_test_case_environment() {
 # Status:
 #   0 - Other status is not expected.
 # Tools:
-#   mkfifo wait cat sort sed
+#   mkfifo wait
 #==============================================================================
 _dm_test__run_test_case() {
   ___test_case="$1"
   ___flag__setup="$2"
   ___flag__teardown="$3"
 
+  dm_test__debug \
+    '_dm_test__run_test_case' \
+    "preparing to run test case '${___test_case}'"
+
+  dm_test__debug \
+    '_dm_test__run_test_case' \
+    'creating temporary files to capture file descriptors..'
+
   # Creating the temporary file names in the cache that will hold the processed
   # output contents.
   ___tmp_file__fd1="$(dm_test__cache__create_temp_file)"
   ___tmp_file__fd2="$(dm_test__cache__create_temp_file)"
   ___tmp_file__fd3="$(dm_test__cache__create_temp_file)"
+
+  dm_test__debug \
+    '_dm_test__run_test_case' \
+    'creating temporary fifos to redirect file descriptors..'
 
   # Creating the temporary fifo names in the cache that will be used for the
   # output processing to connect the processor functions to the executing test
@@ -213,6 +262,10 @@ _dm_test__run_test_case() {
 
   # Starting the processor functions in the background and storing they pids to
   # be able to wait for them later on.
+
+  dm_test__debug \
+    '_dm_test__run_test_case' \
+    'starting file descriptor processing workers in the background..'
 
   # NOTE: the exact time correct ordering is unfortunately not possible with
   # this setup. If two event happens too close to each other, the real order
@@ -229,12 +282,16 @@ _dm_test__run_test_case() {
   # Usually this is not a problem though, as between the printouts there are
   # usually some other code to execute, that allows the background processes to
   # process the outputs in the correct order.
-  _dm_test__process_output "stdout" "$BLUE" <"$___tmp_fifo__fd1" >>"$___tmp_file__fd1" &
+  _dm_test__process_output 'stdout' "$BLUE" <"$___tmp_fifo__fd1" >>"$___tmp_file__fd1" &
   ___pid__fd1="$!"
-  _dm_test__process_output "stderr" "$RED" <"$___tmp_fifo__fd2" >>"$___tmp_file__fd2" &
+  _dm_test__process_output 'stderr' "$RED" <"$___tmp_fifo__fd2" >>"$___tmp_file__fd2" &
   ___pid__fd2="$!"
-  _dm_test__process_output "debug " "$DIM" <"$___tmp_fifo__fd3" >>"$___tmp_file__fd3" &
+  _dm_test__process_output 'debug ' "$DIM" <"$___tmp_fifo__fd3" >>"$___tmp_file__fd3" &
   ___pid__fd3="$!"
+
+  dm_test__debug \
+    '_dm_test__run_test_case' \
+    'starting test case execution..'
 
   # We are doing four things here while executing the test case:
   # 1. Blocking the terminate on error global setting by executing the test
@@ -257,29 +314,89 @@ _dm_test__run_test_case() {
     ___status="$?"
   fi
 
+  dm_test__debug \
+    '_dm_test__run_test_case' \
+    'waiting for file descriptor processing workers..'
+
   # Waiting for the output processor background processes to finish. After
   # this, the outputs are available in the temporary files.
   wait "$___pid__fd1" "$___pid__fd2" "$___pid__fd3"
+
+  dm_test__debug \
+    '_dm_test__run_test_case' \
+    'evaluating test case results..'
 
   # If the status is nonzero or there is any standard error content, the
   # testcase is considered as failed.
   if [ "$___status" -ne "0" ] || [ -s "$___tmp_file__fd2" ]
   then
-    dm_test__cache__set_test_case_failed
 
-    # In this case, printing all the collected output information, that could
-    # help the debugging. Using the timestamps preceding every line, then
-    # removing it.
+    dm_test__debug \
+      '_dm_test__run_test_case' \
+      'status was nonzero or there were standard error output => failed'
+
+    dm_test__cache__test_result__mark_as_failed
+
+    ___output="$( \
+      _dm_test__merge_and_sort_outputs \
+        "$___tmp_file__fd1" \
+        "$___tmp_file__fd2" \
+        "$___tmp_file__fd3" \
+    )"
+
+    dm_test__debug \
+      '_dm_test__run_test_case' \
+      'outputs prepared to display'
+
+    echo "$___output"
+  fi
+}
+
+#==============================================================================
+# Merging and sorting the captured file descriptor outputs captured into
+# temporary files.
+#------------------------------------------------------------------------------
+# Globals:
+#   None
+# Arguments:
+#   [1] tmp_file__fd1 - Temporary file for the output of file descriptor 1.
+#   [2] tmp_file__fd2 - Temporary file for the output of file descriptor 2.
+#   [3] tmp_file__fd3 - Temporary file for the output of file descriptor 3.
+# STDIN:
+#   None
+#------------------------------------------------------------------------------
+# Output variables:
+#   None
+# STDOUT:
+#   Merged and sorted captured file descriptor output.
+# STDERR:
+#   None
+# Status:
+#   0 - Other status is not expected.
+# Tools:
+#   cat sort sed
+#==============================================================================
+_dm_test__merge_and_sort_outputs() {
+    ___tmp_file__fd1="$1"
+    ___tmp_file__fd2="$2"
+    ___tmp_file__fd3="$3"
+
+    dm_test__debug \
+      '_dm_test__merge_and_sort_outputs' \
+      'merging and sorting captured outputs..'
+
+    # Using the timestamps preceding every line for sorting, then removing it.
     {
       cat "$___tmp_file__fd1"
       cat "$___tmp_file__fd2"
       cat "$___tmp_file__fd3"
     } | sort | sed -E 's/^[[:digit:]]+\s//'
-  fi
 }
 
 #==============================================================================
-# Printing out the about to be executed test case identifier without a newline.
+# Printing out the about to be executed test case identifier without a newline
+# in normal execution but with a newline in case of debug mode to have a better
+# debug output.
 #------------------------------------------------------------------------------
 # Globals:
 #   DM_TEST__FILE_UNDER_EXECUTION
@@ -300,13 +417,21 @@ _dm_test__run_test_case() {
 # Status:
 #   0 - Other status is not expected.
 # Tools:
-#   printf
+#   echo
 #==============================================================================
 _dm_test__print_test_case_identifier() {
-  # We are using printf to print without a line break, variables are expected
-  # in the string.
-  # shellcheck disable=SC2059
-  printf "${BOLD}${DM_TEST__FILE_UNDER_EXECUTION}.${DM_TEST__TEST_UNDER_EXECUTION}${RESET}"
+  dm_test__debug \
+    '_dm_test__print_test_case_identifier' \
+    'displaying test case identifier..'
+
+  if _dm_test__debug__is_enabled
+  then
+    echo \
+      "${BOLD}${DM_TEST__FILE_UNDER_EXECUTION}.${DM_TEST__TEST_UNDER_EXECUTION}${RESET}"
+  else
+    echo -n \
+      "${BOLD}${DM_TEST__FILE_UNDER_EXECUTION}.${DM_TEST__TEST_UNDER_EXECUTION}${RESET}"
+  fi
 }
 
 #==============================================================================
@@ -334,7 +459,11 @@ _dm_test__print_test_case_identifier() {
 #   echo
 #==============================================================================
 _dm_test__print_test_case_result() {
-  if dm_test__cache__is_test_case_succeeded
+  dm_test__debug \
+    '_dm_test__print_test_case_result' \
+    'printing test case result..'
+
+  if dm_test__cache__test_result__was_success
   then
     echo "  ${BOLD}${GREEN}ok${RESET}"
   else
@@ -364,9 +493,14 @@ _dm_test__print_test_case_result() {
 #   None
 #==============================================================================
 _dm_test__update_global_counters() {
-  dm_test__cache__increment_global_count
-  if ! dm_test__cache__is_test_case_succeeded
+  dm_test__debug \
+    '_dm_test__update_global_counters' \
+    'updating global counters..'
+
+  dm_test__cache__global_count__increment
+
+  if ! dm_test__cache__test_result__was_success
   then
-    dm_test__cache__increment_global_failure
+    dm_test__cache__global_failure__increment
   fi
 }

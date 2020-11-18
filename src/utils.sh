@@ -12,10 +12,10 @@
 # Test suite runner header with configuration and system information.
 #------------------------------------------------------------------------------
 # Globals:
-#   DM_TEST__SUBMODULE_PATH_PREFIX
-#   DM_TEST__TEST_CASES_ROOT
-#   DM_TEST__TEST_FILE_PREFIX
-#   DM_TEST__TEST_CASE_PREFIX
+#   DM_TEST__CONFIG__SUBMODULE_PATH_PREFIX
+#   DM_TEST__CONFIG__TEST_CASES_ROOT
+#   DM_TEST__CONFIG__TEST_FILE_PREFIX
+#   DM_TEST__CONFIG__TEST_CASE_PREFIX
 #   DIM
 #   RESET
 # Arguments:
@@ -35,15 +35,19 @@
 #   echo uname command
 #==============================================================================
 dm_test__print_header() {
+  dm_test__debug \
+    'dm_test__print_header' \
+    'printing suite header..'
+
   echo -n "$DIM"
   echo "---------------------------------------------------------------------------------"
   echo ">> DM TEST <<"
   echo "---------------------------------------------------------------------------------"
   echo "\$ dm.test.sh --config"
-  echo "DM_TEST__SUBMODULE_PATH_PREFIX='${DM_TEST__SUBMODULE_PATH_PREFIX}'"
-  echo "DM_TEST__TEST_CASES_ROOT='${DM_TEST__TEST_CASES_ROOT}'"
-  echo "DM_TEST__TEST_FILE_PREFIX='${DM_TEST__TEST_FILE_PREFIX}'"
-  echo "DM_TEST__TEST_CASE_PREFIX='${DM_TEST__TEST_CASE_PREFIX}'"
+  echo "DM_TEST__CONFIG__SUBMODULE_PATH_PREFIX='${DM_TEST__CONFIG__SUBMODULE_PATH_PREFIX}'"
+  echo "DM_TEST__CONFIG__TEST_CASES_ROOT='${DM_TEST__CONFIG__TEST_CASES_ROOT}'"
+  echo "DM_TEST__CONFIG__TEST_FILE_PREFIX='${DM_TEST__CONFIG__TEST_FILE_PREFIX}'"
+  echo "DM_TEST__CONFIG__TEST_CASE_PREFIX='${DM_TEST__CONFIG__TEST_CASE_PREFIX}'"
   echo "---------------------------------------------------------------------------------"
   echo "\$ uname --kernel-name --kernel-release --machine --operating-system"
   uname --kernel-name --kernel-release --machine --operating-system
@@ -61,7 +65,6 @@ dm_test__print_header() {
 # the test suite fails this function will terminate the execution.
 #------------------------------------------------------------------------------
 # Globals:
-#   DM_TEST__TEST_RESULT__SUCCESS
 #   RED
 #   GREEN
 #   BOLD
@@ -81,19 +84,22 @@ dm_test__print_header() {
 #   0 - test suite passed
 #   1 - test suite failed, process termination
 # Tools:
-#   echo cat grep
+#   echo
 #==============================================================================
 dm_test__print_report() {
-  echo ""
-  echo "${BOLD}$(dm_test__cache__get_global_count) tests, $(dm_test__cache__get_global_failure_count) failed"
+  ___global_count="$(dm_test__cache__global_count__get)"
+  ___failure_count="$(dm_test__cache__global_failure__get)"
 
-  if dm_test__cache__was_global_failure
+  echo ""
+  echo "${BOLD}${___global_count} tests, ${___failure_count} failed${RESET}"
+
+  if dm_test__cache__global_failure__failures_happened
   then
     echo "${BOLD}Result: ${RED}FAILURE${RESET}"
     echo ""
-    if dm_test__cache__errors__has_errors
+    if dm_test__cache__global_errors__has_errors
     then
-      dm_test__cache__errors__print_errors
+      dm_test__cache__global_errors__print_errors
     fi
     exit 1
   else
@@ -122,12 +128,16 @@ dm_test__print_report() {
 # Status:
 #   0 - Other status is not expected.
 # Tools:
-#   echo
+#   echo test
 #==============================================================================
-dm_test__print_if_has_content() {
+dm_test__print_output_if_has_content() {
   ___content="$1"
   if [ -n "$___content" ]
   then
+    dm_test__debug \
+      'dm_test__print_output_if_has_content' \
+      'displaying captured output..'
+
     echo "$___content"
   fi
 }
@@ -155,12 +165,55 @@ dm_test__print_if_has_content() {
 # Tools:
 #   echo cat
 #==============================================================================
-_dm_test__increase_file_content() {
+_dm_test__increment_file_content() {
   ___file_path="$1"
+
+  dm_test__debug \
+    '_dm_test__increment_file_content' \
+    "incrementing content of file '${___file_path}'"
+
   if [ -s "$___file_path" ]
   then
     ___content="$(cat "$___file_path")"
     ___content=$(( ___content + 1 ))
+    echo "$___content" > "$___file_path"
+  fi
+}
+
+#==============================================================================
+# Function that decrements the content of a file that contains a single integer
+# number. Can be used for counting something.
+#------------------------------------------------------------------------------
+# Globals:
+#   None
+# Arguments:
+#   [1] file_path - File that content needs to be decreased.
+# STDIN:
+#   None
+#------------------------------------------------------------------------------
+# Output variables:
+#   None
+# STDOUT:
+#   None
+# STDERR:
+#   Errors during execution.
+# Status:
+#   0 - File content decremented successfully.
+#  !0 - Error during opreation.
+# Tools:
+#   echo cat
+#==============================================================================
+_dm_test__decrement_file_content() {
+  ___file_path="$1"
+
+  dm_test__debug \
+    '_dm_test__decrement_file_content' \
+    "decrementing content of file '${___file_path}'"
+
+  if [ -s "$___file_path" ]
+  then
+    ___content="$(cat "$___file_path")"
+    ___content=$(( ___content - 1 ))
     echo "$___content" > "$___file_path"
   fi
 }
@@ -192,10 +245,19 @@ _dm_test__increase_file_content() {
 #   read echo date
 #==============================================================================
 _dm_test__process_output() {
-  ___domain="$1"
-  ___color="$2"
-  while read -r ___line
+  ___worker_domain="$1"
+  ___worker_color="$2"
+
+  dm_test__debug \
+    '_dm_test__process_output' \
+    "started processing worker for domain '${___worker_domain}', waiting for input.."
+
+  while read -r ___worker_line
   do
-    echo "$(date +'%s%N') ${___color}${___domain} | ${___line}${RESET}"
+    echo "$(date +'%s%N') ${___worker_color}${___worker_domain} | ${___worker_line}${RESET}"
   done
+
+  dm_test__debug \
+    '_dm_test__process_output' \
+    "worker process finished for domain '${___worker_domain}'"
 }

@@ -13,8 +13,7 @@
 # Global cache file that holds the count of all executed test cases.
 #==============================================================================
 
-# Variable thar holds the runtime path of the global test case count file. This
-# variable should be used for writing or reading purposes.
+# Variable thar holds the runtime path of the global test case count file.
 DM_TEST__CACHE__GLOBAL_COUNT="__INVALID__"
 
 #==============================================================================
@@ -23,7 +22,7 @@ DM_TEST__CACHE__GLOBAL_COUNT="__INVALID__"
 # execution.
 #------------------------------------------------------------------------------
 # Globals:
-#   None
+#   DM_TEST__CACHE__GLOBAL_COUNT
 # Arguments:
 #   None
 # STDIN:
@@ -40,16 +39,20 @@ DM_TEST__CACHE__GLOBAL_COUNT="__INVALID__"
 # Tools:
 #   echo
 #==============================================================================
-_dm_test__cache__init__global_count() {
+_dm_test__cache__global_count__init() {
   DM_TEST__CACHE__GLOBAL_COUNT="$(dm_test__cache__create_temp_file)"
   echo '0' > "$DM_TEST__CACHE__GLOBAL_COUNT"
+
+  dm_test__debug \
+    '_dm_test__cache__global_count__init' \
+    "global count file initialized on path: '${DM_TEST__CACHE__GLOBAL_COUNT}'"
 }
 
 #==============================================================================
 # Function to increase the global count cache file's content.
 #------------------------------------------------------------------------------
 # Globals:
-#   DM_TEST__CACHE__RUNTIME__GLOBAL_COUNT
+#   DM_TEST__CACHE__GLOBAL_COUNT
 # Arguments:
 #   None
 # STDIN:
@@ -66,8 +69,12 @@ _dm_test__cache__init__global_count() {
 # Tools:
 #   None
 #==============================================================================
-dm_test__cache__increment_global_count() {
-  _dm_test__increase_file_content "$DM_TEST__CACHE__GLOBAL_COUNT"
+dm_test__cache__global_count__increment() {
+  _dm_test__increment_file_content "$DM_TEST__CACHE__GLOBAL_COUNT"
+
+  dm_test__debug \
+    'dm_test__cache__global_count__increment' \
+    'global count file incremented'
 }
 
 #==============================================================================
@@ -89,8 +96,13 @@ dm_test__cache__increment_global_count() {
 # Status:
 #   0 - Other status is not expected.
 # Tools:
-#   cat
+#   echo
 #==============================================================================
-dm_test__cache__get_global_count() {
-  cat "$DM_TEST__CACHE__GLOBAL_COUNT"
+dm_test__cache__global_count__get() {
+  ___count="$(cat "$DM_TEST__CACHE__GLOBAL_COUNT")"
+  echo "$___count"
+
+  dm_test__debug \
+    'dm_test__cache__global_count__get' \
+    "global count value returned: '${___count}'"
 }

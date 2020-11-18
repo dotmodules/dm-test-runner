@@ -1,9 +1,9 @@
 #==============================================================================
-#   _____         _     ____                 _ _
-#  |_   _|__  ___| |_  |  _ \ ___  ___ _   _| | |_
-#    | |/ _ \/ __| __| | |_) / _ \/ __| | | | | __|
-#    | |  __/\__ \ |_  |  _ <  __/\__ \ |_| | | |_
-#    |_|\___||___/\__| |_| \_\___||___/\__,_|_|\__|
+#  _____         _     ____                 _ _
+# |_   _|__  ___| |_  |  _ \ ___  ___ _   _| | |_
+#   | |/ _ \/ __| __| | |_) / _ \/ __| | | | | __|
+#   | |  __/\__ \ |_  |  _ <  __/\__ \ |_| | | |_
+#   |_|\___||___/\__| |_| \_\___||___/\__,_|_|\__|
 #
 #==============================================================================
 # TEST RESULT CACHE
@@ -19,15 +19,14 @@
 # content.
 #==============================================================================
 
-# Variable thar holds the runtime path of the test result cache file. This
-# variable should be used for writing or reading purposes.
+# Variable thar holds the runtime path of the test result cache file.
 DM_TEST__CACHE__TEST_RESULT="__INVALID__"
 
 #==============================================================================
 # Inner function to create and initialize the test result file.
 #------------------------------------------------------------------------------
 # Globals:
-#   None
+#   DM_TEST__CACHE__TEST_RESULT
 # Arguments:
 #   None
 # STDIN:
@@ -44,9 +43,13 @@ DM_TEST__CACHE__TEST_RESULT="__INVALID__"
 # Tools:
 #   touch echo
 #==============================================================================
-_dm_test__cache__init__test_result() {
+_dm_test__cache__test_result__init() {
   DM_TEST__CACHE__TEST_RESULT="$(dm_test__cache__create_temp_file)"
   touch "$DM_TEST__CACHE__TEST_RESULT"
+
+  dm_test__debug \
+    '_dm_test__cache__test_result__init' \
+    "test result temp file created: '${DM_TEST__CACHE__TEST_RESULT}'"
 }
 
 #==============================================================================
@@ -56,7 +59,7 @@ _dm_test__cache__init__test_result() {
 #------------------------------------------------------------------------------
 # Globals:
 #   DM_TEST__CACHE__TEST_RESULT
-#   DM_TEST__TEST_RESULT__SUCCESS
+#   DM_TEST__CONSTANT__TEST_RESULT__SUCCESS
 # Arguments:
 #   None
 # STDIN:
@@ -73,8 +76,12 @@ _dm_test__cache__init__test_result() {
 # Tools:
 #   echo
 #==============================================================================
-dm_test__cache__initialize_test_result() {
-  echo "$DM_TEST__TEST_RESULT__SUCCESS" > "$DM_TEST__CACHE__TEST_RESULT"
+dm_test__cache__test_result__init() {
+  echo "$DM_TEST__CONSTANT__TEST_RESULT__SUCCESS" > "$DM_TEST__CACHE__TEST_RESULT"
+
+  dm_test__debug \
+    'dm_test__cache__test_result__init' \
+    'test result file initialized with success'
 }
 
 #==============================================================================
@@ -82,7 +89,7 @@ dm_test__cache__initialize_test_result() {
 #------------------------------------------------------------------------------
 # Globals:
 #   DM_TEST__CACHE__TEST_RESULT
-#   DM_TEST__TEST_RESULT__FAILURE
+#   DM_TEST__CONSTANT__TEST_RESULT__FAILURE
 # Arguments:
 #   None
 # STDIN:
@@ -99,8 +106,12 @@ dm_test__cache__initialize_test_result() {
 # Tools:
 #   echo
 #==============================================================================
-dm_test__cache__set_test_case_failed() {
-  echo "$DM_TEST__TEST_RESULT__FAILURE" > "$DM_TEST__CACHE__TEST_RESULT"
+dm_test__cache__test_result__mark_as_failed() {
+  echo "$DM_TEST__CONSTANT__TEST_RESULT__FAILURE" > "$DM_TEST__CACHE__TEST_RESULT"
+
+  dm_test__debug \
+    'dm_test__cache__test_result__mark_as_failed' \
+    'test case marked as failed'
 }
 
 #==============================================================================
@@ -108,7 +119,7 @@ dm_test__cache__set_test_case_failed() {
 #------------------------------------------------------------------------------
 # Globals:
 #   DM_TEST__CACHE__TEST_RESULT
-#   DM_TEST__TEST_RESULT__SUCCESS
+#   DM_TEST__CONSTANT__TEST_RESULT__SUCCESS
 # Arguments:
 #   None
 # STDIN:
@@ -126,6 +137,21 @@ dm_test__cache__set_test_case_failed() {
 # Tools:
 #   grep
 #==============================================================================
-dm_test__cache__is_test_case_succeeded() {
-  grep --silent "$DM_TEST__TEST_RESULT__SUCCESS" "$DM_TEST__CACHE__TEST_RESULT"
+dm_test__cache__test_result__was_success() {
+  dm_test__debug \
+    'dm_test__cache__test_result__was_success' \
+    'getting test case result from the global cache file..'
+
+  if grep --silent "$DM_TEST__CONSTANT__TEST_RESULT__SUCCESS" "$DM_TEST__CACHE__TEST_RESULT"
+  then
+    dm_test__debug \
+      'dm_test__cache__test_result__was_success' \
+      '=> test case succeeded'
+    return 0
+  else
+    dm_test__debug \
+      'dm_test__cache__test_result__was_success' \
+      '=> test case failed'
+    return 1
+  fi
 }

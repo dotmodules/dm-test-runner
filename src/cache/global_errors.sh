@@ -16,15 +16,14 @@
 # fails it should write to this file via the provided API function.
 #==============================================================================
 
-# Variable thar holds the runtime path of the global error file. This variable
-# should be used for writing or reading purposes.
+# Variable thar holds the runtime path of the global error file.
 DM_TEST__CACHE__ERRORS="__INVALID__"
 
 #==============================================================================
 # Inner function to create and initialize the error cache file.
 #------------------------------------------------------------------------------
 # Globals:
-#   None
+#   DM_TEST__CACHE__ERRORS
 # Arguments:
 #   None
 # STDIN:
@@ -39,11 +38,15 @@ DM_TEST__CACHE__ERRORS="__INVALID__"
 # Status:
 #   0 - Other status is not expected.
 # Tools:
-#   touch echo
+#   touch
 #==============================================================================
-_dm_test__cache__init__errors() {
+_dm_test__cache__global_errors__init() {
   DM_TEST__CACHE__ERRORS="$(dm_test__cache__create_temp_file)"
   touch "$DM_TEST__CACHE__ERRORS"
+
+  dm_test__debug \
+    '_dm_test__cache__global_errors__init' \
+    "global errors file created: '${DM_TEST__CACHE__ERRORS}'"
 }
 
 #==============================================================================
@@ -64,11 +67,15 @@ _dm_test__cache__init__errors() {
 #   None
 # Status:
 #    0 - There are errors present in the global test cache file.
-#   !0 - No errors in the global test cache file.
+#    1 - No errors in the global test cache file.
 # Tools:
-#   None
+#   test
 #==============================================================================
-dm_test__cache__errors__has_errors() {
+dm_test__cache__global_errors__has_errors() {
+  dm_test__debug \
+    'dm_test__cache__global_errors__has_errors' \
+    'checking if there are errors..'
+
   test -s "$DM_TEST__CACHE__ERRORS"
 }
 
@@ -93,8 +100,12 @@ dm_test__cache__errors__has_errors() {
 # Tools:
 #   cat
 #==============================================================================
-dm_test__cache__errors__print_errors() {
+dm_test__cache__global_errors__print_errors() {
   cat "$DM_TEST__CACHE__ERRORS"
+
+  dm_test__debug \
+    'dm_test__cache__global_errors__print_errors' \
+    'global errors printed'
 }
 
 #==============================================================================
@@ -119,6 +130,10 @@ dm_test__cache__errors__print_errors() {
 # Tools:
 #   cat
 #==============================================================================
-dm_test__cache__errors__write_errors() {
+dm_test__cache__global_errors__write_errors() {
   cat - >> "$DM_TEST__CACHE__ERRORS"
+
+  dm_test__debug \
+    'dm_test__cache__global_errors__write_errors' \
+    'error saved to the global errors file'
 }

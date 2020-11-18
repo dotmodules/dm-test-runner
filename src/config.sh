@@ -8,6 +8,14 @@
 #                           __/ |
 #==========================|___/===============================================
 
+
+#==============================================================================
+#   __  __                 _       _
+#  |  \/  | __ _ _ __   __| | __ _| |_ ___  _ __ _   _
+#  | |\/| |/ _` | '_ \ / _` |/ _` | __/ _ \| '__| | | |
+#  | |  | | (_| | | | | (_| | (_| | || (_) | |  | |_| |
+#  |_|  |_|\__,_|_| |_|\__,_|\__,_|\__\___/|_|   \__, |
+#                                                |___/
 #==============================================================================
 # MANDATORY CONFIGURATION VARIABLES
 #==============================================================================
@@ -15,21 +23,42 @@
 # For better readability dm.test.sh is composed of smaller scripts that are
 # sourced into it dynamically. As dm.test.sh is imported to the user codebase
 # by sourcing, the conventional path determination cannot be used. The '$0'
-# variable contains the the host script dm.test.sh is sourced from. The
+# variable contains the the host script's path dm.test.sh is sourced from. The
 # relative path to the root of the dm-test-runner subrepo has to be defined
 # explicitly to the internal sourcing could be executed.
-DM_TEST__SUBMODULE_PATH_PREFIX="${DM_TEST__SUBMODULE_PATH_PREFIX:=__unconfigured__}"
+DM_TEST__CONFIG__SUBMODULE_PATH_PREFIX="${DM_TEST__CONFIG__SUBMODULE_PATH_PREFIX:=__INVALID__}"
 
 # Test cases root directory relative to the runner script dm.test.sh is sourced
 # to.
-DM_TEST__TEST_CASES_ROOT="${DM_TEST__TEST_CASES_ROOT:=__unconfigured__}"
+DM_TEST__CONFIG__TEST_CASES_ROOT="${DM_TEST__CONFIG__TEST_CASES_ROOT:=__INVALID__}"
 
 # Test files are recognized by this prefix in the test case root directory.
-DM_TEST__TEST_FILE_PREFIX="${DM_TEST__TEST_FILE_PREFIX:=__unconfigured__}"
+DM_TEST__CONFIG__TEST_FILE_PREFIX="${DM_TEST__CONFIG__TEST_FILE_PREFIX:=__INVALID__}"
 
 # Test cases are recognized by this prefix in the test files.
-DM_TEST__TEST_CASE_PREFIX="${DM_TEST__TEST_CASE_PREFIX:=__unconfigured__}"
+DM_TEST__CONFIG__TEST_CASE_PREFIX="${DM_TEST__CONFIG__TEST_CASE_PREFIX:=__INVALID__}"
 
+#==============================================================================
+#    ___        _   _                   _
+#   / _ \ _ __ | |_(_) ___  _ __   __ _| |
+#  | | | | '_ \| __| |/ _ \| '_ \ / _` | |
+#  | |_| | |_) | |_| | (_) | | | | (_| | |
+#   \___/| .__/ \__|_|\___/|_| |_|\__,_|_|
+#        |_|
+#==============================================================================
+# OPTIONAL CONFIGURATION VARIABLES
+#==============================================================================
+
+# Debug mode enabled or not..
+DM_TEST__CONFIG__DEBUG_ENABLED="${DM_TEST__CONFIG__DEBUG_ENABLED:=0}"
+
+#==============================================================================
+# __     __    _ _     _       _   _
+# \ \   / /_ _| (_) __| | __ _| |_(_) ___  _ __
+#  \ \ / / _` | | |/ _` |/ _` | __| |/ _ \| '_ \
+#   \ V / (_| | | | (_| | (_| | |_| | (_) | | | |
+#    \_/ \__,_|_|_|\__,_|\__,_|\__|_|\___/|_| |_|
+#
 #==============================================================================
 # CONFIGURATION VALIDATION
 #==============================================================================
@@ -39,10 +68,10 @@ DM_TEST__TEST_CASE_PREFIX="${DM_TEST__TEST_CASE_PREFIX:=__unconfigured__}"
 # to ensure that the configuration is complete.
 #------------------------------------------------------------------------------
 # Globals:
-#   DM_TEST__SUBMODULE_PATH_PREFIX
-#   DM_TEST__TEST_CASES_ROOT
-#   DM_TEST__TEST_FILE_PREFIX
-#   DM_TEST__TEST_CASE_PREFIX
+#   DM_TEST__CONFIG__SUBMODULE_PATH_PREFIX
+#   DM_TEST__CONFIG__TEST_CASES_ROOT
+#   DM_TEST__CONFIG__TEST_FILE_PREFIX
+#   DM_TEST__CONFIG__TEST_CASE_PREFIX
 # Arguments:
 #   None
 # STDIN:
@@ -51,34 +80,42 @@ DM_TEST__TEST_CASE_PREFIX="${DM_TEST__TEST_CASE_PREFIX:=__unconfigured__}"
 # Output variables:
 #   None
 # STDOUT:
-#   Content that is passed to the function.
+#   None
 # STDERR:
 #   None
 # Status:
 #   0 - Other status is not expected.
 # Tools:
-#   None
+#   test
 #==============================================================================
-_dm_test__validate_config() {
-  if [ "$DM_TEST__SUBMODULE_PATH_PREFIX" = "__unconfigured__" ]
+dm_test__config__validate_mandatory_config() {
+  dm_test__debug \
+    'dm_test__config__validate_mandatory_config' \
+    'validating mandatory configuration variables..'
+
+  if [ "$DM_TEST__CONFIG__SUBMODULE_PATH_PREFIX" = "__INVALID__" ]
   then
-    _report_configuration_error "DM_TEST__SUBMODULE_PATH_PREFIX"
+    _report_configuration_error "DM_TEST__CONFIG__SUBMODULE_PATH_PREFIX"
   fi
 
-  if [ "$DM_TEST__TEST_CASES_ROOT" = "__unconfigured__" ]
+  if [ "$DM_TEST__CONFIG__TEST_CASES_ROOT" = "__INVALID__" ]
   then
-    _report_configuration_error "DM_TEST__TEST_CASES_ROOT"
+    _report_configuration_error "DM_TEST__CONFIG__TEST_CASES_ROOT"
   fi
 
-  if [ "$DM_TEST__TEST_FILE_PREFIX" = "__unconfigured__" ]
+  if [ "$DM_TEST__CONFIG__TEST_FILE_PREFIX" = "__INVALID__" ]
   then
-    _report_configuration_error "DM_TEST__TEST_FILE_PREFIX"
+    _report_configuration_error "DM_TEST__CONFIG__TEST_FILE_PREFIX"
   fi
 
-  if [ "$DM_TEST__TEST_CASE_PREFIX" = "__unconfigured__" ]
+  if [ "$DM_TEST__CONFIG__TEST_CASE_PREFIX" = "__INVALID__" ]
   then
-    _report_configuration_error "DM_TEST__TEST_CASE_PREFIX"
+    _report_configuration_error "DM_TEST__CONFIG__TEST_CASE_PREFIX"
   fi
+
+  dm_test__debug \
+    'dm_test__config__validate_mandatory_config' \
+    'configuration is complete'
 }
 
 #==============================================================================
@@ -86,10 +123,7 @@ _dm_test__validate_config() {
 # with error.
 #------------------------------------------------------------------------------
 # Globals:
-#   DM_TEST__SUBMODULE_PATH_PREFIX
-#   DM_TEST__TEST_CASES_ROOT
-#   DM_TEST__TEST_FILE_PREFIX
-#   DM_TEST__TEST_CASE_PREFIX
+#   None
 # Arguments:
 #   [1] variable - Missing variable name.
 # STDIN:
@@ -98,22 +132,16 @@ _dm_test__validate_config() {
 # Output variables:
 #   None
 # STDOUT:
-#   Error message about the missing configuration variable.
-# STDERR:
 #   None
+# STDERR:
+#   Error message about the missing configuration variable.
 # Status:
 #   1 - Exiting with error after printed out the issue.
 # Tools:
-#   None
+#   echo
 #==============================================================================
 _dm_test__report_configuration_error() {
   ___variable="$1"
-  echo "ERROR: Mandatory configuration variable was not configured: '${___variable}'!"
+  >&2 echo "ERROR: Mandatory configuration variable was not configured: '${___variable}'!"
   exit 1
 }
-
-#==============================================================================
-# VALIDATION ENTRY POINT
-#==============================================================================
-
-_dm_test__validate_config

@@ -14,16 +14,16 @@
 #==============================================================================
 
 # Variable thar holds the runtime path of the global test case failure count
-# file. This variable should be used for writing or reading purposes.
+# file.
 DM_TEST__CACHE__GLOBAL_FAILURES="__INVALID__"
 
 #==============================================================================
 # Inner function to create and initialize the global result file. Writing an
-# initial success value to the file, as it is a zero. Any nonzero number will
-# represent failure.
+# initial zero to it. In case of a failed test case this number will be
+# increased.
 #------------------------------------------------------------------------------
 # Globals:
-#   None
+#   DM_TEST__CACHE__GLOBAL_FAILURES
 # Arguments:
 #   None
 # STDIN:
@@ -40,9 +40,13 @@ DM_TEST__CACHE__GLOBAL_FAILURES="__INVALID__"
 # Tools:
 #   echo
 #==============================================================================
-_dm_test__cache__init__global_result() {
+_dm_test__cache__global_failures__init() {
   DM_TEST__CACHE__GLOBAL_FAILURES="$(dm_test__cache__create_temp_file)"
   echo '0' > "$DM_TEST__CACHE__GLOBAL_FAILURES"
+
+  dm_test__debug \
+    '_dm_test__cache__global_failures__init' \
+    "global failure count file created: '${DM_TEST__CACHE__GLOBAL_FAILURES}'"
 }
 
 #==============================================================================
@@ -66,8 +70,12 @@ _dm_test__cache__init__global_result() {
 # Tools:
 #   None
 #==============================================================================
-dm_test__cache__increment_global_failure() {
-  _dm_test__increase_file_content "$DM_TEST__CACHE__GLOBAL_FAILURES"
+dm_test__cache__global_failure__increment() {
+  _dm_test__increment_file_content "$DM_TEST__CACHE__GLOBAL_FAILURES"
+
+  dm_test__debug \
+    'dm_test__cache__global_failure__increment' \
+    'global failure count incremented'
 }
 
 #==============================================================================
@@ -91,8 +99,13 @@ dm_test__cache__increment_global_failure() {
 # Tools:
 #   cat
 #==============================================================================
-dm_test__cache__get_global_failure_count() {
-  cat "$DM_TEST__CACHE__GLOBAL_FAILURES"
+dm_test__cache__global_failure__get() {
+  ___count="$(cat "$DM_TEST__CACHE__GLOBAL_FAILURES")"
+  echo "$___count"
+
+  dm_test__debug \
+    'dm_test__cache__global_failure__get' \
+    "global failure count value returned: '${___count}'"
 }
 
 #==============================================================================
@@ -117,6 +130,10 @@ dm_test__cache__get_global_failure_count() {
 # Tools:
 #   grep
 #==============================================================================
-dm_test__cache__was_global_failure() {
+dm_test__cache__global_failure__failures_happened() {
+  dm_test__debug \
+    'dm_test__cache__global_failure__failures_happened' \
+    'checking if there were failures..'
+
   grep --silent --invert-match '^0$' "$DM_TEST__CACHE__GLOBAL_FAILURES"
 }
