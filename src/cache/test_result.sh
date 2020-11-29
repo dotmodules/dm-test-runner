@@ -81,7 +81,7 @@ dm_test__cache__test_result__init() {
 
   dm_test__debug \
     'dm_test__cache__test_result__init' \
-    'test result file initialized with success'
+    'test case initialized to SUCCESS'
 }
 
 #==============================================================================
@@ -111,7 +111,7 @@ dm_test__cache__test_result__mark_as_failed() {
 
   dm_test__debug \
     'dm_test__cache__test_result__mark_as_failed' \
-    'test case marked as failed'
+    'test case marked as FAILED'
 }
 
 #==============================================================================
@@ -138,20 +138,16 @@ dm_test__cache__test_result__mark_as_failed() {
 #   grep
 #==============================================================================
 dm_test__cache__test_result__was_success() {
-  dm_test__debug \
-    'dm_test__cache__test_result__was_success' \
-    'getting test case result from the global cache file..'
-
   if grep --silent "$DM_TEST__CONSTANT__TEST_RESULT__SUCCESS" "$DM_TEST__CACHE__TEST_RESULT"
   then
     dm_test__debug \
       'dm_test__cache__test_result__was_success' \
-      '=> test case succeeded'
+      'test result cache file content: SUCCESS'
     return 0
   else
     dm_test__debug \
       'dm_test__cache__test_result__was_success' \
-      '=> test case failed'
+      'test result cache file content: FAILURE'
     return 1
   fi
 }

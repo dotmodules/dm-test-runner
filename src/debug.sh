@@ -180,7 +180,7 @@ dm_test__debug_list() {
 
     dm_test__debug "$___debug_domain" "$___debug_message"
 
-    echo "$___debug_list" | while read -r ___debug_list_item
+    echo "$___debug_list" | while IFS= read -r ___debug_list_item
     do
       dm_test__debug "$___debug_domain" "- '${___debug_list_item}'"
     done

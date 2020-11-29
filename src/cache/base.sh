@@ -290,7 +290,7 @@ _dm_test__cache__init__temp_directories_base_directory() {
 #==============================================================================
 dm_test__cache__create_temp_directory() {
   ___postfix="$(_dm_test__cache__generate_postfix)"
-  ___dir="${DM_TEST__CACHE__TEMP_DIRS_PATH}/${___postfix}"
+  ___dir="${DM_TEST__CACHE__TEMP_DIRS_PATH}/${___postfix}.d"
   mkdir --parents "$___dir"
   echo "$___dir"
 

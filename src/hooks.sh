@@ -84,6 +84,14 @@ dm_test__run_hook() {
       'dm_test__run_hook' \
       "executing hook '${___hook}'"
 
-    "$___hook"
+    if $___hook
+    then
+      return 0
+    else
+      ___hook_status="$?"
+      >&2 echo "Error during '${___hook}' hook execution! Status: ${___hook_status}"
+      return "$___hook_status"
+    fi
+
   fi
 }

@@ -127,10 +127,9 @@ _dm_test__run_suite() {
     # Executing the test file in a subshell to avoid poisoning the test runner
     # environemnt.
     (
-
       dm_test__debug \
         '_dm_test__run_suite' \
-        '>> test file subshell started'
+        '========================[ test file level subshell start ]========================'
 
       # Have to collect the test cases before the path change.
       ___test_cases="$(dm_test__get_test_cases "$___test_file_path")"
@@ -191,13 +190,20 @@ _dm_test__run_suite() {
         '_dm_test__run_suite' \
         'test file execution finished'
 
+      dm_test__debug \
+        '_dm_test__run_suite' \
+        '========================[ test file level subshell stop ]========================'
     ) # End of the subshell.
 
-    dm_test__debug \
-      '_dm_test__run_suite' \
-      '>> test file subshell exited'
-
   done < "$___tmp_pipe"
+
+  dm_test__debug \
+    '_dm_test__run_suite' \
+    'test files were executed'
+
+  dm_test__debug \
+    '_dm_test__run_suite' \
+    'printing final test report..'
 
   dm_test__print_report
 

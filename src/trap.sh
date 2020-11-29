@@ -45,7 +45,7 @@ _dm_test__exit_trap() {
     '_dm_test__exit_trap' \
     "handling exit trap, original status code '${___original_exit_code}' saved"
 
-  dm_test__cache__cleanup 10>&1
+  dm_test__cache__cleanup
   trap - EXIT
 
   dm_test__debug \
