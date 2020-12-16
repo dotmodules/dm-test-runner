@@ -117,6 +117,9 @@ _dm_test__run_suite() {
   mkfifo "$___tmp_pipe"
   dm_test__get_test_files > "$___tmp_pipe" &
 
+  # Creating the test suite level test directory.
+  dm_test__cache__init_test_directory__test_suite
+
   while IFS= read -r ___test_file_path
   do
 
@@ -124,15 +127,30 @@ _dm_test__run_suite() {
       '_dm_test__run_suite' \
       "preparing for executing test file '${___test_file_path}'.."
 
+    # Creating the test file level test directory.
+    dm_test__cache__init_test_directory__test_file
+
+    # Have to collect the test cases before the path change.
+    ___test_cases="$(dm_test__get_test_cases "$___test_file_path")"
+
+    if [ -z "$___test_cases" ]
+    then
+      dm_test__debug \
+        '_dm_test__run_suite' \
+        '[warn] no matching test cases found, skipping file execution..'
+      continue
+    fi
+
+    dm_test__debug \
+      '_dm_test__run_suite' \
+      ">> running test file '${___test_file_path}' in a separate subshell.."
+
     # Executing the test file in a subshell to avoid poisoning the test runner
     # environemnt.
     (
       dm_test__debug \
         '_dm_test__run_suite' \
         '========================[ test file level subshell start ]========================'
-
-      # Have to collect the test cases before the path change.
-      ___test_cases="$(dm_test__get_test_cases "$___test_file_path")"
 
       dm_test__debug \
         '_dm_test__run_suite' \
@@ -168,7 +186,6 @@ _dm_test__run_suite() {
         '_dm_test__run_suite' \
         'generating execution environment..'
 
-      dm_test__cache__test_directory__create
       dm_test__run_hook "$___flag__setup_file" 'setup_file'
 
       dm_test__debug \
@@ -177,6 +194,10 @@ _dm_test__run_suite() {
 
       for ___test_case in $___test_cases
       do
+
+        # Creating the test case level test directory.
+        dm_test__cache__init_test_directory__test_case
+
         dm_test__execute_test_case \
           "$___test_file_path" \
           "$___test_case" \

@@ -73,7 +73,7 @@ dm_test__get_test_files() {
 # Status:
 #   0 - Other status is not expected.
 # Tools:
-#   grep
+#   grep true
 #==============================================================================
 dm_test__get_test_cases() {
   ___test_file_path="$1"
@@ -86,6 +86,7 @@ dm_test__get_test_cases() {
     grep -E --only-matching \
       "^${DM_TEST__CONFIG__TEST_CASE_PREFIX}[^\(]+" \
       "$___test_file_path" \
+    || true
   )"
 
   dm_test__debug_list \
@@ -386,6 +387,7 @@ _dm_test__run_test_case() {
     dm_test__debug \
       '_dm_test__run_test_case' \
       '[!] there were uncaptured standard error output => test case failed'
+    echo "${RED}stderr | test_runner | standard error output present => test case fails automatically${RESET}" >> "$___tmp_file__fd2"
     ___result=1
   else
     dm_test__debug \

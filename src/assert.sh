@@ -16,14 +16,702 @@
 #==============================================================================
 
 #==============================================================================
-#   ____
-#  |  _ \ _   _ _ __
-#  | |_) | | | | '_ \
-#  |  _ <| |_| | | | |
-#  |_| \_\\__,_|_| |_|
+#   ____            _                                   _   _
+#  |  _ \          (_)          /\                     | | (_)
+#  | |_) | __ _ ___ _  ___     /  \   ___ ___  ___ _ __| |_ _  ___  _ __  ___
+#  |  _ < / _` / __| |/ __|   / /\ \ / __/ __|/ _ \ '__| __| |/ _ \| '_ \/ __|
+#  | |_) | (_| \__ \ | (__   / ____ \\__ \__ \  __/ |  | |_| | (_) | | | \__ \
+#  |____/ \__,_|___/_|\___| /_/    \_\___/___/\___|_|   \__|_|\___/|_| |_|___/
 #
 #==============================================================================
-# TARGET FUNCTION RUNNER
+# BASIC ASSERTIONS
+#==============================================================================
+
+#==============================================================================
+# Simple assertion helper function that expects a list of parameters that will
+# be interpreted as a test command. Based on that evaluation the assertion
+# result will be decided. It is common to use the 'test' command to write
+# simple assertions, but in general anything can be used. This assertion
+# function does not require a prior call to the 'run' command to have the test
+# output variables set.
+#------------------------------------------------------------------------------
+# Globals:
+#   None
+# Arguments:
+#   Expects a list of arguments that will be evaluated.
+# STDIN:
+#   None
+#------------------------------------------------------------------------------
+# Output variables:
+#   None
+# STDOUT:
+#   None
+# STDERR:
+#   None
+# Status:
+#   0 - Assertion succeeded.
+#   1 - Assertion failed.
+# Tools:
+#   None
+#==============================================================================
+assert() {
+  ___commands="$*"
+
+  dm_test__debug \
+    'assert' \
+    "running assertion: '${___commands}'"
+
+  if $___commands
+  then
+    dm_test__debug 'assert' '=> assertion succeeded'
+  else
+    dm_test__debug 'assert' '=> assertion failed'
+
+    ___subject='Assertion failed'
+    ___reason="Tested command that failed: '${___commands}'."
+    ___assertion='assert'
+    _dm_test__report_failure "$___subject" "$___reason" "$___assertion"
+  fi
+}
+
+#==============================================================================
+# Simple assertion helper function that expects a list of parameters that will
+# be interpreted as a test command. Based on that evaluation the assertion
+# result will be decided. It is common to use the 'test' command to write
+# simple assertions, but in general anything can be used. This assertion
+# function does not require a prior call to the 'run' command to have the test
+# output variables set.
+#------------------------------------------------------------------------------
+# Globals:
+#   None
+# Arguments:
+#   Expects a list of arguments that will be evaluated.
+# STDIN:
+#   None
+#------------------------------------------------------------------------------
+# Output variables:
+#   None
+# STDOUT:
+#   None
+# STDERR:
+#   None
+# Status:
+#   0 - Assertion succeeded.
+#   1 - Assertion failed.
+# Tools:
+#   None
+#==============================================================================
+assert_success() {
+  ___commands="$*"
+
+  dm_test__debug \
+    'assert_success' \
+    "running assertion: '${___commands}'"
+
+  if $___commands
+  then
+    dm_test__debug 'assert_success' '=> assertion succeeded'
+  else
+    dm_test__debug 'assert_success' '=> assertion failed'
+
+    ___subject='Assertion failed'
+    ___reason="Tested command that failed: '${___commands}'."
+    ___assertion='assert_success'
+    _dm_test__report_failure "$___subject" "$___reason" "$___assertion"
+  fi
+}
+
+#==============================================================================
+# Simple assertion that succeeds on failure
+#------------------------------------------------------------------------------
+# Globals:
+#   None
+# Arguments:
+#   Expects a list of arguments that will be evaluated.
+# STDIN:
+#   None
+#------------------------------------------------------------------------------
+# Output variables:
+#   None
+# STDOUT:
+#   None
+# STDERR:
+#   None
+# Status:
+#   0 - Assertion succeeded.
+#   1 - Assertion failed.
+# Tools:
+#   None
+#==============================================================================
+assert_failure() {
+  ___commands="$*"
+
+  dm_test__debug \
+    'assert_failure' \
+    "running assertion: '${___commands}'"
+
+  if ! $___commands
+  then
+    dm_test__debug 'assert_failure' '=> assertion succeeded'
+  else
+    dm_test__debug 'assert_failure' '=> assertion failed'
+
+    ___subject='Inverse assertion failed, command succeeded'
+    ___reason="Command that succeeded but should have failed: '${___commands}'."
+    ___assertion='assert_failure'
+    _dm_test__report_failure "$___subject" "$___reason" "$___assertion"
+  fi
+}
+
+#==============================================================================
+#   ______ _ _                      _
+#  |  ____(_) |                    | |
+#  | |__   _| | ___   ___ _   _ ___| |_ ___ _ __ ___
+#  |  __| | | |/ _ \ / __| | | / __| __/ _ \ '_ ` _ \
+#  | |    | | |  __/ \__ \ |_| \__ \ ||  __/ | | | | |
+#  |_|    |_|_|\___| |___/\__, |___/\__\___|_| |_| |_|
+#                          __/ |
+#=========================|___/================================================
+# FILE SYSTEM BASED ASSERTIONS
+#==============================================================================
+
+#==============================================================================
+# File system based assertion that checks if the given path does name a file.
+#------------------------------------------------------------------------------
+# Globals:
+#   None
+# Arguments:
+#   [1] file_path - Path that should name a file.
+# STDIN:
+#   None
+#------------------------------------------------------------------------------
+# Output variables:
+#   None
+# STDOUT:
+#   None
+# STDERR:
+#   None
+# Status:
+#   0 - Assertion succeeded.
+#   1 - Assertion failed.
+# Tools:
+#   test
+#==============================================================================
+assert_file() {
+  ___file_path="$1"
+
+  dm_test__debug \
+    'assert_file' \
+    "asserting file existence: '${___file_path}'"
+
+  if [ -f "$___file_path" ]
+  then
+    dm_test__debug 'assert_file' '=> assertion succeeded'
+  else
+    dm_test__debug 'assert_file' '=> assertion failed'
+
+    ___subject='Path does not name a file'
+    ___reason="File does not exist at path: '${___file_path}'."
+    ___assertion='assert_file'
+    _dm_test__report_failure "$___subject" "$___reason" "$___assertion"
+  fi
+}
+
+#==============================================================================
+# File system based assertion that checks if the given path does not name a
+# file.
+#------------------------------------------------------------------------------
+# Globals:
+#   None
+# Arguments:
+#   [1] file_path - Path that should not name a file.
+# STDIN:
+#   None
+#------------------------------------------------------------------------------
+# Output variables:
+#   None
+# STDOUT:
+#   None
+# STDERR:
+#   None
+# Status:
+#   0 - Assertion succeeded.
+#   1 - Assertion failed.
+# Tools:
+#   test
+#==============================================================================
+assert_no_file() {
+  ___file_path="$1"
+
+  dm_test__debug \
+    'assert_no_file' \
+    "asserting file non existence: '${___file_path}'"
+
+  if [ ! -f "$___file_path" ]
+  then
+    dm_test__debug 'assert_no_file' '=> assertion succeeded'
+  else
+    dm_test__debug 'assert_no_file' '=> assertion failed'
+
+    ___subject='File exists on path'
+    ___reason="File should not exists at: '${___file_path}'."
+    ___assertion='assert_no_file'
+    _dm_test__report_failure "$___subject" "$___reason" "$___assertion"
+  fi
+}
+
+#==============================================================================
+# File system based assertion that checks if the given path does name a file
+# and that file has nonzero content.
+#------------------------------------------------------------------------------
+# Globals:
+#   None
+# Arguments:
+#   [1] file_path - Path that should name a file and should have nonzero
+#       content.
+# STDIN:
+#   None
+#------------------------------------------------------------------------------
+# Output variables:
+#   None
+# STDOUT:
+#   None
+# STDERR:
+#   None
+# Status:
+#   0 - Assertion succeeded.
+#   1 - Assertion failed.
+# Tools:
+#   test
+#==============================================================================
+assert_file_has_content() {
+  ___file_path="$1"
+
+  dm_test__debug \
+    'assert_file_has_content' \
+    "asserting file content: '${___file_path}'"
+
+  if [ -f "$___file_path" ]
+  then
+    if [ -s "$___file_path" ]
+    then
+      dm_test__debug 'assert_file_has_content' '=> assertion succeeded'
+    else
+      dm_test__debug 'assert_file_has_content' '=> assertion failed'
+
+      ___subject='File exists but it is empty'
+    ___reason="File should not be empty: '${___file_path}'."
+    ___assertion='assert_file_has_content'
+    _dm_test__report_failure "$___subject" "$___reason" "$___assertion"
+    fi
+  else
+    dm_test__debug 'assert_file_has_content' '=> assertion failed'
+
+    ___subject='Path does not name a file'
+    ___reason="File does not exist at path: '${___file_path}'."
+    ___assertion='assert_file_has_content'
+    _dm_test__report_failure "$___subject" "$___reason" "$___assertion"
+  fi
+}
+
+#==============================================================================
+# File system based assertion that checks if the given path does name a file
+# and that file has no content.
+#------------------------------------------------------------------------------
+# Globals:
+#   None
+# Arguments:
+#   [1] file_path - Path that should name a file but it should be empty.
+# STDIN:
+#   None
+#------------------------------------------------------------------------------
+# Output variables:
+#   None
+# STDOUT:
+#   None
+# STDERR:
+#   None
+# Status:
+#   0 - Assertion succeeded.
+#   1 - Assertion failed.
+# Tools:
+#   test
+#==============================================================================
+assert_file_has_no_content() {
+  ___file_path="$1"
+
+  dm_test__debug \
+    'assert_file_has_no_content' \
+    "asserting file empty: '${___file_path}'"
+
+  if [ -f "$___file_path" ]
+  then
+    if [ ! -s "$___file_path" ]
+    then
+      dm_test__debug 'assert_file_has_no_content' '=> assertion succeeded'
+    else
+      dm_test__debug 'assert_file_has_no_content' '=> assertion failed'
+
+      ___subject='File exists but it is not empty'
+    ___reason="File should be empty: '${___file_path}'."
+    ___assertion='assert_file_has_no_content'
+    _dm_test__report_failure "$___subject" "$___reason" "$___assertion"
+    fi
+  else
+    dm_test__debug 'assert_file_has_no_content' '=> assertion failed'
+
+    ___subject='Path does not name a file'
+    ___reason="File does not exist at path: '${___file_path}'."
+    ___assertion='assert_file_has_no_content'
+    _dm_test__report_failure "$___subject" "$___reason" "$___assertion"
+  fi
+}
+
+#==============================================================================
+# File system based assertion that checks if the given path does name a
+# directory.
+#------------------------------------------------------------------------------
+# Globals:
+#   None
+# Arguments:
+#   [1] directory_path - Path that needs to name a directory.
+# STDIN:
+#   None
+#------------------------------------------------------------------------------
+# Output variables:
+#   None
+# STDOUT:
+#   None
+# STDERR:
+#   None
+# Status:
+#   0 - Assertion succeeded.
+#   1 - Assertion failed.
+# Tools:
+#   test
+#==============================================================================
+assert_directory() {
+  ___directory_path="$1"
+
+  dm_test__debug \
+    'assert_directory' \
+    "asserting directory existence: '${___directory_path}'"
+
+  if [ -d "$___directory_path" ]
+  then
+    dm_test__debug 'assert_directory' '=> assertion succeeded'
+  else
+    dm_test__debug 'assert_directory' '=> assertion failed'
+
+    ___subject='Path does not name a directory'
+    ___reason="Directory does not exist at path: '${___directory_path}'."
+    ___assertion='assert_directory'
+    _dm_test__report_failure "$___subject" "$___reason" "$___assertion"
+  fi
+}
+
+#==============================================================================
+# File system based assertion that checks if the given path does not name a
+# directory.
+#------------------------------------------------------------------------------
+# Globals:
+#   None
+# Arguments:
+#   [1] directory_path - Path that should not name a directory.
+# STDIN:
+#   None
+#------------------------------------------------------------------------------
+# Output variables:
+#   None
+# STDOUT:
+#   None
+# STDERR:
+#   None
+# Status:
+#   0 - Assertion succeeded.
+#   1 - Assertion failed.
+# Tools:
+#   test
+#==============================================================================
+assert_no_directory() {
+  ___directory_path="$1"
+
+  dm_test__debug \
+    'assert_no_directory' \
+    "asserting lack of directory: '${___directory_path}'"
+
+  if [ ! -d "$___directory_path" ]
+  then
+    dm_test__debug 'assert_no_directory' '=> assertion succeeded'
+  else
+    dm_test__debug 'assert_no_directory' '=> assertion failed'
+
+    ___subject='Path should not name a directory'
+    ___reason="Directory should not exist at path: '${___directory_path}'."
+    ___assertion='assert_no_directory'
+    _dm_test__report_failure "$___subject" "$___reason" "$___assertion"
+  fi
+}
+
+#==============================================================================
+# File system based assertion that checks if the given path does name a
+# directory an the directory is empty.
+#------------------------------------------------------------------------------
+# Globals:
+#   None
+# Arguments:
+#   [1] directory_path - Path that needs to name a directory.
+# STDIN:
+#   None
+#------------------------------------------------------------------------------
+# Output variables:
+#   None
+# STDOUT:
+#   None
+# STDERR:
+#   None
+# Status:
+#   0 - Assertion succeeded.
+#   1 - Assertion failed.
+# Tools:
+#   test
+#==============================================================================
+assert_directory_empty() {
+  ___directory_path="$1"
+
+  dm_test__debug \
+    'assert_directory_empty' \
+    "asserting directory is empty: '${___directory_path}'"
+
+  if [ -d "$___directory_path" ]
+  then
+    if [ -z "$(ls -A "$___directory_path")" ]
+    then
+      dm_test__debug 'assert_directory_empty' '=> assertion succeeded'
+    else
+      dm_test__debug 'assert_directory_empty' '=> assertion failed'
+
+      ___subject='Directory is not empty'
+      ___reason="Directory should be empty: '${___directory_path}'."
+      ___assertion='assert_directory_empty'
+      _dm_test__report_failure "$___subject" "$___reason" "$___assertion"
+    fi
+  else
+    dm_test__debug 'assert_directory_empty' '=> assertion failed'
+
+    ___subject='Path does not name a directory'
+    ___reason="Directory does not exist at path: '${___directory_path}'."
+    ___assertion='assert_directory_empty'
+    _dm_test__report_failure "$___subject" "$___reason" "$___assertion"
+  fi
+}
+
+#==============================================================================
+# File system based assertion that checks if the given path does name a
+# directory an the directory is not empty.
+#------------------------------------------------------------------------------
+# Globals:
+#   None
+# Arguments:
+#   [1] directory_path - Path that needs to name a directory.
+# STDIN:
+#   None
+#------------------------------------------------------------------------------
+# Output variables:
+#   None
+# STDOUT:
+#   None
+# STDERR:
+#   None
+# Status:
+#   0 - Assertion succeeded.
+#   1 - Assertion failed.
+# Tools:
+#   test
+#==============================================================================
+assert_directory_not_empty() {
+  ___directory_path="$1"
+
+  dm_test__debug \
+    'assert_directory_not_empty' \
+    "asserting directory is not empty: '${___directory_path}'"
+
+  if [ -d "$___directory_path" ]
+  then
+    if [ -n "$(ls -A "$___directory_path")" ]
+    then
+      dm_test__debug 'assert_directory_not_empty' '=> assertion succeeded'
+    else
+      dm_test__debug 'assert_directory_not_empty' '=> assertion failed'
+
+      ___subject='Directory is empty'
+      ___reason="Directory should not be empty: '${___directory_path}'."
+      ___assertion='assert_directory_not_empty'
+      _dm_test__report_failure "$___subject" "$___reason" "$___assertion"
+    fi
+  else
+    dm_test__debug 'assert_directory_not_empty' '=> assertion failed'
+
+    ___subject='Path does not name a directory'
+    ___reason="Directory does not exist at path: '${___directory_path}'."
+    ___assertion='assert_directory_not_empty'
+    _dm_test__report_failure "$___subject" "$___reason" "$___assertion"
+  fi
+}
+
+#==============================================================================
+# File system based assertion that checks if the given path does name a
+# symlink.
+#------------------------------------------------------------------------------
+# Globals:
+#   None
+# Arguments:
+#   [1] link_path - Path that needs to name a symbolic link.
+# STDIN:
+#   None
+#------------------------------------------------------------------------------
+# Output variables:
+#   None
+# STDOUT:
+#   None
+# STDERR:
+#   None
+# Status:
+#   0 - Assertion succeeded.
+#   1 - Assertion failed.
+# Tools:
+#   test
+#==============================================================================
+assert_symlink() {
+  ___link_path="$1"
+
+  dm_test__debug \
+    'assert_symlink' \
+    "asserting symlink existence: '${___link_path}'"
+
+  if [ -L "$___link_path" ]
+  then
+    dm_test__debug 'assert_symlink' '=> assertion succeeded'
+  else
+    dm_test__debug 'assert_symlink' '=> assertion failed'
+
+    ___subject='Path does not name a symbolic link'
+    ___reason="Symbolic link does not exist at path: '${___link_path}'."
+    ___assertion='assert_symlink'
+    _dm_test__report_failure "$___subject" "$___reason" "$___assertion"
+  fi
+}
+
+#==============================================================================
+# File system based assertion that checks if the given path does not name a
+# symlink.
+#------------------------------------------------------------------------------
+# Globals:
+#   None
+# Arguments:
+#   [1] link_path - Path that should not name a symbolic link.
+# STDIN:
+#   None
+#------------------------------------------------------------------------------
+# Output variables:
+#   None
+# STDOUT:
+#   None
+# STDERR:
+#   None
+# Status:
+#   0 - Assertion succeeded.
+#   1 - Assertion failed.
+# Tools:
+#   test
+#==============================================================================
+assert_no_symlink() {
+  ___link_path="$1"
+
+  dm_test__debug \
+    'assert_no_symlink' \
+    "asserting symlink non existence: '${___link_path}'"
+
+  if [ ! -L "$___link_path" ]
+  then
+    dm_test__debug 'assert_no_symlink' '=> assertion succeeded'
+  else
+    dm_test__debug 'assert_no_symlink' '=> assertion failed'
+
+    ___subject='Path should not name a symbolic link'
+    ___reason="Symbolic link should not exist at path: '${___link_path}'."
+    ___assertion='assert_no_symlink'
+    _dm_test__report_failure "$___subject" "$___reason" "$___assertion"
+  fi
+}
+
+#==============================================================================
+# File system based assertion that checks if the given path names a symlink and
+# the target is correct.
+#------------------------------------------------------------------------------
+# Globals:
+#   None
+# Arguments:
+#   [1] link_path - Path that needs to name a symbolic link.
+#   [2] target_path - Path that is the target of the link.
+# STDIN:
+#   None
+#------------------------------------------------------------------------------
+# Output variables:
+#   None
+# STDOUT:
+#   None
+# STDERR:
+#   None
+# Status:
+#   0 - Assertion succeeded.
+#   1 - Assertion failed.
+# Tools:
+#   test readlink
+#==============================================================================
+assert_symlink_target() {
+  ___link_path="$1"
+  ___target_path="$2"
+
+  dm_test__debug \
+    'assert_symlink_target' \
+    "asserting symlink '${___link_path}' target '${___target_path}'"
+
+  if [ -L "$___link_path" ]
+  then
+    ___actual_target="$(readlink "$___link_path")"
+    if [ "$___target_path" = "$___actual_target" ]
+    then
+      dm_test__debug 'assert_symlink_target' '=> assertion succeeded'
+    else
+      dm_test__debug 'assert_symlink_target' '=> assertion failed'
+
+      ___subject='Symbolic link target does not match'
+      ___reason="expected target: '${___target_path}'\nactual target: '${___actual_target}'."
+      ___assertion='assert_symlink_target'
+      _dm_test__report_failure "$___subject" "$___reason" "$___assertion"
+    fi
+  else
+    dm_test__debug 'assert_symlink_target' '=> assertion failed'
+
+    ___subject='Path does not name a symbolic link'
+    ___reason="Symbolic link does not exist at path: '${___link_path}'."
+    ___assertion='assert_symlink_target'
+    _dm_test__report_failure "$___subject" "$___reason" "$___assertion"
+  fi
+}
+
+
+#==============================================================================
+#    _____            _                  _     _                        _
+#   / ____|          | |                | |   | |                      | |
+#  | |     ___  _ __ | |_ ___ _ __ __  _| |_  | |__   __ _ ___  ___  __| |
+#  | |    / _ \| '_ \| __/ _ \ '_ \\ \/ / __| | '_ \ / _` / __|/ _ \/ _` |
+#  | |___| (_) | | | | ||  __/ | | |>  <| |_  | |_) | (_| \__ \  __/ (_| |
+#   \_____\___/|_| |_|\__\___|_| |_/_/\_\\__| |_.__/ \__,_|___/\___|\__,_|
+#
+#==============================================================================
+# CONTENXT BASED ASSERTIONS
 #==============================================================================
 
 #==============================================================================
@@ -78,28 +766,13 @@ run() {
 }
 
 #==============================================================================
-#      _                      _
-#     / \   ___ ___  ___ _ __| |_
-#    / _ \ / __/ __|/ _ \ '__| __|
-#   / ___ \\__ \__ \  __/ |  | |_
-#  /_/   \_\___/___/\___|_|   \__|
-#
-#==============================================================================
-# ASSERTION FUNCTIONS
-#==============================================================================
-
-#==============================================================================
-# Simple assertion helper function that expects a list of parameters that will
-# be interpreted as a test command. Based on that evaluation the assertion
-# result will be decided. It is common to use the 'test' command to write
-# simple assertions, but in general anything can be used. This assertion
-# function does not require a prior call to the 'run' command to have the test
-# output variables set.
+# Advanced assertion function that will evaluate the previously set 'status'
+# variable by the 'run' function.
 #------------------------------------------------------------------------------
 # Globals:
-#   None
+#   ___status
 # Arguments:
-#   Expects a list of arguments that will be evaluated.
+#   [1] expected_status - Expected status of the previously run function.
 # STDIN:
 #   None
 #------------------------------------------------------------------------------
@@ -111,71 +784,28 @@ run() {
 #   None
 # Status:
 #   0 - Assertion succeeded.
-#  !0 - Assertion failed.
-# Tools:
-#   None
-#==============================================================================
-assert() {
-  # Disabling SC2124 here as we won't modify the assigned 'commands' variable.
-  # shellcheck disable=SC2124
-  ___commands="$@"
-
-  dm_test__debug \
-    'assert' \
-    "running assertion: '${___commands}'"
-
-  if $___commands
-  then
-    dm_test__debug 'assert' '=> assertion succeeded'
-  else
-    dm_test__debug 'assert' '=> assertion failed'
-
-    ___subject='Assertion failed'
-    ___reason="$___commands"
-    _dm_test__report_failure "$___subject" "$___reason"
-  fi
-}
-
-#==============================================================================
-# Simple assertion that checks if the given file path is valid and there is a
-# file behind. This assertion function that does not require a prior call to
-# the 'run' command to have the test output variables set.
-#------------------------------------------------------------------------------
-# Globals:
-#   None
-# Arguments:
-#   [1] file_path - Path that needs to be tested in this function.
-# STDIN:
-#   None
-#------------------------------------------------------------------------------
-# Output variables:
-#   None
-# STDOUT:
-#   None
-# STDERR:
-#   None
-# Status:
-#   0 - Assertion succeeded.
-#  !0 - Assertion failed.
+#   1 - Assertion failed.
 # Tools:
 #   test
 #==============================================================================
-assert_file() {
-  ___file_path="$1"
+assert_status() {
+  ___expected="$1"
+  ___result="$___status"
 
-  dm_test__debug \
-    'assert_file' \
-    "asserting file existence: '${___file_path}'"
+  dm_test__debug 'assert_status' 'asserting status:'
+  dm_test__debug 'assert_status' "- expected: '${___expected}'"
+  dm_test__debug 'assert_status' "- result:   '${___result}'"
 
-  if [ -f "$___file_path" ]
+  if [ "$___result" = "$___expected" ]
   then
-    dm_test__debug 'assert_file' '=> assertion succeeded'
+    dm_test__debug 'assert_status' '=> assertion succeeded'
   else
-    dm_test__debug 'assert_file' '=> assertion failed'
+    dm_test__debug 'assert_status' '=> assertion failed'
 
-    ___subject='Invalid file path'
-    ___reason="${___file_path}"
-    _dm_test__report_failure "$___subject" "$___reason"
+    ___subject='Status comparison failed'
+    ___reason="expected: ${___expected}\n  actual: ${___result}"
+    ___assertion='assert_status'
+    _dm_test__report_failure "$___subject" "$___reason" "$___assertion"
   fi
 }
 
@@ -198,13 +828,24 @@ assert_file() {
 #   None
 # Status:
 #   0 - Assertion succeeded.
-#  !0 - Assertion failed.
+#   1 - Assertion failed.
 # Tools:
 #   test
 #==============================================================================
 assert_output() {
   ___expected="$1"
   ___result="$___output"
+  ___count="$(echo "$___output" | wc --lines)"
+
+  if [ "$___count" -ne '1' ]
+  then
+    dm_test__debug 'assert_output' '=> assertion failed'
+
+    ___subject='Inappropriate assertion function'
+    ___reason="Multiline output should be asserted with 'assert_line_at_index' or 'assert_line_partially_at_index'."
+    ___assertion='assert_output'
+    _dm_test__report_failure "$___subject" "$___reason" "$___assertion"
+  fi
 
   dm_test__debug 'assert_output' 'asserting output:'
   dm_test__debug 'assert_output' "- expected: '${___expected}'"
@@ -218,7 +859,8 @@ assert_output() {
 
     ___subject='Output comparison failed'
     ___reason="expected: '${___expected}'\n  actual: '${___result}'"
-    _dm_test__report_failure "$___subject" "$___reason"
+    ___assertion='assert_output'
+    _dm_test__report_failure "$___subject" "$___reason" "$___assertion"
   fi
 }
 
@@ -241,7 +883,7 @@ assert_output() {
 #   None
 # Status:
 #   0 - Assertion succeeded.
-#  !0 - Assertion failed.
+#   1 - Assertion failed.
 # Tools:
 #   echo wc test
 #==============================================================================
@@ -261,7 +903,8 @@ assert_output_line_count() {
 
     ___subject='Output line count mismatch'
     ___reason="expected: '${___expected}'\n  actual: '${___result}'"
-    _dm_test__report_failure "$___subject" "$___reason"
+    ___assertion='assert_output_line_count'
+    _dm_test__report_failure "$___subject" "$___reason" "$___assertion"
   fi
 }
 
@@ -286,7 +929,7 @@ assert_output_line_count() {
 #   None
 # Status:
 #   0 - Assertion succeeded.
-#  !0 - Assertion failed.
+#   1 - Assertion failed.
 # Tools:
 #   test
 #==============================================================================
@@ -295,6 +938,14 @@ assert_line_at_index() {
   ___expected="$2"
 
   ___result="$(dm_test__utils__get_line_from_output_by_index "$___index" "$___output")"
+
+  # If there is no line captured, we can assume that the index was invalid. The
+  # index checking is running in a subprocess, so exiting there won't affect
+  # the current shell.
+  if [ -z "$___result" ]
+  then
+    return
+  fi
 
   dm_test__debug 'assert_line_at_index' 'asserting output line at index:'
   dm_test__debug 'assert_line_at_index' "- expected: '${___expected}'"
@@ -308,7 +959,8 @@ assert_line_at_index() {
 
     ___subject="Line at index '${___index}' differs from expected'"
     ___reason="expected: '${___expected}'\n  actual: '${___result}'"
-    _dm_test__report_failure "$___subject" "$___reason"
+    ___assertion='assert_line_at_index'
+    _dm_test__report_failure "$___subject" "$___reason" "$___assertion"
   fi
 }
 
@@ -334,7 +986,7 @@ assert_line_at_index() {
 #   None
 # Status:
 #   0 - Assertion succeeded.
-#  !0 - Assertion failed.
+#   1 - Assertion failed.
 # Tools:
 #   echo grep
 #==============================================================================
@@ -343,6 +995,14 @@ assert_line_partially_at_index() {
   ___expected="$2"
 
   ___result="$(dm_test__utils__get_line_from_output_by_index "$___index" "$___output")"
+
+  # If there is no line captured, we can assume that the index was invalid. The
+  # index checking is running in a subprocess, so exiting there won't affect
+  # the current shell.
+  if [ -z "$___result" ]
+  then
+    return
+  fi
 
   dm_test__debug 'assert_line_partially_at_index' 'asserting output line at index partially:'
   dm_test__debug 'assert_line_partially_at_index' "- pattern: '${___expected}'"
@@ -356,50 +1016,8 @@ assert_line_partially_at_index() {
 
     ___subject="Line at index '${___index}' differs from expected'"
     ___reason="expected: '${___expected}'\n  actual: '${___result}'"
-    _dm_test__report_failure "$___subject" "$___reason"
-  fi
-}
-
-#==============================================================================
-# Advanced assertion function that will evaluate the previously set 'status'
-# variable by the 'run' function.
-#------------------------------------------------------------------------------
-# Globals:
-#   ___status
-# Arguments:
-#   [1] expected_status - Expected status of the previously run function.
-# STDIN:
-#   None
-#------------------------------------------------------------------------------
-# Output variables:
-#   None
-# STDOUT:
-#   None
-# STDERR:
-#   None
-# Status:
-#   0 - Assertion succeeded.
-#  !0 - Assertion failed.
-# Tools:
-#   test
-#==============================================================================
-assert_status() {
-  ___expected="$1"
-  ___result="$___status"
-
-  dm_test__debug 'assert_status' 'asserting status:'
-  dm_test__debug 'assert_status' "- expected: '${___expected}'"
-  dm_test__debug 'assert_status' "- result:   '${___result}'"
-
-  if [ "$___result" = "$___expected" ]
-  then
-    dm_test__debug 'assert_status' '=> assertion succeeded'
-  else
-    dm_test__debug 'assert_status' '=> assertion failed'
-
-    ___subject='Status comparison failed'
-    ___reason="expected: ${___expected}\n  actual: ${___result}"
-    _dm_test__report_failure "$___subject" "$___reason"
+    ___assertion='assert_line_partially_at_index'
+    _dm_test__report_failure "$___subject" "$___reason" "$___assertion"
   fi
 }
 
@@ -435,7 +1053,7 @@ assert_status() {
 #   None
 # Status:
 #   0 - Line extraction succeeded.
-#  !0 - Line extraction failed.
+#   1 - Line extraction failed.
 # Tools:
 #   echo wc sed test
 #==============================================================================
@@ -457,7 +1075,8 @@ dm_test__utils__get_line_from_output_by_index() {
 
     ___subject='Line index is out of range'
     ___reason="max line index: '${___line_count}'\n   given index: '${___line_index}'"
-    _dm_test__report_failure "$___subject" "$___reason"
+    ___assertion='utils__get_line_from_output_by_index'
+    _dm_test__report_failure "$___subject" "$___reason" "$___assertion"
   fi
 
   # Getting the indexed line.
@@ -495,6 +1114,7 @@ dm_test__utils__get_line_from_output_by_index() {
 # Arguments:
 #   [1] subject - Subject of the failure.
 #   [2] reason - Reason of the failure.
+#   [3] assertion - Assertion function name that produced that failed.
 # STDIN:
 #   None
 #------------------------------------------------------------------------------
@@ -512,6 +1132,7 @@ dm_test__utils__get_line_from_output_by_index() {
 _dm_test__report_failure() {
   ___subject="$1"
   ___reason="$2"
+  ___assertion="$3"
 
   dm_test__debug \
     '_dm_test__report_failure' \
@@ -523,7 +1144,7 @@ _dm_test__report_failure() {
   ___test_case="${DM_TEST__FILE_UNDER_EXECUTION}.${DM_TEST__TEST_UNDER_EXECUTION}"
   {
     echo "${RED}${BOLD}${___test_case}${RESET}";
-    echo "  ${RED}${___subject}${RESET}:";
+    echo "  ${RED}${___subject}: [${BOLD}${___assertion}${RESET}${RED}]${RESET}";
     # We want to use printf here to display the inline line newlines, so using
     # only the template parameter, shellcheck can be disabled.
     # shellcheck disable=SC2059
@@ -532,7 +1153,7 @@ _dm_test__report_failure() {
   } | dm_test__cache__global_errors__write_errors
 
   # Report the concise error report to the standard error.
-  >&2 echo "Aborting due to failed assertion: '${___subject}'"
+  >&2 echo "${___assertion} | Aborting due to failed assertion: '${___subject}'"
 
   # Only the first  assertion error should be reported, the latter ones could
   # be the direct result of the first one, so they have minimal new information
