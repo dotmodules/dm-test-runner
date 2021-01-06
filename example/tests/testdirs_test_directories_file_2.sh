@@ -17,15 +17,15 @@
 #==============================================================================
 
 test__test_directories__file_2__case_1() {
-  echo "test case level path:  ${DM_TEST__TEST_DIR__TEST_CASE}"
-  echo "test file level path:  ${DM_TEST__TEST_DIR__TEST_FILE}"
-  echo "test suite level path: ${DM_TEST__TEST_DIR__TEST_SUITE}"
+  echo "[test case] level path:  ${DM_TEST__TEST_DIR__TEST_CASE}"
+  echo "[test file] level path:  ${DM_TEST__TEST_DIR__TEST_FILE}"
+  echo "[test suite] level path: ${DM_TEST__TEST_DIR__TEST_SUITE}"
   >&2 echo 'making the test case fail intentionally to print the outputs'
 }
 
 test__test_directories__file_2__case_2() {
-  echo "test case level path:  ${DM_TEST__TEST_DIR__TEST_CASE}"
-  echo "test file level path:  ${DM_TEST__TEST_DIR__TEST_FILE}"
-  echo "test suite level path: ${DM_TEST__TEST_DIR__TEST_SUITE}"
+  echo "[test case] level path:  ${DM_TEST__TEST_DIR__TEST_CASE}"
+  echo "[test file] level path:  ${DM_TEST__TEST_DIR__TEST_FILE}"
+  echo "[test suite] level path: ${DM_TEST__TEST_DIR__TEST_SUITE}"
   >&2 echo 'making the test case fail intentionally to print the outputs'
 }

@@ -6,7 +6,7 @@ NAME := dm.test
 
 
 #=======================================================================================
-# HELP COMMAND
+# HELP TARGET
 
 .PHONY: help
 help:
@@ -17,12 +17,20 @@ help:
 	@echo ""
 	@echo "   help              Prints out this help message."
 	@echo "   test              Runs the included example test suite."
+	@echo "   tools             Collects all used command line tools."
 	@echo ""
 
 
 #=======================================================================================
-# EXAMPLE COMMAND
+# EXAMPLE TEST SUITES TARGET
 #
 .PHONY: test
 test:
 	@./example/run.sh
+
+#=======================================================================================
+# TOOLS COLLECTION TARGET
+#
+.PHONY: tools
+tools:
+	@./utils/collect_tools.sh

@@ -7,9 +7,11 @@
 #     |_|_|  \__,_| .__/
 #                 | |
 #=================|_|==========================================================
+# TRAP
+#==============================================================================
 
 #==============================================================================
-# This file containes the signal handler functions that are making sure the
+# This file contains the signal handler functions that are making sure the
 # artifacts are cleaned up if the test suite exits or an unexpected event
 # happens.
 #==============================================================================
@@ -35,21 +37,20 @@
 #   None
 # Status:
 #   Original exit code replayed from the called level.
+#------------------------------------------------------------------------------
 # Tools:
-#   trap exit
+#   trap
 #==============================================================================
 _dm_test__exit_trap() {
   ___original_exit_code="$1"
 
-  dm_test__debug \
-    '_dm_test__exit_trap' \
+  dm_test__debug '_dm_test__exit_trap' \
     "handling exit trap, original status code '${___original_exit_code}' saved"
 
   dm_test__cache__cleanup
   trap - EXIT
 
-  dm_test__debug \
-    '_dm_test__exit_trap' \
+  dm_test__debug '_dm_test__exit_trap' \
     "exit trap finished, exiting with status code '${___original_exit_code}'"
 
   exit "$___original_exit_code"
@@ -76,6 +77,7 @@ _dm_test__exit_trap() {
 #   None
 # Status:
 #   None
+#------------------------------------------------------------------------------
 # Tools:
 #   None
 #==============================================================================

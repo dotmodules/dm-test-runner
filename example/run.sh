@@ -22,11 +22,59 @@ cd "$(dirname "$(readlink -f "$0")")"
 if command -v tput >/dev/null && tput init >/dev/null 2>&1
 then
   DIM="$(tput dim)"
+  BOLD="$(tput bold)"
+  RED="$(tput setaf 1)"
+  GREEN="$(tput setaf 2)"
   RESET="$(tput sgr0)"
 else
-  DIM=""
-  RESET=""
+  DIM=''
+  BOLD=''
+  RED=''
+  GREEN=''
+  RESET=''
 fi
+
+#==============================================================================
+# RESULT VALIDATION
+#==============================================================================
+
+assert_test_case_count() {
+  ___expected_count="$1"
+  ___count="$DM_TEST__RESULT__TEST_CASE_COUNT"
+
+  _assert_count \
+    "$___expected_count" \
+    "$___count" \
+    'Unexpected test case count!'
+}
+
+assert_failure_count() {
+  ___expected_count="$1"
+  ___count="$DM_TEST__RESULT__FAILURE_COUNT"
+
+  _assert_count \
+    "$___expected_count" \
+    "$___count" \
+    'Unexpected failure count!'
+}
+
+_assert_count() {
+  ___expected_count="$1"
+  ___count="$2"
+  ___message="$3"
+
+  if [ "$___count" -ne "$___expected_count" ]
+  then
+    echo "${BOLD}${RED}"
+    echo "================================================================================="
+    echo "  ERROR: ${___message}"
+    echo "    actual count:   ${___count}"
+    echo "    expected count: ${___expected_count}"
+    echo "================================================================================="
+    echo "$RESET"
+    exit 1
+  fi
+}
 
 #==============================================================================
 # RUNNING THE TEST SUITES
@@ -43,7 +91,9 @@ echo '  | |\  | (_) | |  | | | | | | (_| | | | (_| (_| \__ \  __/\__ \'
 echo '  |_| \_|\___/|_|  |_| |_| |_|\__,_|_|  \___\__,_|___/\___||___/'
 echo "${RESET}"
 
-./run_basic.sh
+# Sourcing the sub-suites to be able to access the validation functions without
+# sourcing a separate file from them.
+. ./run_basic.sh
 
 echo "${DIM}================================================================================="
 echo '   ______    _ _'
@@ -55,7 +105,7 @@ echo '  | | | (_| | | | |_| | | |  __/ | (_| (_| \__ \  __/\__ \'
 echo '  |_|  \__,_|_|_|\__,_|_|  \___|  \___\__,_|___/\___||___/'
 echo "${RESET}"
 
-./run_failures.sh || true
+. ./run_failures.sh
 
 echo "${DIM}================================================================================="
 echo '    _____            _'
@@ -68,7 +118,7 @@ echo '   \_____\__,_| .__/ \__|\__,_|_|  \___|  \___\__,_|___/\___||___/'
 echo '              | |'
 echo "              |_|${RESET}"
 
-./run_captures.sh || true
+. ./run_captures.sh
 
 echo "${DIM}================================================================================="
 echo '   _______        _         _ _               _             _'
@@ -80,7 +130,7 @@ echo '     | |  __/\__ \ |_  | (_| | | | |  __/ (__| || (_) | |  | |  __/\__ \'
 echo '     |_|\___||___/\__|  \__,_|_|_|  \___|\___|\__\___/|_|  |_|\___||___/'
 echo "${RESET}"
 
-./run_test_directories.sh || true
+. ./run_test_directories.sh
 
 echo "${DIM}================================================================================="
 echo '   _____       _                                       _'
@@ -93,7 +143,20 @@ echo '  |_____/ \___|_.__/ \__,_|\__, | |_| |_| |_|\___/ \__,_|\___|'
 echo '                            __/ |'
 echo "                           |___/${RESET}"
 
-./run_debug_mode.sh || true
+. ./run_debug_mode.sh
+
+echo "${DIM}================================================================================="
+echo '   _____          _ _               _           _       _      _'
+echo '  |  __ \        | (_)             | |         | |     | |    | |'
+echo '  | |__) |___  __| |_ _ __ ___  ___| |_ ___  __| |   __| | ___| |__  _   _  __ _'
+# shellcheck disable=SC1003,SC2016
+echo '  |  _  // _ \/ _` | | '\''__/ _ \/ __| __/ _ \/ _` |  / _` |/ _ \ '\''_ \| | | |/ _` |'
+echo '  | | \ \  __/ (_| | | | |  __/ (__| ||  __/ (_| | | (_| |  __/ |_) | |_| | (_| |'
+echo '  |_|  \_\___|\__,_|_|_|  \___|\___|\__\___|\__,_|  \__,_|\___|_.__/ \__,_|\__, |'
+echo '                                                                            __/ |'
+echo "                                                                           |___/${RESET}"
+
+. ./run_debug_mode_redirected.sh
 
 echo "${DIM}================================================================================="
 echo '   _    _             _'
@@ -105,5 +168,15 @@ echo '  | |  | | (_) | (_) |   <\__ \'
 echo '  |_|  |_|\___/ \___/|_|\_\___/'
 echo "${RESET}"
 
-./run_test_hooks.sh || true
+. ./run_test_hooks.sh
 
+#==============================================================================
+# SUMMARY
+#==============================================================================
+
+echo "${BOLD}${GREEN}"
+echo "================================================================================="
+echo "                      All example test suite executed with"
+echo "                    the expected test case and failure count."
+echo "================================================================================="
+echo "$RESET"

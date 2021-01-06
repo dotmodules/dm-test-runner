@@ -7,11 +7,15 @@
 #     \/ \__,_|_|  |_|\__,_|_.__/|_|\___||___/
 #
 #==============================================================================
+# VARIABLES
+#==============================================================================
 
+#==============================================================================
 # As this file contains variables with default values without actually using
 # them, we are disabling shellcheck variable unused warnings (SC2034) for the
 # whole file.
 # shellcheck disable=SC2034
+#==============================================================================
 
 #==============================================================================
 # PRETTY COLORING
@@ -28,27 +32,16 @@ then
   BOLD="$(tput bold)"
   DIM="$(tput dim)"
 else
-  RED=""
-  GREEN=""
-  RESET=""
-  BOLD=""
-  DIM=""
+  RED=''
+  GREEN=''
+  RESET=''
+  BOLD=''
+  DIM=''
 fi
-
-#==============================================================================
-# GLOBAL CONTEXT VARIABLES
-#==============================================================================
-
-# Global execution related variables that is used to communicate the currently
-# executed test file and test names to the test case running in a subshell.
-# They are used in the error reporting section.
-
-DM_TEST__FILE_UNDER_EXECUTION=""
-DM_TEST__TEST_UNDER_EXECUTION=""
 
 #==============================================================================
 # GLOBAL CONSTANTS
 #==============================================================================
 
-DM_TEST__CONSTANT__TEST_RESULT__SUCCESS="0"
-DM_TEST__CONSTANT__TEST_RESULT__FAILURE="1"
+DM_TEST__CONSTANT__TEST_RESULT__SUCCESS='0'
+DM_TEST__CONSTANT__TEST_RESULT__FAILURE='1'
