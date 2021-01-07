@@ -34,6 +34,7 @@ then
 else
   RED=''
   GREEN=''
+  BLUE=''
   RESET=''
   BOLD=''
   DIM=''

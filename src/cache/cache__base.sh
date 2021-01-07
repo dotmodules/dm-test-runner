@@ -52,6 +52,9 @@
 dm_test__cache__init() {
   dm_test__debug 'dm_test__cache__init' 'initializing cache system..'
 
+  # Initializing and normalizing the cache parent directory.
+  _dm_test__cache__normalize_cache_parent_directory
+
   dm_test__cache__cleanup
 
   # Base cache system initialization.
@@ -85,6 +88,7 @@ dm_test__cache__init() {
 # don't need to worry about cleaning up after themselves.
 #==============================================================================
 
+
 # Prefix that every cache directory will have. This uniform prefix would make
 # it easy to recover from an unexpected event when the cache cleanup couldn't
 # be executed, by deleting all temporary directories with this prefix.
@@ -96,9 +100,75 @@ DM_TEST__CACHE__CONFIG__DIRECTORY_PREFIX='dm_test_cache'
 DM_TEST__CACHE__CONFIG__MKTEMP_TEMPLATE=\
 "${DM_TEST__CACHE__CONFIG__DIRECTORY_PREFIX}.XXXXXXXXXX"
 
+# Global variable that hold the normalized cache parent directory. Normalizing
+# the cache parent directory should be the first step during cache system
+# initialization.
+DM_TEST__CACHE__RUNTIME__NORMALIZED_CACHE_PARENT_DIRECTORY='__INVALID__'
+
 # Global variable that holds the path to the currently operational cache
 # directory.
 DM_TEST__CACHE__RUNTIME__CACHE_PATH='__INVALID__'
+
+#==============================================================================
+# Function that will normalize and validate the cache parent directory received
+# from the configuration.
+#------------------------------------------------------------------------------
+# Globals:
+#   DM_TEST__CONFIG__OPTIONAL__CACHE_PARENT_DIRECTORY
+# Arguments:
+#   None
+# STDIN:
+#   None
+#------------------------------------------------------------------------------
+# Output variables:
+#   DM_TEST__CACHE__RUNTIME__NORMALIZED_CACHE_PARENT_DIRECTORY
+# STDOUT:
+#   None
+# STDERR:
+#   None
+# Status:
+#   0 - Other status is not expected.
+#------------------------------------------------------------------------------
+# Tools:
+#   realpath mkdir
+#==============================================================================
+_dm_test__cache__normalize_cache_parent_directory() {
+  ___raw_parent="$DM_TEST__CONFIG__OPTIONAL__CACHE_PARENT_DIRECTORY"
+  ___parent="$(realpath --no-symlinks "$___raw_parent")"
+
+  dm_test__debug '_dm_test__cache__normalize_cache_parent_directory' \
+    "normalizing raw cache parent directory: '${___raw_parent}'"
+
+  if [ -d "$___parent" ]
+  then
+    :
+  else
+    if ___output="$(mkdir --parents "$___parent" 2>&1)"
+    then
+      :
+    else
+      dm_test__utils__report_error_and_exit \
+        'Cache system initialization failed!' \
+        "Cache parent directory '${___parent}' cannot be created!" \
+        "$___output"
+    fi
+  fi
+
+  if [ -w "$___parent" ]
+  then
+    :
+  else
+    dm_test__utils__report_error_and_exit \
+      'Cache system initialization failed!' \
+      'Cache parent directory exists but you have no write permission!' \
+      "unable to write into '${___parent}': Permission denied"
+  fi
+
+  DM_TEST__CACHE__RUNTIME__NORMALIZED_CACHE_PARENT_DIRECTORY="$___parent"
+
+  dm_test__debug '_dm_test__cache__normalize_cache_parent_directory' \
+    "raw cache parent directory normalized: '${___parent}'"
+}
 
 #==============================================================================
 # Inner function that will create the cache directory and sets the global
@@ -125,21 +195,33 @@ DM_TEST__CACHE__RUNTIME__CACHE_PATH='__INVALID__'
 #   mktemp
 #==============================================================================
 _dm_test__cache__create_base_cache_directory() {
-  DM_TEST__CACHE__RUNTIME__CACHE_PATH="$( \
-    mktemp --directory -t "$DM_TEST__CACHE__CONFIG__MKTEMP_TEMPLATE" \
+  if ___mktemp_output="$( \
+    mktemp \
+      -t \
+      --directory \
+      --tmpdir="$DM_TEST__CACHE__RUNTIME__NORMALIZED_CACHE_PARENT_DIRECTORY" \
+      "$DM_TEST__CACHE__CONFIG__MKTEMP_TEMPLATE" \
+      2>&1 \
   )"
+  then
+    DM_TEST__CACHE__RUNTIME__CACHE_PATH="$___mktemp_output"
+  else
+    dm_test__utils__report_error_and_exit \
+      'Cache system initialization failed!' \
+      'Cache base directory cannot be created!' \
+      "$___mktemp_output"
+  fi
 
   dm_test__debug '_dm_test__cache__create_base_cache_directory' \
     "base cache directory created: '${DM_TEST__CACHE__RUNTIME__CACHE_PATH}'"
 }
 
 #==============================================================================
-# Cleans up all existing cache directories that are matches to the predepfined
-# prefix.. Cache directories are created with `mktemp` so the cleanup has to be
-# done in the `/tmp` directory.
+# Cleans up all existing cache directories that are matches to the predefined
+# prefix in the cache parent directory..
 #------------------------------------------------------------------------------
 # Globals:
-#   DM_TEST__CACHE__CONFIG__DIRECTORY_PREFIX
+#   None
 # Arguments:
 #   None
 # STDIN:
@@ -155,17 +237,115 @@ _dm_test__cache__create_base_cache_directory() {
 #   0 - Other status is not expected.
 #------------------------------------------------------------------------------
 # Tools:
-#   find xargs rm
+#   find rm
 #==============================================================================
 dm_test__cache__cleanup() {
-  find /tmp \
-    -type d \
-    -name "${DM_TEST__CACHE__CONFIG__DIRECTORY_PREFIX}*" \
-    -print0 2>/dev/null | \
-  xargs --null --replace='{}' \
-    rm --recursive --force '{}'
+  dm_test__debug 'dm_test__cache__cleanup' \
+    'cleanup process started..'
 
-  dm_test__debug 'dm_test__cache__cleanup' 'cache cleaned up'
+  ___cleanup_targets="$(_dm_test__cache__cleanup__find_targets)"
+
+  if [ -n "$___cleanup_targets" ]
+  then
+
+    for ___target in $___cleanup_targets
+    do
+      _dm_test__cache__cleanup__delete_target "$___target"
+    done
+
+    dm_test__debug 'dm_test__cache__cleanup' 'cleanup finished'
+  else
+    dm_test__debug 'dm_test__cache__cleanup' 'nothing to clean up'
+  fi
+}
+
+#==============================================================================
+# Helper function to find the deletable cache directories in the cache parent
+# directory.
+#------------------------------------------------------------------------------
+# Globals:
+#   DM_TEST__CACHE__CONFIG__DIRECTORY_PREFIX
+#   DM_TEST__CACHE__RUNTIME__NORMALIZED_CACHE_PARENT_DIRECTORY
+# Arguments:
+#   None
+# STDIN:
+#   None
+#------------------------------------------------------------------------------
+# Output variables:
+#   None
+# STDOUT:
+#   Multiline list of deletable targets.
+# STDERR:
+#   None
+# Status:
+#   0 - Other status is not expected.
+#------------------------------------------------------------------------------
+# Tools:
+#   find echo wc
+#==============================================================================
+_dm_test__cache__cleanup__find_targets() {
+  dm_test__debug '_dm_test__cache__cleanup__find_targets' \
+    'looking for deletable cache directories..'
+
+  if ___find_output="$( \
+    find "$DM_TEST__CACHE__RUNTIME__NORMALIZED_CACHE_PARENT_DIRECTORY" \
+      -maxdepth 1 \
+      -type d \
+      -name "${DM_TEST__CACHE__CONFIG__DIRECTORY_PREFIX}*" \
+      2>&1 \
+  )"
+  then
+
+    dm_test__debug '_dm_test__cache__cleanup__find_targets' \
+      "deletable directory count: $(echo "$___find_output" | wc --lines)"
+    echo "$___find_output"
+
+  else
+
+    dm_test__utils__report_error_and_exit \
+      'Cache system clean up failed!' \
+      'An unexpected error happened during the clean up process!' \
+      "$___find_output"
+
+  fi
+}
+
+#==============================================================================
+# Helper function to delete the given target cache directory.
+#------------------------------------------------------------------------------
+# Globals:
+#   None
+# Arguments:
+#   [1] target - Deletable target.
+# STDIN:
+#   None
+#------------------------------------------------------------------------------
+# Output variables:
+#   None
+# STDOUT:
+#   None
+# STDERR:
+#   None
+# Status:
+#   0 - Other status is not expected.
+#------------------------------------------------------------------------------
+# Tools:
+#   rm
+#==============================================================================
+_dm_test__cache__cleanup__delete_target() {
+  ___target="$1"
+
+  dm_test__debug '_dm_test__cache__cleanup__delete_target' "deleting '${___target}'.."
+
+  if ___rm_output="$(rm --recursive --force "$___target" 2>&1)"
+  then
+    dm_test__debug '_dm_test__cache__cleanup__delete_target' "deleted '${___target}'"
+  else
+    dm_test__utils__report_error_and_exit \
+      'Cache system clean up failed!' \
+      "An unexpected error happened while cleaning up '${___target}'!" \
+      "$___rm_output"
+  fi
 }
 
 #==============================================================================

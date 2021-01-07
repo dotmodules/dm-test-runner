@@ -37,18 +37,18 @@ set -u  # prevent unset variable expansion
 # shellcheck source=./src/capture.sh
 . "${DM_TEST__CONFIG__MANDATORY__SUBMODULE_PATH_PREFIX}/src/capture.sh"
 
-# shellcheck source=./src/cache/base.sh
-. "${DM_TEST__CONFIG__MANDATORY__SUBMODULE_PATH_PREFIX}/src/cache/base.sh"
-# shellcheck source=./src/cache/global_errors.sh
-. "${DM_TEST__CONFIG__MANDATORY__SUBMODULE_PATH_PREFIX}/src/cache/global_errors.sh"
-# shellcheck source=./src/cache/test_result.sh
-. "${DM_TEST__CONFIG__MANDATORY__SUBMODULE_PATH_PREFIX}/src/cache/test_result.sh"
-# shellcheck source=./src/cache/global_count.sh
-. "${DM_TEST__CONFIG__MANDATORY__SUBMODULE_PATH_PREFIX}/src/cache/global_count.sh"
-# shellcheck source=./src/cache/global_failure.sh
-. "${DM_TEST__CONFIG__MANDATORY__SUBMODULE_PATH_PREFIX}/src/cache/global_failure.sh"
-# shellcheck source=./src/cache/test_directory.sh
-. "${DM_TEST__CONFIG__MANDATORY__SUBMODULE_PATH_PREFIX}/src/cache/test_directory.sh"
+# shellcheck source=./src/cache/cache__base.sh
+. "${DM_TEST__CONFIG__MANDATORY__SUBMODULE_PATH_PREFIX}/src/cache/cache__base.sh"
+# shellcheck source=./src/cache/cache__global_errors.sh
+. "${DM_TEST__CONFIG__MANDATORY__SUBMODULE_PATH_PREFIX}/src/cache/cache__global_errors.sh"
+# shellcheck source=./src/cache/cache__test_result.sh
+. "${DM_TEST__CONFIG__MANDATORY__SUBMODULE_PATH_PREFIX}/src/cache/cache__test_result.sh"
+# shellcheck source=./src/cache/cache__global_count.sh
+. "${DM_TEST__CONFIG__MANDATORY__SUBMODULE_PATH_PREFIX}/src/cache/cache__global_count.sh"
+# shellcheck source=./src/cache/cache__global_failure.sh
+. "${DM_TEST__CONFIG__MANDATORY__SUBMODULE_PATH_PREFIX}/src/cache/cache__global_failure.sh"
+# shellcheck source=./src/cache/cache__test_directory.sh
+. "${DM_TEST__CONFIG__MANDATORY__SUBMODULE_PATH_PREFIX}/src/cache/cache__test_directory.sh"
 
 # shellcheck source=./src/debug.sh
 . "${DM_TEST__CONFIG__MANDATORY__SUBMODULE_PATH_PREFIX}/src/debug.sh"

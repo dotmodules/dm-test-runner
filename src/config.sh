@@ -92,6 +92,22 @@ DM_TEST__CONFIG__MANDATORY__TEST_CASE_PREFIX=\
 #==============================================================================
 
 #==============================================================================
+#   ____           _                                       _         _ _
+#  / ___|__ _  ___| |__   ___   _ __   __ _ _ __ ___ _ __ | |_    __| (_)_ __
+# | |   / _` |/ __| '_ \ / _ \ | '_ \ / _` | '__/ _ \ '_ \| __|  / _` | | '__|
+# | |__| (_| | (__| | | |  __/ | |_) | (_| | | |  __/ | | | |_  | (_| | | |
+#  \____\__,_|\___|_| |_|\___| | .__/ \__,_|_|  \___|_| |_|\__|  \__,_|_|_|
+#==============================|_|=============================================
+# CACHE PARENT DIRECTORY
+#==============================================================================
+# Directory where the cache system will create the cache directories. It
+# defaults to the '/tmp' directory. The cache directories will be created
+# inside this parent directory. If the default are kept a cache directory might
+# look like this: '/tmp/dm_test_cache.[random_string]'.
+DM_TEST__CONFIG__OPTIONAL__CACHE_PARENT_DIRECTORY=\
+"${DM_TEST__CONFIG__OPTIONAL__CACHE_PARENT_DIRECTORY:=/tmp}"
+
+#==============================================================================
 #  _____      _ _                    __       _ _
 # | ____|_  _(_) |_    ___  _ __    / _| __ _(_) |_   _ _ __ ___
 # |  _| \ \/ / | __|  / _ \| '_ \  | |_ / _` | | | | | | '__/ _ \
