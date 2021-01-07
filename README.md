@@ -1,3 +1,5 @@
+![build](https://github.com/dotmodules/dm-test/workflows/build/badge.svg)
+
 # POSIX compliant shell test runner
 
 Minimalistic test runner for shell scripts. It could be used with any POSIX
