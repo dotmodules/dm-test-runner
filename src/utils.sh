@@ -166,3 +166,60 @@ _dm_test__utils__decrement_file_content() {
     echo "$___content" > "$___file_path"
   fi
 }
+
+#==============================================================================
+# Helper function that will check if the required tools are available on the
+# current system.
+#------------------------------------------------------------------------------
+# Globals:
+#   DM_TEST__CONFIG__MANDATORY__SUBMODULE_PATH_PREFIX
+# Arguments:
+#   None
+# STDIN:
+#   None
+#------------------------------------------------------------------------------
+# Output variables:
+#   None
+# STDOUT:
+#   Execution results.
+# STDERR:
+#   None
+# Status:
+#   0 - Every required tool is available.
+#   1 - Missing tools. Execution will be aborted.
+# Tools:
+#   cat command
+#==============================================================================
+_dm_test__utils__assert_tools() {
+  dm_test__debug '_dm_test__utils__assert_tools' 'asserting required tools..'
+
+  ___required_tools="$( \
+    cat \
+      "${DM_TEST__CONFIG__MANDATORY__SUBMODULE_PATH_PREFIX}/requirements.txt" \
+  )"
+
+  dm_test__debug_list '_dm_test__utils__assert_tools' \
+    'required tools' "$___required_tools"
+
+  ___missing_tools=''
+  for ___tool in $___required_tools
+  do
+    if command -v "$___tool" >/dev/null 2>&1
+    then
+      :
+    else
+      ___missing_tools="${___missing_tools} ${___tool}"
+    fi
+  done
+
+  if [ -n "$___missing_tools" ]
+  then
+    dm_test__utils__report_error_and_exit \
+      'One or more required command line tool is missing from your system!' \
+      'Unable to start dm.test execution..' \
+      "$___missing_tools"
+  fi
+
+  dm_test__debug '_dm_test__utils__assert_tools' \
+    'required tool assertion finished with success'
+}

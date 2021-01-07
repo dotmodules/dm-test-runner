@@ -33,4 +33,5 @@ test:
 #
 .PHONY: tools
 tools:
-	@./utils/collect_tools.sh
+	@./utils/collect_tools.sh > requirements.txt
+	@ cat requirements.txt

@@ -5,9 +5,11 @@
 # `Tools:` header.
 #==============================================================================
 
+cd "$(dirname "$(readlink -f "$0")")" || exit
+
 HEADER_TEMPLATE="# Tools:"
 
-find . -type f -name '*.sh' -print0 | \
+find .. -type f -name '*.sh' -print0 | \
   # Filtering the tools list in each file by gathering the header+1 lines.
   xargs -0 -I {} grep -A 1 "$HEADER_TEMPLATE" {} | \
   # Ignoring grep's match separator.
@@ -21,6 +23,4 @@ find . -type f -name '*.sh' -print0 | \
   sort | \
   uniq | \
   # Removing the leftover hashmark.
-  grep -v '#' | \
-  # Put everything back to one line.
-  xargs
+  grep -v '#'

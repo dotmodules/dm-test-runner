@@ -49,6 +49,8 @@
 dm_test__test_suite__main() {
   dm_test__debug 'dm_test__test_suite__main' 'test suite execution started..'
 
+  _dm_test__utils__assert_tools
+
   _dm_test__test_suite__init
   _dm_test__test_suite__execute_test_files
   _dm_test__test_suite__set_result_output_variables
