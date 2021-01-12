@@ -377,7 +377,12 @@ dm_test__config__validate_mandatory_config() {
 #==============================================================================
 _dm_test__config__report_configuration_error() {
   ___variable="$1"
-  >&2 echo -n 'ERROR: Mandatory configuration variable was not configured: '
-  >&2 echo "'${___variable}'!"
-  exit 1
+
+  dm_test__debug '_dm_test__config__report_configuration_error' \
+    'configuration error detected!'
+
+  dm_test__report_error_and_exit \
+    'Configuration validation failed!' \
+    'Mandatory configuration variable was not configured:' \
+    "$___variable"
 }

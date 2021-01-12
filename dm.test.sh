@@ -17,6 +17,73 @@ set -e  # exit on error
 set -u  # prevent unset variable expansion
 
 #==============================================================================
+# Error reporting function that will display the given message, and abort the
+# execution.
+#------------------------------------------------------------------------------
+# Globals:
+#   RED
+#   BOLD
+#   RESET
+# Arguments:
+#   [1] message - Error message that will be displayed.
+#   [2] details - Detailed error message.
+#   [3] reason - Reason of this error.
+# STDIN:
+#   None
+#------------------------------------------------------------------------------
+# Output variables:
+#   None
+# STDOUT:
+#   Error message.
+# STDERR:
+#   None
+# Status:
+#   1 - System exit.
+#------------------------------------------------------------------------------
+# Tools:
+#   echo sed
+#==============================================================================
+dm_test__report_error_and_exit() {
+  ___message="$1"
+  ___details="$2"
+  ___reason="$3"
+
+  RED="${RED:=}"
+  BOLD="${BOLD:=}"
+  RESET="${RESET:=}"
+
+  >&2 printf '%s=======================================' "$RED"
+  >&2 echo "========================================${RESET}"
+  >&2 echo "  ${RED}${BOLD}FATAL ERROR${RESET}"
+  >&2 printf '%s=======================================' "$RED"
+  >&2 echo "========================================${RESET}"
+  >&2 echo ''
+  >&2 echo "  ${RED}${___message}${RESET}"
+  >&2 echo "  ${RED}${___details}${RESET}"
+  >&2 echo ''
+  >&2 echo "$( \
+    echo "${___reason}" | sed "s/^/  ${RED}/" | sed "s/$/${RESET}/" \
+  )"
+  >&2 echo ''
+  >&2 printf '%s=======================================' "$RED"
+  >&2 echo "========================================${RESET}"
+
+  exit 1
+}
+
+#==============================================================================
+# ASSERTING THE PATH PREFIX CONFIGURATION
+#==============================================================================
+
+if [ -z ${DM_TEST__CONFIG__MANDATORY__SUBMODULE_PATH_PREFIX+x} ]
+then
+  dm_test__report_error_and_exit \
+    'Initialization failed!' \
+    'Mandatory path prefix variable is missing!' \
+    'DM_TEST__CONFIG__MANDATORY__SUBMODULE_PATH_PREFIX'
+fi
+
+#==============================================================================
 # SOURCING SUBMODULES
 #==============================================================================
 

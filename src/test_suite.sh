@@ -505,7 +505,7 @@ _dm_test__test_suite__set_result_output_variables() {
 #   0 - Other status is not expected.
 #------------------------------------------------------------------------------
 # Tools:
-#   echo uname command
+#   echo uname command printf
 #==============================================================================
 dm_test__test_suite__print_header() {
   dm_test__debug 'dm_test__test_suite__print_header' 'printing suite header..'
@@ -513,69 +513,69 @@ dm_test__test_suite__print_header() {
   #============================================================================
   # TITLE
   #============================================================================
-  echo -n "$DIM"
-  echo -n '-------------------------------------------------------------------'
-  echo '------------'
+  printf '%s' "$DIM"
+  printf '%s' '---------------------------------------------------------------'
+  echo '----------------'
   echo '>> DM TEST <<'
 
   #============================================================================
   # CONFIG SECTION
   #============================================================================
-  echo -n '-------------------------------------------------------------------'
-  echo '------------'
+  printf '%s' '---------------------------------------------------------------'
+  echo '----------------'
   echo '$ dm.test.sh --config'
 
   # Mandatory config variables
-  echo -n 'DM_TEST__CONFIG__MANDATORY__SUBMODULE_PATH_PREFIX='
+  printf '%s' 'DM_TEST__CONFIG__MANDATORY__SUBMODULE_PATH_PREFIX='
   echo "'${DM_TEST__CONFIG__MANDATORY__SUBMODULE_PATH_PREFIX}'"
 
-  echo -n 'DM_TEST__CONFIG__MANDATORY__TEST_CASES_ROOT='
+  printf '%s' 'DM_TEST__CONFIG__MANDATORY__TEST_CASES_ROOT='
   echo "'${DM_TEST__CONFIG__MANDATORY__TEST_CASES_ROOT}'"
 
-  echo -n 'DM_TEST__CONFIG__MANDATORY__TEST_FILE_PREFIX='
+  printf '%s' 'DM_TEST__CONFIG__MANDATORY__TEST_FILE_PREFIX='
   echo "'${DM_TEST__CONFIG__MANDATORY__TEST_FILE_PREFIX}'"
 
-  echo -n 'DM_TEST__CONFIG__MANDATORY__TEST_CASE_PREFIX='
+  printf '%s' 'DM_TEST__CONFIG__MANDATORY__TEST_CASE_PREFIX='
   echo "'${DM_TEST__CONFIG__MANDATORY__TEST_CASE_PREFIX}'"
 
   # Optional config variables
-  echo -n 'DM_TEST__CONFIG__OPTIONAL__CACHE_PARENT_DIRECTORY='
+  printf '%s' 'DM_TEST__CONFIG__OPTIONAL__CACHE_PARENT_DIRECTORY='
   echo "'${DM_TEST__CONFIG__OPTIONAL__CACHE_PARENT_DIRECTORY}'"
 
-  echo -n 'DM_TEST__CONFIG__OPTIONAL__EXIT_ON_FAILURE='
+  printf '%s' 'DM_TEST__CONFIG__OPTIONAL__EXIT_ON_FAILURE='
   echo "'${DM_TEST__CONFIG__OPTIONAL__EXIT_ON_FAILURE}'"
 
-  echo -n 'DM_TEST__CONFIG__OPTIONAL__EXIT_STATUS_ON_FAILURE='
+  printf '%s' 'DM_TEST__CONFIG__OPTIONAL__EXIT_STATUS_ON_FAILURE='
   echo "'${DM_TEST__CONFIG__OPTIONAL__EXIT_STATUS_ON_FAILURE}'"
 
-  echo -n 'DM_TEST__CONFIG__OPTIONAL__ALWAYS_DISPLAY_FILE_LEVEL_HOOK_OUTPUT='
+  printf '%s' 'DM_TEST__CONFIG__OPTIONAL__ALWAYS_DISPLAY_FILE_LEVEL_HOOK_OUTPUT='
   echo "'${DM_TEST__CONFIG__OPTIONAL__ALWAYS_DISPLAY_FILE_LEVEL_HOOK_OUTPUT}'"
 
-  echo -n 'DM_TEST__CONFIG__OPTIONAL__DEBUG_ENABLED='
+  printf '%s' 'DM_TEST__CONFIG__OPTIONAL__DEBUG_ENABLED='
   echo "'${DM_TEST__CONFIG__OPTIONAL__DEBUG_ENABLED}'"
 
   #============================================================================
   # SYSTEM INFO SECTION
   #============================================================================
-  echo -n '-------------------------------------------------------------------'
-  echo '------------'
+  printf '%s' '---------------------------------------------------------------'
+  echo '----------------'
   echo '$ uname --kernel-name --kernel-release --machine --operating-system'
   uname --kernel-name --kernel-release --machine --operating-system
 
   #============================================================================
   # SHELL INFO SECTION
   #============================================================================
-  echo -n '-------------------------------------------------------------------'
-  echo '------------'
+  printf '%s' '---------------------------------------------------------------'
+  echo '----------------'
   echo '$ command -v sh'
   command -v sh
 
   #============================================================================
   # FOOTER SECTION
   #============================================================================
-  echo -n '-------------------------------------------------------------------'
-  echo '------------'
-  echo -n "$RESET"
+  printf '%s' '---------------------------------------------------------------'
+  echo '----------------'
+  printf '%s' "$RESET"
 }
 
 #==============================================================================

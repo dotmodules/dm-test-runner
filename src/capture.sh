@@ -445,7 +445,7 @@ _dm_test__capture__create_temp_fifo() {
 #   0 - Other status is not expected.
 #------------------------------------------------------------------------------
 # Tools:
-#   read echo
+#   read echo printf
 #==============================================================================
 _dm_test__capture__capture_output_for_domain() {
   ___worker_domain="$1"
@@ -457,7 +457,7 @@ _dm_test__capture__capture_output_for_domain() {
   while read -r ___worker_line
   do
     ___timestamp="$(_dm_test__capture__create_timestamp)"
-    echo -n "${___timestamp} ${___worker_color}${___worker_domain} | "
+    printf '%s' "${___timestamp} ${___worker_color}${___worker_domain} | "
     echo "${___worker_line}${RESET}"
   done
 

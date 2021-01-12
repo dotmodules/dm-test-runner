@@ -845,7 +845,7 @@ assert_status() {
 #   1 - Assertion failed.
 #------------------------------------------------------------------------------
 # Tools:
-#   test echo wc
+#   test echo wc printf
 #==============================================================================
 assert_output() {
   ___expected="$1"
@@ -858,7 +858,7 @@ assert_output() {
 
     ___subject='Inappropriate assertion function'
     ___reason="$( \
-      echo -n 'Multiline output should be asserted with '; \
+      printf '%s' 'Multiline output should be asserted with '; \
       echo "'assert_line_at_index' or 'assert_line_partially_at_index'." \
     )"
     ___assertion='assert_output'
@@ -1174,7 +1174,7 @@ _dm_test__report_failure() {
   # Appending the current error report to the error cache file.
   {
     echo "${RED}${BOLD}${___test_case_identifier}${RESET}";
-    echo -n "  ${RED}${___subject}: ";
+    printf '%s' "  ${RED}${___subject}: ";
     echo "[${BOLD}${___assertion}${RESET}${RED}]${RESET}";
     # We want to use printf here to display the inline line newlines, so using
     # only the template parameter, shellcheck can be disabled.
@@ -1184,7 +1184,7 @@ _dm_test__report_failure() {
   } | dm_test__cache__global_errors__write_errors
 
   # Report the concise error report to the standard error.
-  >&2 echo -n "${___assertion} | "
+  >&2 printf '%s' "${___assertion} | "
   >&2 echo "Aborting due to failed assertion: '${___subject}'"
 
   # Only the first  assertion error should be reported, the latter ones could

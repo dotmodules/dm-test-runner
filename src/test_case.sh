@@ -202,11 +202,11 @@ dm_test__test_case__set_current_test_case() {
 #   0 - Other status is not expected.
 #------------------------------------------------------------------------------
 # Tools:
-#   echo
+#   echo printf
 #==============================================================================
 dm_test__test_case__get_current_test_case_identifier() {
-  echo -n "$DM_TEST__TEST_CASE__RUNTIME__FILE_UNDER_EXECUTION"
-  echo -n '.'
+  printf '%s' "$DM_TEST__TEST_CASE__RUNTIME__FILE_UNDER_EXECUTION"
+  printf '%s' '.'
   echo "$DM_TEST__TEST_CASE__RUNTIME__TEST_UNDER_EXECUTION"
 }
 
@@ -606,7 +606,7 @@ _dm_test__execute_and_capture__teardown_hook() {
 #   0 - Other status is not expected.
 #------------------------------------------------------------------------------
 # Tools:
-#   echo test
+#   echo test printf
 #==============================================================================
 _dm_test__print_test_case_identifier() {
   dm_test__debug '_dm_test__print_test_case_identifier' \
@@ -619,7 +619,7 @@ _dm_test__print_test_case_identifier() {
   then
     echo "$___identifier"
   else
-    echo -n "$___identifier"
+    printf '%s' "$___identifier"
   fi
 }
 

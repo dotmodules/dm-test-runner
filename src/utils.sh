@@ -11,55 +11,6 @@
 #==============================================================================
 
 #==============================================================================
-# Error reporting function that will display the given message, and abort the
-# execution.
-#------------------------------------------------------------------------------
-# Globals:
-#   None
-# Arguments:
-#   [1] message - Error message that will be displayed.
-#   [2] details - Detailed error message.
-#   [3] reason - Reason of this error.
-# STDIN:
-#   None
-#------------------------------------------------------------------------------
-# Output variables:
-#   None
-# STDOUT:
-#   Error message.
-# STDERR:
-#   None
-# Status:
-#   1 - System exit.
-#------------------------------------------------------------------------------
-# Tools:
-#   echo sed
-#==============================================================================
-dm_test__utils__report_error_and_exit() {
-  ___message="$1"
-  ___details="$2"
-  ___reason="$3"
-
-  dm_test__debug 'dm_test__utils__report_error_and_exit' \
-    'aborting the execution due to an unrecoverable error..'
-
-  echo -n "${RED}============================================================="
-  echo "==================${RESET}"
-  echo "  ${RED}${BOLD}FATAL ERROR${RESET}"
-  echo -n "${RED}============================================================="
-  echo "==================${RESET}"
-  echo ''
-  echo "  ${RED}${___message}${RESET}"
-  echo "  ${RED}${___details}${RESET}"
-  echo ''
-  echo "${___reason}" | sed "s/^/  ${RED}/" | sed "s/$/${RESET}/" 
-  echo ''
-  echo -n "${RED}============================================================="
-  echo "==================${RESET}"
-  exit 1
-}
-
-#==============================================================================
 # Prints the given test content if it contains anything. The reason behind this
 # function is not to print an empty line if the printable variable is empty.
 #------------------------------------------------------------------------------

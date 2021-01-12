@@ -532,14 +532,14 @@ _dm_test__hooks__is_hook_available() {
 #   0 - Other status is not expected.
 #------------------------------------------------------------------------------
 # Tools:
-#   echo test
+#   echo test printf
 #==============================================================================
 _dm_test__hooks__check_singular_flag() {
   ___hook_flag="$1"
 
   if [ "$___hook_flag" -gt '1' ]
   then
-    echo -n "WARNING: mutiple definitions of hook function '${___hook_name}' "
+    printf '%s' "WARNING: mutiple definitions of hook function '${___hook_name}' "
     echo 'found, only the last one will be executed.'
   fi
 }
@@ -564,7 +564,7 @@ _dm_test__hooks__check_singular_flag() {
 #   Returns the given hook's status.
 #------------------------------------------------------------------------------
 # Tools:
-#   echo test
+#   echo test printf
 #==============================================================================
 _dm_test__hooks__execute_hook() {
   ___hook_name="$1"
@@ -577,7 +577,7 @@ _dm_test__hooks__execute_hook() {
     return 0
   else
     ___hook_status="$?"
-    >&2 echo -n "ERROR: Error during '${___hook_name}' hook execution! "
+    >&2 printf '%s' "ERROR: Error during '${___hook_name}' hook execution! "
     >&2 echo "Status: ${___hook_status}"
     return "$___hook_status"
   fi

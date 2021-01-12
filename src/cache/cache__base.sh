@@ -55,10 +55,17 @@ dm_test__cache__init() {
   # Initializing and normalizing the cache parent directory.
   _dm_test__cache__normalize_cache_parent_directory
 
+  # At this point the cache parent directory has been finalized, we can try to
+  # clean up all the leftover cache directories.
   dm_test__cache__cleanup
 
-  # Base cache system initialization.
+  # Creating the new cache directory..
   _dm_test__cache__create_base_cache_directory
+  # At this point the current cache drectory has been created, so arming the
+  # trap system to clean it up on exit or interrupt signals.
+  dm_test__arm_trap_system
+
+  # Initializing the internal cache structure..
   _dm_test__cache__init__temp_files_base_directory
   _dm_test__cache__init__temp_directories_base_directory
 
@@ -147,7 +154,7 @@ _dm_test__cache__normalize_cache_parent_directory() {
     then
       :
     else
-      dm_test__utils__report_error_and_exit \
+      dm_test__report_error_and_exit \
         'Cache system initialization failed!' \
         "Cache parent directory '${___parent}' cannot be created!" \
         "$___output"
@@ -158,7 +165,7 @@ _dm_test__cache__normalize_cache_parent_directory() {
   then
     :
   else
-    dm_test__utils__report_error_and_exit \
+    dm_test__report_error_and_exit \
       'Cache system initialization failed!' \
       'Cache parent directory exists but you have no write permission!' \
       "unable to write into '${___parent}': Permission denied"
@@ -206,7 +213,7 @@ _dm_test__cache__create_base_cache_directory() {
   then
     DM_TEST__CACHE__RUNTIME__CACHE_PATH="$___mktemp_output"
   else
-    dm_test__utils__report_error_and_exit \
+    dm_test__report_error_and_exit \
       'Cache system initialization failed!' \
       'Cache base directory cannot be created!' \
       "$___mktemp_output"
@@ -302,7 +309,10 @@ _dm_test__cache__cleanup__find_targets() {
 
   else
 
-    dm_test__utils__report_error_and_exit \
+    dm_test__debug '_dm_test__cache__cleanup__find_targets' \
+      'error happened while looking for cache directories.. exiting!'
+
+    dm_test__report_error_and_exit \
       'Cache system clean up failed!' \
       'An unexpected error happened during the clean up process!' \
       "$___find_output"
@@ -341,7 +351,7 @@ _dm_test__cache__cleanup__delete_target() {
   then
     dm_test__debug '_dm_test__cache__cleanup__delete_target' "deleted '${___target}'"
   else
-    dm_test__utils__report_error_and_exit \
+    dm_test__report_error_and_exit \
       'Cache system clean up failed!' \
       "An unexpected error happened while cleaning up '${___target}'!" \
       "$___rm_output"
@@ -395,13 +405,13 @@ DM_TEST__CACHE__RUNTIME__TEMP_FILES_PATH='__INVALID__'
 #   0 - Other status is not expected.
 #------------------------------------------------------------------------------
 # Tools:
-#   mkdir echo
+#   mkdir echo printf
 #==============================================================================
 _dm_test__cache__init__temp_files_base_directory() {
   # Using a subshell here to prevent the long line.
   # shellcheck disable=2116
   DM_TEST__CACHE__RUNTIME__TEMP_FILES_PATH="$( \
-    echo -n "${DM_TEST__CACHE__RUNTIME__CACHE_PATH}/"; \
+    printf '%s' "${DM_TEST__CACHE__RUNTIME__CACHE_PATH}/"; \
     echo "$DM_TEST__CACHE__CONFIG__TEMP_FILES_PATH_NAME" \
   )"
   mkdir --parents "$DM_TEST__CACHE__RUNTIME__TEMP_FILES_PATH"
@@ -490,13 +500,13 @@ DM_TEST__CACHE__RUNTIME__TEMP_DIRS_PATH='__INVALID__'
 #   0 - Other status is not expected.
 #------------------------------------------------------------------------------
 # Tools:
-#   mkdir echo
+#   mkdir echo printf
 #==============================================================================
 _dm_test__cache__init__temp_directories_base_directory() {
   # Using a subshell here to prevent the long line.
   # shellcheck disable=2116
   DM_TEST__CACHE__RUNTIME__TEMP_DIRS_PATH="$( \
-    echo -n "${DM_TEST__CACHE__RUNTIME__CACHE_PATH}/"; \
+    printf '%s' "${DM_TEST__CACHE__RUNTIME__CACHE_PATH}/"; \
     echo "$DM_TEST__CACHE__CONFIG__TEMP_DIRS_PATH_NAME" \
   )"
   mkdir --parents "$DM_TEST__CACHE__RUNTIME__TEMP_DIRS_PATH"
