@@ -79,8 +79,8 @@ dm_test__debug__printf() {
 # Globals:
 #   None
 # Arguments:
-#   [..] args - Variable length arguments that will be executed as a command while having a
-#        file descriptor attached to it.
+#   [..] args - Variable length arguments that will be executed as a command
+#        while having a file descriptor attached to it.
 # STDIN:
 #   None
 #------------------------------------------------------------------------------

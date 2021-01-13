@@ -92,7 +92,7 @@ dm_test__arm_trap_system() {
 #   Original exit code replayed from the called level.
 #------------------------------------------------------------------------------
 # Tools:
-#   trap
+#   trap exit
 #==============================================================================
 _dm_test__exit_trap() {
   ___original_exit_code="$1"
@@ -138,4 +138,3 @@ _dm_test__exit_trap__wrapper() {
   ___original_exit_code="$?"
   dm_test__debug__wrapper '_dm_test__exit_trap' "$___original_exit_code"
 }
-

@@ -49,8 +49,8 @@ DM_TEST__CONFIG__MANDATORY__SUBMODULE_PATH_PREFIX=\
 #==============================================================================
 # Test cases root directory relative to the runner script dm.test.sh is sourced
 # to.
-DM_TEST__CONFIG__MANDATORY__TEST_CASES_ROOT=\
-"${DM_TEST__CONFIG__MANDATORY__TEST_CASES_ROOT:=__INVALID__}"
+DM_TEST__CONFIG__MANDATORY__TEST_FILES_ROOT=\
+"${DM_TEST__CONFIG__MANDATORY__TEST_FILES_ROOT:=__INVALID__}"
 
 #==============================================================================
 #  _____         _      __ _ _                        __ _
@@ -242,6 +242,51 @@ dm_test__config__should_only_display_file_level_hook_output_on_failure() {
 }
 
 #==============================================================================
+#  ____             _     _            _
+# / ___|  ___  _ __| |_  | |_ ___  ___| |_    ___ __ _ ___  ___  ___
+# \___ \ / _ \| '__| __| | __/ _ \/ __| __|  / __/ _` / __|/ _ \/ __|
+#  ___) | (_) | |  | |_  | ||  __/\__ \ |_  | (_| (_| \__ \  __/\__ \
+# |____/ \___/|_|   \__|  \__\___||___/\__|  \___\__,_|___/\___||___/
+#==============================================================================
+# SORT TEST CASES
+#==============================================================================
+# Optional flag that determines if the test cases are executed in an
+# alphabetically sorted way in a test file or not. The default behavior is to
+# not to sort the test cases.
+# Options:
+#   0 - test case execution will not be sorted inside a file
+#   1 - test case execution will be sorted inside a file
+DM_TEST__CONFIG__OPTIONAL__SORTED_TEST_CASE_EXECUTION=\
+"${DM_TEST__CONFIG__OPTIONAL__SORTED_TEST_CASE_EXECUTION:=0}"
+
+#==============================================================================
+# Helper function to check if test case sorting is necessary.
+#------------------------------------------------------------------------------
+# Globals:
+#   DM_TEST__CONFIG__OPTIONAL__SORTED_TEST_CASE_EXECUTION
+# Arguments:
+#   None
+# STDIN:
+#   None
+#------------------------------------------------------------------------------
+# Output variables:
+#   None
+# STDOUT:
+#   None
+# STDERR:
+#   None
+# Status:
+#   0 - test case execution should be sorted inside a test file
+#   1 - test case execution should not be sorted inside a test file
+#------------------------------------------------------------------------------
+# Tools:
+#   test
+#==============================================================================
+dm_test__config__should_sort_test_cases() {
+  test "$DM_TEST__CONFIG__OPTIONAL__SORTED_TEST_CASE_EXECUTION" -ne '0'
+}
+
+#==============================================================================
 #  ____       _                                       _
 # |  _ \  ___| |__  _   _  __ _   _ __ ___   ___   __| | ___
 # | | | |/ _ \ '_ \| | | |/ _` | | '_ ` _ \ / _ \ / _` |/ _ \
@@ -300,7 +345,7 @@ dm_test__config__debug_is_enabled() {
 #------------------------------------------------------------------------------
 # Globals:
 #   DM_TEST__CONFIG__MANDATORY__SUBMODULE_PATH_PREFIX
-#   DM_TEST__CONFIG__MANDATORY__TEST_CASES_ROOT
+#   DM_TEST__CONFIG__MANDATORY__TEST_FILES_ROOT
 #   DM_TEST__CONFIG__MANDATORY__TEST_FILE_PREFIX
 #   DM_TEST__CONFIG__MANDATORY__TEST_CASE_PREFIX
 # Arguments:
@@ -330,10 +375,10 @@ dm_test__config__validate_mandatory_config() {
       'DM_TEST__CONFIG__MANDATORY__SUBMODULE_PATH_PREFIX'
   fi
 
-  if [ "$DM_TEST__CONFIG__MANDATORY__TEST_CASES_ROOT" = '__INVALID__' ]
+  if [ "$DM_TEST__CONFIG__MANDATORY__TEST_FILES_ROOT" = '__INVALID__' ]
   then
     _dm_test__config__report_configuration_error \
-      'DM_TEST__CONFIG__MANDATORY__TEST_CASES_ROOT'
+      'DM_TEST__CONFIG__MANDATORY__TEST_FILES_ROOT'
   fi
 
   if [ "$DM_TEST__CONFIG__MANDATORY__TEST_FILE_PREFIX" = '__INVALID__' ]

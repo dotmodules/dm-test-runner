@@ -6,6 +6,7 @@ cut
 date
 dirname
 echo
+exit
 find
 grep
 mkdir

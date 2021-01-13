@@ -137,7 +137,7 @@ DM_TEST__CACHE__RUNTIME__CACHE_PATH='__INVALID__'
 #   0 - Other status is not expected.
 #------------------------------------------------------------------------------
 # Tools:
-#   realpath mkdir
+#   realpath mkdir test
 #==============================================================================
 _dm_test__cache__normalize_cache_parent_directory() {
   ___raw_parent="$DM_TEST__CONFIG__OPTIONAL__CACHE_PARENT_DIRECTORY"
@@ -199,7 +199,7 @@ _dm_test__cache__normalize_cache_parent_directory() {
 #   0 - Other status is not expected.
 #------------------------------------------------------------------------------
 # Tools:
-#   mktemp
+#   mktemp test
 #==============================================================================
 _dm_test__cache__create_base_cache_directory() {
   if ___mktemp_output="$( \
@@ -244,7 +244,7 @@ _dm_test__cache__create_base_cache_directory() {
 #   0 - Other status is not expected.
 #------------------------------------------------------------------------------
 # Tools:
-#   find rm
+#   test
 #==============================================================================
 dm_test__cache__cleanup() {
   dm_test__debug 'dm_test__cache__cleanup' \
@@ -288,7 +288,7 @@ dm_test__cache__cleanup() {
 #   0 - Other status is not expected.
 #------------------------------------------------------------------------------
 # Tools:
-#   find echo wc
+#   find echo wc test
 #==============================================================================
 _dm_test__cache__cleanup__find_targets() {
   dm_test__debug '_dm_test__cache__cleanup__find_targets' \
@@ -340,16 +340,18 @@ _dm_test__cache__cleanup__find_targets() {
 #   0 - Other status is not expected.
 #------------------------------------------------------------------------------
 # Tools:
-#   rm
+#   rm test
 #==============================================================================
 _dm_test__cache__cleanup__delete_target() {
   ___target="$1"
 
-  dm_test__debug '_dm_test__cache__cleanup__delete_target' "deleting '${___target}'.."
+  dm_test__debug '_dm_test__cache__cleanup__delete_target' \
+    "deleting '${___target}'.."
 
   if ___rm_output="$(rm --recursive --force "$___target" 2>&1)"
   then
-    dm_test__debug '_dm_test__cache__cleanup__delete_target' "deleted '${___target}'"
+    dm_test__debug '_dm_test__cache__cleanup__delete_target' \
+      "deleted '${___target}'"
   else
     dm_test__report_error_and_exit \
       'Cache system clean up failed!' \

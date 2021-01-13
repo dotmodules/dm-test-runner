@@ -123,17 +123,26 @@ _dm_test__test_suite__init() {
 #   0 - Other status is not expected.
 #------------------------------------------------------------------------------
 # Tools:
-#   mkfifo
+#   mkfifo test read echo
 #==============================================================================
 _dm_test__test_suite__execute_test_files() {
   dm_test__debug '_dm_test__test_suite__execute_test_files' \
     'executing test files..'
 
+  ___test_files="$(_dm_test__test_suite__get_test_files)"
+
+  if [ -z "$___test_files" ]
+  then
+    dm_test__debug '_dm_test__test_suite__execute_test_files' \
+      'WARNING: no matching test files were found, cannot continue..'
+    return
+  fi
+
   # Using a named pipe here to be able to safely iterate over the file names.
   # See more at shellcheck SC2044.
   ___tmp_pipe="$(dm_test__cache__create_temp_file)"
   mkfifo "$___tmp_pipe"
-  _dm_test__test_suite__get_test_files > "$___tmp_pipe" &
+  echo "$___test_files" > "$___tmp_pipe" &
 
   while IFS= read -r ___test_file_path
   do
@@ -150,7 +159,7 @@ _dm_test__test_suite__execute_test_files() {
 # config variable.
 #------------------------------------------------------------------------------
 # Globals:
-#   DM_TEST__CONFIG__MANDATORY__TEST_CASES_ROOT
+#   DM_TEST__CONFIG__MANDATORY__TEST_FILES_ROOT
 #   DM_TEST__CONFIG__MANDATORY__TEST_FILE_PREFIX
 # Arguments:
 #   None
@@ -167,22 +176,38 @@ _dm_test__test_suite__execute_test_files() {
 #   0 - Other status is not expected.
 #------------------------------------------------------------------------------
 # Tools:
-#   find sort xargs echo
+#   find sort xargs echo test
 #==============================================================================
 _dm_test__test_suite__get_test_files() {
   dm_test__debug '_dm_test__test_suite__get_test_files' \
     'gathering test files..'
 
+  # Pre checking if there would be matches.
+  if ___find_output="$( \
+    find \
+      "$DM_TEST__CONFIG__MANDATORY__TEST_FILES_ROOT" \
+      -type f \
+      -name "${DM_TEST__CONFIG__MANDATORY__TEST_FILE_PREFIX}*" \
+      2>&1 \
+  )"
+  then
+    :
+  else
+    dm_test__report_error_and_exit \
+      'Unexpected error during execution!' \
+      'Test file loading failed!' \
+      "$___find_output"
+  fi
+
   ___test_files="$( \
     find \
-      "$DM_TEST__CONFIG__MANDATORY__TEST_CASES_ROOT" \
+      "$DM_TEST__CONFIG__MANDATORY__TEST_FILES_ROOT" \
       -type f \
       -name "${DM_TEST__CONFIG__MANDATORY__TEST_FILE_PREFIX}*" \
       -print0 | \
-    sort --zero-terminated --dictionary-order | \
-    xargs --null --max-args=1 --no-run-if-empty \
+      sort --zero-terminated --dictionary-order | \
+      xargs --null --max-args=1 --no-run-if-empty \
   )"
-
   dm_test__debug_list '_dm_test__test_suite__get_test_files' \
     'test files found:' \
     "$___test_files"
@@ -231,7 +256,7 @@ _dm_test__test_suite__execute_test_file() {
   if [ -z "$___test_cases" ]
   then
     dm_test__debug '_dm_test__test_suite__execute_test_file' \
-      '[warn] no matching test cases found, skipping file execution..'
+      'WARNING: no matching test cases found, skipping file execution..'
     return
   fi
 
@@ -270,7 +295,7 @@ _dm_test__test_suite__execute_test_file() {
 #   0 - Other status is not expected.
 #------------------------------------------------------------------------------
 # Tools:
-#   cd dirname basename echo test
+#   cd dirname basename echo test exit
 #==============================================================================
 _dm_test__test_suite__execute_test_file_in_a_subshell() {
   ___test_file_path="$1"
@@ -340,6 +365,13 @@ _dm_test__test_suite__execute_test_file_in_a_subshell() {
 #   test
 #==============================================================================
 _dm_test__test_suite__run_and_capture_setup_file_hook() {
+  if ! dm_test__hooks__is_hook_available__setup_file
+  then
+    dm_test__debug '_dm_test__test_suite__run_and_capture_setup_file_hook' \
+      'setup file hook is not available, returning..'
+    return
+  fi
+
   dm_test__debug '_dm_test__test_suite__run_and_capture_setup_file_hook' \
     'executing and capture setup file hook..'
 
@@ -398,6 +430,13 @@ _dm_test__test_suite__run_and_capture_setup_file_hook() {
 #   test
 #==============================================================================
 _dm_test__test_suite__run_and_capture_teardown_file_hook() {
+  if ! dm_test__hooks__is_hook_available__teardown_file
+  then
+    dm_test__debug '_dm_test__test_suite__run_and_capture_teardown_file_hook' \
+      'teardown file hook is not available, returning..'
+    return
+  fi
+
   dm_test__debug '_dm_test__test_suite__run_and_capture_teardown_file_hook' \
     'executing and capture teardown file hook..'
 
@@ -480,7 +519,7 @@ _dm_test__test_suite__set_result_output_variables() {
 #------------------------------------------------------------------------------
 # Globals:
 #   DM_TEST__CONFIG__MANDATORY__SUBMODULE_PATH_PREFIX
-#   DM_TEST__CONFIG__MANDATORY__TEST_CASES_ROOT
+#   DM_TEST__CONFIG__MANDATORY__TEST_FILES_ROOT
 #   DM_TEST__CONFIG__MANDATORY__TEST_FILE_PREFIX
 #   DM_TEST__CONFIG__MANDATORY__TEST_CASE_PREFIX
 #   DM_TEST__CONFIG__OPTIONAL__CACHE_PARENT_DIRECTORY
@@ -529,8 +568,8 @@ dm_test__test_suite__print_header() {
   printf '%s' 'DM_TEST__CONFIG__MANDATORY__SUBMODULE_PATH_PREFIX='
   echo "'${DM_TEST__CONFIG__MANDATORY__SUBMODULE_PATH_PREFIX}'"
 
-  printf '%s' 'DM_TEST__CONFIG__MANDATORY__TEST_CASES_ROOT='
-  echo "'${DM_TEST__CONFIG__MANDATORY__TEST_CASES_ROOT}'"
+  printf '%s' 'DM_TEST__CONFIG__MANDATORY__TEST_FILES_ROOT='
+  echo "'${DM_TEST__CONFIG__MANDATORY__TEST_FILES_ROOT}'"
 
   printf '%s' 'DM_TEST__CONFIG__MANDATORY__TEST_FILE_PREFIX='
   echo "'${DM_TEST__CONFIG__MANDATORY__TEST_FILE_PREFIX}'"
@@ -548,7 +587,8 @@ dm_test__test_suite__print_header() {
   printf '%s' 'DM_TEST__CONFIG__OPTIONAL__EXIT_STATUS_ON_FAILURE='
   echo "'${DM_TEST__CONFIG__OPTIONAL__EXIT_STATUS_ON_FAILURE}'"
 
-  printf '%s' 'DM_TEST__CONFIG__OPTIONAL__ALWAYS_DISPLAY_FILE_LEVEL_HOOK_OUTPUT='
+  printf '%s' \
+    'DM_TEST__CONFIG__OPTIONAL__ALWAYS_DISPLAY_FILE_LEVEL_HOOK_OUTPUT='
   echo "'${DM_TEST__CONFIG__OPTIONAL__ALWAYS_DISPLAY_FILE_LEVEL_HOOK_OUTPUT}'"
 
   printf '%s' 'DM_TEST__CONFIG__OPTIONAL__DEBUG_ENABLED='
@@ -606,7 +646,7 @@ dm_test__test_suite__print_header() {
 #   1 - test suite failed, process termination
 #------------------------------------------------------------------------------
 # Tools:
-#   echo test
+#   echo test exit
 #==============================================================================
 _dm_test__test_suite__print_report() {
   dm_test__debug '_dm_test__test_suite__print_report' \

@@ -760,22 +760,26 @@ DM_TEST__ASSERT__RUNTIME__LAST_OUTPUT='__INVALID__'
 #       captured.
 #------------------------------------------------------------------------------
 # Tools:
-#   test
+#   test printf echo
 #==============================================================================
 run() {
   ___command="$*"
 
   dm_test__debug 'run' "running command: '$*'"
 
-  if DM_TEST__ASSERT__RUNTIME__LAST_OUTPUT="$("$___command")"
+  if DM_TEST__ASSERT__RUNTIME__LAST_OUTPUT="$($___command)"
   then
     DM_TEST__ASSERT__RUNTIME__LAST_STATUS="$?"
   else
     DM_TEST__ASSERT__RUNTIME__LAST_STATUS="$?"
   fi
 
-  dm_test__debug_list 'run' 'captured output:' "$DM_TEST__ASSERT__RUNTIME__LAST_OUTPUT"
-  dm_test__debug 'run' "captured status: '${DM_TEST__ASSERT__RUNTIME__LAST_STATUS}'"
+  dm_test__debug_list 'run' 'captured output:' \
+    "$DM_TEST__ASSERT__RUNTIME__LAST_OUTPUT"
+  dm_test__debug 'run' "$( \
+    printf '%s' 'captured status: '; \
+    echo "'${DM_TEST__ASSERT__RUNTIME__LAST_STATUS}'" \
+  )"
 }
 
 #==============================================================================
@@ -981,7 +985,7 @@ assert_line_at_index() {
   else
     dm_test__debug 'assert_line_at_index' '=> assertion failed'
 
-    ___subject="Line at index '${___index}' differs from expected'"
+    ___subject="Line at index '${___index}' differs from expected"
     ___reason="expected: '${___expected}'\n  actual: '${___result}'"
     ___assertion='assert_line_at_index'
     _dm_test__report_failure "$___subject" "$___reason" "$___assertion"
@@ -1158,7 +1162,7 @@ dm_test__assert__get_line_from_output_by_index() {
 #   1 - This function will exit the caller process with status 1.
 #------------------------------------------------------------------------------
 # Tools:
-#   echo printf sed
+#   echo printf sed exit
 #==============================================================================
 _dm_test__report_failure() {
   ___subject="$1"
@@ -1170,7 +1174,9 @@ _dm_test__report_failure() {
 
   dm_test__cache__test_result__mark_as_failed
 
-  ___test_case_identifier="$(dm_test__test_case__get_current_test_case_identifier)"
+  ___test_case_identifier="$( \
+    dm_test__test_case__get_current_test_case_identifier \
+  )"
   # Appending the current error report to the error cache file.
   {
     echo "${RED}${BOLD}${___test_case_identifier}${RESET}";
@@ -1185,7 +1191,7 @@ _dm_test__report_failure() {
 
   # Report the concise error report to the standard error.
   >&2 printf '%s' "${___assertion} | "
-  >&2 echo "Aborting due to failed assertion: '${___subject}'"
+  >&2 echo "Aborting due to failed assertion: ${BOLD}${___subject}${RESET}."
 
   # Only the first  assertion error should be reported, the latter ones could
   # be the direct result of the first one, so they have minimal new information

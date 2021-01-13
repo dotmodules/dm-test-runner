@@ -139,7 +139,7 @@ _dm_test__utils__decrement_file_content() {
 #   0 - Every required tool is available.
 #   1 - Missing tools. Execution will be aborted.
 # Tools:
-#   cat command
+#   cat command test
 #==============================================================================
 _dm_test__utils__assert_tools() {
   dm_test__debug '_dm_test__utils__assert_tools' 'asserting required tools..'

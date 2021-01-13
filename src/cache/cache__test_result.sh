@@ -42,7 +42,7 @@ DM_TEST__CACHE__RUNTIME__TEST_RESULTS='__INVALID__'
 #   0 - Other status is not expected.
 #------------------------------------------------------------------------------
 # Tools:
-#   touch echo
+#   touch
 #==============================================================================
 _dm_test__cache__test_result__init() {
   DM_TEST__CACHE__RUNTIME__TEST_RESULTS="$(dm_test__cache__create_temp_file)"

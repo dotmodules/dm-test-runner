@@ -539,7 +539,8 @@ _dm_test__hooks__check_singular_flag() {
 
   if [ "$___hook_flag" -gt '1' ]
   then
-    printf '%s' "WARNING: mutiple definitions of hook function '${___hook_name}' "
+    printf '%s' \
+      "WARNING: mutiple definitions of hook function '${___hook_name}' "
     echo 'found, only the last one will be executed.'
   fi
 }

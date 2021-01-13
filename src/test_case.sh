@@ -51,26 +51,43 @@ DM_TEST__TEST_CASE__RUNTIME__TEST_UNDER_EXECUTION='__INVALID__'
 #   0 - Other status is not expected.
 #------------------------------------------------------------------------------
 # Tools:
-#   grep sort echo
+#   grep echo printf test
 #==============================================================================
 dm_test__test_case__get_test_cases_from_test_file() {
   ___test_file_path="$1"
 
+  ___prefix="$DM_TEST__CONFIG__MANDATORY__TEST_CASE_PREFIX"
+
   dm_test__debug 'dm_test__test_case__get_test_cases_from_test_file' \
-    "gathering test cases in test file '${___test_file_path}'.."
+    "$( \
+      printf '%s' 'gathering test cases in test file '; \
+      echo "'${___test_file_path}' based on prefix '${___prefix}'.." \
+    )"
 
-  ___test_cases="$( \
+  if ___test_cases="$( \
     grep -E --only-matching \
-      "^${DM_TEST__CONFIG__MANDATORY__TEST_CASE_PREFIX}[^\(]+" \
-      "$___test_file_path" | \
-    sort --dictionary-order \
+      "^${___prefix}[^\(]+" \
+      "$___test_file_path" \
   )"
+  then
+    dm_test__debug_list 'dm_test__test_case__get_test_cases_from_test_file' \
+      'test cases found:' \
+      "$___test_cases"
 
-  dm_test__debug_list 'dm_test__test_case__get_test_cases_from_test_file' \
-    'test cases found:' \
-    "$___test_cases"
+    if dm_test__config__should_sort_test_cases
+    then
 
-  echo "$___test_cases"
+      dm_test__debug 'dm_test__test_case__get_test_cases_from_test_file' \
+        'sorting test case list to be able to execute in alphabetical order'
+
+      echo "$___test_cases" | sort --dictionary-order
+    else
+      echo "$___test_cases"
+    fi
+  else
+    dm_test__debug 'dm_test__test_case__get_test_cases_from_test_file' \
+      'no matching test cases were found'
+  fi
 }
 
 #==============================================================================
@@ -114,7 +131,10 @@ dm_test__test_case__execute_test_cases() {
 
 #==============================================================================
 # Setting the current test file name into a global variable that can be
-# accessed later on.
+# accessed later on. Only stores the filename, the extension will be ignored,
+# It expects that the filename has this pattern: '<filename>.<extension>'. If
+# there is a period in the filename, then the filename will be only the part
+# before the first period.
 #------------------------------------------------------------------------------
 # Globals:
 #   DM_TEST__TEST_CASE__RUNTIME__FILE_UNDER_EXECUTION
@@ -416,7 +436,7 @@ _dm_test__evaluate_test_case_result() {
 #   1 - Test case exectution failed.
 #------------------------------------------------------------------------------
 # Tools:
-#   test
+#   test exit
 #==============================================================================
 _dm_test__run_test_case_in_a_subshell() {
   ___test_case="$1"
@@ -473,7 +493,7 @@ _dm_test__run_test_case_in_a_subshell() {
 #   0 - Other status is not expected.
 #------------------------------------------------------------------------------
 # Tools:
-#   test
+#   test exit
 #==============================================================================
 _dm_test__execute_and_capture__setup_hook() {
   if dm_test__hooks__is_hook_available__setup

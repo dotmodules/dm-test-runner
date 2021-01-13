@@ -488,13 +488,6 @@ _dm_test__capture__capture_output_for_domain() {
 #   echo date
 #==============================================================================
 _dm_test__capture__create_timestamp() {
-  dm_test__debug '_dm_test__capture__create_timestamp' \
-    'generating timestamp prefix..'
-
   ___timestamp="$(date +'%s%N')"
-
-  dm_test__debug '_dm_test__capture__create_timestamp' \
-    "timestamp prefix generated: '${___timestamp}'"
-
   echo "$___timestamp"
 }

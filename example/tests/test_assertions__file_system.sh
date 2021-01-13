@@ -7,9 +7,9 @@ setup() {
   # in there. These paths will be different for each test case as we are using
   # the test case level test directory here. This won't create the file, just
   # saves the path to a variable.
-  dummy_file="${DM_TEST__TEST_DIR__TEST_CASE}/dummy_file.txt"
-  dummy_directory="${DM_TEST__TEST_DIR__TEST_CASE}/dummy_directory"
-  dummy_link="${DM_TEST__TEST_DIR__TEST_CASE}/dummy_link"
+  dummy_file="${DM_TEST__TEST_DIR__TEST_CASE_LEVEL}/dummy_file.txt"
+  dummy_directory="${DM_TEST__TEST_DIR__TEST_CASE_LEVEL}/dummy_directory"
+  dummy_link="${DM_TEST__TEST_DIR__TEST_CASE_LEVEL}/dummy_link"
 }
 
 #==============================================================================

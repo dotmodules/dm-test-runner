@@ -32,22 +32,22 @@
 # directory paths. These could be used in the test cases to set up testing
 # fixtures. The naming of these variables breaks away from the conventions used
 # in the codease to be able to use these variables in the test cases with ease.
-DM_TEST__TEST_DIR__TEST_SUITE='__INVALID__'
-DM_TEST__TEST_DIR__TEST_FILE='__INVALID__'
-DM_TEST__TEST_DIR__TEST_CASE='__INVALID__'
+DM_TEST__TEST_DIR__TEST_SUITE_LEVEL='__INVALID__'
+DM_TEST__TEST_DIR__TEST_FILE_LEVEL='__INVALID__'
+DM_TEST__TEST_DIR__TEST_CASE_LEVEL='__INVALID__'
 
 #==============================================================================
 # Creates the suite level test directory.
 #------------------------------------------------------------------------------
 # Globals:
-#   DM_TEST__TEST_DIR__TEST_SUITE
+#   DM_TEST__TEST_DIR__TEST_SUITE_LEVEL
 # Arguments:
 #   None
 # STDIN:
 #   None
 #------------------------------------------------------------------------------
 # Output variables:
-#   DM_TEST__TEST_DIR__TEST_SUITE
+#   DM_TEST__TEST_DIR__TEST_SUITE_LEVEL
 # STDOUT:
 #   None
 # STDERR:
@@ -56,27 +56,34 @@ DM_TEST__TEST_DIR__TEST_CASE='__INVALID__'
 #   0 - Other status is not expected.
 #------------------------------------------------------------------------------
 # Tools:
-#   None
+#   printf echo
 #==============================================================================
 dm_test__cache__init_test_directory__test_suite_level() {
-  DM_TEST__TEST_DIR__TEST_SUITE="$(dm_test__cache__create_temp_directory)"
+  DM_TEST__TEST_DIR__TEST_SUITE_LEVEL="$( \
+    dm_test__cache__create_temp_directory \
+  )"
 
   dm_test__debug 'dm_test__cache__init_test_directory__test_suite_level' \
-    "test suite level test dir created: '${DM_TEST__TEST_DIR__TEST_SUITE}'"
+    'test suite level test dir created:'
+  dm_test__debug 'dm_test__cache__init_test_directory__test_suite_level' \
+    "$( \
+      printf '%s' 'DM_TEST__TEST_DIR__TEST_SUITE_LEVEL: ' \
+      echo "'${DM_TEST__TEST_DIR__TEST_SUITE_LEVEL}'" \
+    )"
 }
 
 #==============================================================================
 # Creates the file level test directory.
 #------------------------------------------------------------------------------
 # Globals:
-#   DM_TEST__TEST_DIR__TEST_FILE
+#   DM_TEST__TEST_DIR__TEST_FILE_LEVEL
 # Arguments:
 #   None
 # STDIN:
 #   None
 #------------------------------------------------------------------------------
 # Output variables:
-#   DM_TEST__TEST_DIR__TEST_FILE
+#   DM_TEST__TEST_DIR__TEST_FILE_LEVEL
 # STDOUT:
 #   None
 # STDERR:
@@ -85,27 +92,32 @@ dm_test__cache__init_test_directory__test_suite_level() {
 #   0 - Other status is not expected.
 #------------------------------------------------------------------------------
 # Tools:
-#   None
+#   printf echo
 #==============================================================================
 dm_test__cache__init_test_directory__test_file_level() {
-  DM_TEST__TEST_DIR__TEST_FILE="$(dm_test__cache__create_temp_directory)"
+  DM_TEST__TEST_DIR__TEST_FILE_LEVEL="$(dm_test__cache__create_temp_directory)"
 
   dm_test__debug 'dm_test__cache__init_test_directory__test_file_level' \
-    "test file level test dir created: '${DM_TEST__TEST_DIR__TEST_FILE}'"
+    'test file level test dir created:'
+  dm_test__debug 'dm_test__cache__init_test_directory__test_file_level' \
+    "$( \
+      printf '%s' 'DM_TEST__TEST_DIR__TEST_FILE_LEVEL: ' \
+      echo "'${DM_TEST__TEST_DIR__TEST_FILE_LEVEL}'" \
+    )"
 }
 
 #==============================================================================
 # Creates the case level test directory.
 #------------------------------------------------------------------------------
 # Globals:
-#   DM_TEST__TEST_DIR__TEST_CASE
+#   DM_TEST__TEST_DIR__TEST_CASE_LEVEL
 # Arguments:
 #   None
 # STDIN:
 #   None
 #------------------------------------------------------------------------------
 # Output variables:
-#   DM_TEST__TEST_DIR__TEST_CASE
+#   DM_TEST__TEST_DIR__TEST_CASE_LEVEL
 # STDOUT:
 #   None
 # STDERR:
@@ -114,11 +126,16 @@ dm_test__cache__init_test_directory__test_file_level() {
 #   0 - Other status is not expected.
 #------------------------------------------------------------------------------
 # Tools:
-#   None
+#   printf echo
 #==============================================================================
 dm_test__cache__init_test_directory__test_case_level() {
-  DM_TEST__TEST_DIR__TEST_CASE="$(dm_test__cache__create_temp_directory)"
+  DM_TEST__TEST_DIR__TEST_CASE_LEVEL="$(dm_test__cache__create_temp_directory)"
 
   dm_test__debug 'dm_test__cache__init_test_directory__test_case_level' \
-    "test case level test dir created: '${DM_TEST__TEST_DIR__TEST_CASE}'"
+    'test case level test dir created:'
+  dm_test__debug 'dm_test__cache__init_test_directory__test_case_level' \
+    "$( \
+      printf '%s' 'DM_TEST__TEST_DIR__TEST_CASE_LEVEL: ' \
+      echo "'${DM_TEST__TEST_DIR__TEST_CASE_LEVEL}'" \
+    )"
 }
