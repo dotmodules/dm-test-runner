@@ -21,18 +21,35 @@ cd "$(dirname "$(readlink -f "$0")")"
 # usable we can set the global coloring variables with it.
 if command -v tput >/dev/null && tput init >/dev/null 2>&1
 then
-  DIM="$(tput dim)"
-  BOLD="$(tput bold)"
   RED="$(tput setaf 1)"
   GREEN="$(tput setaf 2)"
+  BLUE="$(tput setaf 4)"
   RESET="$(tput sgr0)"
+  BOLD="$(tput bold)"
+  DIM="$(tput dim)"
 else
-  DIM=''
-  BOLD=''
   RED=''
   GREEN=''
+  BLUE=''
   RESET=''
+  BOLD=''
+  DIM=''
 fi
+
+log_task() {
+  message="$1"
+    echo "${BOLD}[ ${BLUE}>>${RESET}${BOLD} ]${RESET} ${message}"
+}
+
+log_success() {
+  message="$1"
+    echo "${BOLD}[ ${GREEN}OK${RESET}${BOLD} ]${RESET} ${message}"
+}
+
+log_failure() {
+  message="$1"
+    echo "${BOLD}[ ${RED}!!${RESET}${BOLD} ]${RESET} ${message}"
+}
 
 #==============================================================================
 # RESULT VALIDATION
@@ -169,6 +186,29 @@ echo '  |_|  |_|\___/ \___/|_|\_\___/'
 echo "${RESET}"
 
 . ./run_test_hooks.sh
+
+#==============================================================================
+# SHELLCHECK VALIDATION
+#==============================================================================
+
+run_shellcheck() {
+  if command -v shellcheck >/dev/null
+  then
+    log_task 'running shellcheck..'
+    current_path="$(pwd)"
+    cd ../src
+    # Specifying shell type here to be able to omit the shebangs from the
+    # modules.
+    # More info: https://github.com/koalaman/shellcheck/wiki/SC2148
+    shellcheck --shell=sh -x ./*.sh
+    cd "$current_path"
+    log_success 'shellcheck finished'
+  else
+    echo "WARNING: shellcheck won't be executed as it cannot be found."
+  fi
+}
+
+run_shellcheck
 
 #==============================================================================
 # SUMMARY

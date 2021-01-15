@@ -763,11 +763,11 @@ DM_TEST__ASSERT__RUNTIME__LAST_OUTPUT='__INVALID__'
 #   test printf echo
 #==============================================================================
 run() {
-  ___command="$*"
-
   dm_test__debug 'run' "running command: '$*'"
 
-  if DM_TEST__ASSERT__RUNTIME__LAST_OUTPUT="$($___command)"
+  # Storing the passed command as a variable is not an option here, because it
+  # would be re-splitted on execution.
+  if DM_TEST__ASSERT__RUNTIME__LAST_OUTPUT="$("$@")"
   then
     DM_TEST__ASSERT__RUNTIME__LAST_STATUS="$?"
   else

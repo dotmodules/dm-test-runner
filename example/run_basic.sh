@@ -45,5 +45,5 @@ DM_TEST__CONFIG__OPTIONAL__DEBUG_ENABLED=0
 
 dm_test__run_suite
 
-assert_test_case_count 22
+assert_test_case_count 23
 assert_failure_count 0

@@ -44,4 +44,3 @@ test__hooks__test_case__multiple_hook_functions() {
   echo 'echo during test case - error will happen after this to see the logs'
   cat invalid_file
 }
-

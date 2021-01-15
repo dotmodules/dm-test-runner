@@ -45,4 +45,3 @@ test__hooks__test_case__error_during_setup__case_2() {
 test__hooks__test_case__error_during_setup__case_1() {
   echo 'echo during test case 1'
 }
-

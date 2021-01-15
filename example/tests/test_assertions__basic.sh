@@ -19,7 +19,9 @@ test__assert__common_use_case() {
   assert test '42' -eq '42'
 }
 
-x_test__assert() {
+# These tests are the failure cases picked up by another test runner. In this
+# way the valid and failure cases are in one place.
+should_fail__assert() {
   echo 'Expected [assert] failure.'
   assert false
 }
@@ -35,7 +37,7 @@ test__assert_success() {
   assert_success true
 }
 
-x_test__assert_success() {
+should_fail__assert_success() {
   echo 'Expected [assert_success] failure.'
   assert_success false
 }
@@ -51,7 +53,7 @@ test__assert_failure() {
   assert_failure false
 }
 
-x_test__assert_failure() {
+should_fail__assert_failure() {
   echo 'Expected [assert_failure] failure.'
   assert_failure true
 }
