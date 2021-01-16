@@ -103,13 +103,37 @@ test__assert_line_at_index() {
   assert_line_at_index 2 'hello 2'
 }
 
-should_fail__assert_line_at_index__invalid_index() {
+should_fail__assert_line_at_index__invalid_index__case_1() {
   echo 'Expected [assert_line_at_index] failure.'
   dummy_function() {
+    echo 'hello'
+    echo 'hello'
     echo 'hello'
   }
   run dummy_function
   assert_line_at_index 42 'invalid index'
+}
+
+should_fail__assert_line_at_index__invalid_index__case_2() {
+  echo 'Expected [assert_line_at_index] failure.'
+  dummy_function() {
+    echo 'hello'
+    echo 'hello'
+    echo 'hello'
+  }
+  run dummy_function
+  assert_line_at_index 0 'invalid index'
+}
+
+should_fail__assert_line_at_index__invalid_index__case_3() {
+  echo 'Expected [assert_line_at_index] failure.'
+  dummy_function() {
+    echo 'hello'
+    echo 'hello'
+    echo 'hello'
+  }
+  run dummy_function
+  assert_line_at_index -1 'invalid index'
 }
 
 should_fail__assert_line_at_index__no_match() {
@@ -122,6 +146,22 @@ should_fail__assert_line_at_index__no_match() {
   run dummy_function
   # This assertion matches the whole line.
   assert_line_at_index 2 'hello'
+}
+
+test__assert_line_line_at_index__empty_line_can_be_validated() {
+  dummy_function() {
+    echo ''
+  }
+  run dummy_function
+  assert_line_at_index 1 ''
+}
+
+should_fail__assert_line_at_index__empty_line_wont_get_ignored() {
+  dummy_function() {
+    echo ''
+  }
+  run dummy_function
+  assert_line_at_index 1 'not empty line'
 }
 
 #==============================================================================
@@ -141,13 +181,37 @@ test__assert_line_partially_at_index() {
   assert_line_partially_at_index 2 'hello'
 }
 
-should_fail__assert_line_partially_at_index__invalid_index() {
+should_fail__assert_line_partially_at_index__invalid_index__case_1() {
   echo 'Expected [assert_line_partially_at_index] failure.'
   dummy_function() {
-    echo 'hello 1'
+    echo 'hello'
+    echo 'hello'
+    echo 'hello'
   }
   run dummy_function
   assert_line_partially_at_index 42 'hello'
+}
+
+should_fail__assert_line_partially_at_index__invalid_index__case_2() {
+  echo 'Expected [assert_line_partially_at_index] failure.'
+  dummy_function() {
+    echo 'hello'
+    echo 'hello'
+    echo 'hello'
+  }
+  run dummy_function
+  assert_line_partially_at_index 0 'hello'
+}
+
+should_fail__assert_line_partially_at_index__invalid_index__case_3() {
+  echo 'Expected [assert_line_partially_at_index] failure.'
+  dummy_function() {
+    echo 'hello'
+    echo 'hello'
+    echo 'hello'
+  }
+  run dummy_function
+  assert_line_partially_at_index -1 'hello'
 }
 
 should_fail__assert_line_partially_at_index__no_match() {
@@ -159,6 +223,22 @@ should_fail__assert_line_partially_at_index__no_match() {
   }
   run dummy_function
   assert_line_partially_at_index 2 'unrelated content'
+}
+
+test__assert_line_partially_at_index__empty_line_can_be_validated() {
+  dummy_function() {
+    echo ''
+  }
+  run dummy_function
+  assert_line_partially_at_index 1 ''
+}
+
+should_fail__assert_line_partially_at_index__empty_line_wont_get_ignored() {
+  dummy_function() {
+    echo ''
+  }
+  run dummy_function
+  assert_line_partially_at_index 1 'not empty line'
 }
 
 #==============================================================================

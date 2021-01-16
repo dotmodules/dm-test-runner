@@ -961,17 +961,20 @@ assert_line_at_index() {
   ___index="$1"
   ___expected="$2"
 
-  ___result="$( \
-    dm_test__assert__get_line_from_output_by_index \
+  if ___result="$( \
+    dm_test__get_line_from_output_by_index \
       "$___index" \
       "$DM_TEST__ASSERT__RUNTIME__LAST_OUTPUT" \
   )"
-
-  # If there is no line captured, we can assume that the index was invalid. The
-  # index checking is running in a subprocess, so exiting there won't affect
-  # the current shell.
-  if [ -z "$___result" ]
   then
+    # Line extraction succeeded, the '__result' variable contains the extracted
+    # line.
+    :
+  else
+    # As the line extraction function returned a nonzero status, the line
+    # extraction failed, and the error was already reported. Since it is
+    # happened in a subshell to obtain the output from it, the execution won't
+    # stopped here, so we should simply return from here.
     return
   fi
 
@@ -1023,17 +1026,20 @@ assert_line_partially_at_index() {
   ___index="$1"
   ___expected="$2"
 
-  ___result="$( \
-    dm_test__assert__get_line_from_output_by_index \
+  if ___result="$( \
+    dm_test__get_line_from_output_by_index \
       "$___index" \
       "$DM_TEST__ASSERT__RUNTIME__LAST_OUTPUT" \
   )"
-
-  # If there is no line captured, we can assume that the index was invalid. The
-  # index checking is running in a subprocess, so exiting there won't affect
-  # the current shell.
-  if [ -z "$___result" ]
   then
+    # Line extraction succeeded, the '__result' variable contains the extracted
+    # line.
+    :
+  else
+    # As the line extraction function returned a nonzero status, the line
+    # extraction failed, and the error was already reported. Since it is
+    # happened in a subshell to obtain the output from it, the execution won't
+    # stopped here, so we should simply return from here.
     return
   fi
 
@@ -1073,7 +1079,8 @@ assert_line_partially_at_index() {
 # assertion. This function can be used in the test cases as a helper function
 # to access specific lines in the output.
 #
-# This function is intended to be used in the test cases if needed.
+# This function is intended to be used in the test cases if needed, hence the
+# missing assert naming scope.
 #------------------------------------------------------------------------------
 # Globals:
 #   DM_TEST__ASSERT__RUNTIME__LAST_OUTPUT
@@ -1095,22 +1102,23 @@ assert_line_partially_at_index() {
 # Tools:
 #   echo wc sed test
 #==============================================================================
-dm_test__assert__get_line_from_output_by_index() {
+dm_test__get_line_from_output_by_index() {
   ___line_index="$1"
+
   ___lines="$DM_TEST__ASSERT__RUNTIME__LAST_OUTPUT"
 
-  dm_test__debug_list 'dm_test__assert__get_line_from_output_by_index' \
+  dm_test__debug_list 'dm_test__get_line_from_output_by_index' \
     "getting line for index '${___line_index}' from output:" "$___lines"
 
   ___line_count="$(echo "$___lines" | wc --lines)"
-  if [ "$___line_index" -gt "$___line_count" ]
+  if [ "$___line_index" -gt "$___line_count" ] || [ "$___line_index" -lt '1' ]
   then
-    dm_test__debug 'dm_test__assert__get_line_from_output_by_index' \
-      "invalid line index! should be insite the range of [1-${___line_count}]"
+    dm_test__debug 'dm_test__get_line_from_output_by_index' \
+      "invalid line index! should be inside the range of [1-${___line_count}]"
 
     ___subject='Line index is out of range'
     ___reason="$( \
-      echo "max line index: '${___line_count}'"; \
+      echo "index should be in range: [1-${___line_count}]"; \
       echo "given index: '${___line_index}'" \
     )"
     ___assertion='utils__get_line_from_output_by_index'
@@ -1120,7 +1128,7 @@ dm_test__assert__get_line_from_output_by_index() {
   # Getting the indexed line.
   ___line="$(echo "$___lines" | sed "${___line_index}q;d")"
 
-  dm_test__debug_list 'dm_test__assert__get_line_from_output_by_index' \
+  dm_test__debug_list 'dm_test__get_line_from_output_by_index' \
     'line selected:' "$___line"
 
   echo "$___line"
