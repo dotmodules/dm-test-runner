@@ -130,11 +130,9 @@ dm_test__test_case__execute_test_cases() {
 }
 
 #==============================================================================
-# Setting the current test file name into a global variable that can be
-# accessed later on. Only stores the filename, the extension will be ignored,
-# It expects that the filename has this pattern: '<filename>.<extension>'. If
-# there is a period in the filename, then the filename will be only the part
-# before the first period.
+# Setting the current test file path into a global variable that can be
+# accessed later on. It removes the first dot from the path that is relative to
+# the  test runner script.
 #------------------------------------------------------------------------------
 # Globals:
 #   DM_TEST__TEST_CASE__RUNTIME__FILE_UNDER_EXECUTION
@@ -159,7 +157,7 @@ dm_test__test_case__set_current_test_file() {
   ___test_file_path="$1"
 
   DM_TEST__TEST_CASE__RUNTIME__FILE_UNDER_EXECUTION="$( \
-    basename "$___test_file_path" | cut -d '.' -f 1 \
+    echo "$___test_file_path" | cut --delimiter '/' --field '2-' \
   )"
 
   dm_test__debug 'dm_test__test_case__set_current_test_file' \
@@ -226,7 +224,7 @@ dm_test__test_case__set_current_test_case() {
 #==============================================================================
 dm_test__test_case__get_current_test_case_identifier() {
   printf '%s' "$DM_TEST__TEST_CASE__RUNTIME__FILE_UNDER_EXECUTION"
-  printf '%s' '.'
+  printf '%s' ' - '
   echo "$DM_TEST__TEST_CASE__RUNTIME__TEST_UNDER_EXECUTION"
 }
 
