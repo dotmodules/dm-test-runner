@@ -229,6 +229,37 @@ dm_test__test_case__get_current_test_case_identifier() {
 }
 
 #==============================================================================
+# Prints out the colorized test identifier.
+#------------------------------------------------------------------------------
+# Globals:
+#   DM_TEST__TEST_CASE__RUNTIME__FILE_UNDER_EXECUTION
+#   DM_TEST__TEST_CASE__RUNTIME__TEST_UNDER_EXECUTION
+#   BOLD
+#   RESET
+# Arguments:
+#   None
+# STDIN:
+#   None
+#------------------------------------------------------------------------------
+# Output variables:
+#   None
+# STDOUT:
+#   Currently executing test case identifier.
+# STDERR:
+#   None
+# Status:
+#   0 - Other status is not expected.
+#------------------------------------------------------------------------------
+# Tools:
+#   echo printf
+#==============================================================================
+dm_test__test_case__get_current_colorized_test_case_identifier() {
+  printf '%s' "${RESET}${DM_TEST__TEST_CASE__RUNTIME__FILE_UNDER_EXECUTION}"
+  printf '%s' ' - '
+  echo "${BOLD}${DM_TEST__TEST_CASE__RUNTIME__TEST_UNDER_EXECUTION}${RESET}"
+}
+
+#==============================================================================
 #  ____       _            _         _          _
 # |  _ \ _ __(_)_   ____ _| |_ ___  | |__   ___| |_ __   ___ _ __ ___
 # | |_) | '__| \ \ / / _` | __/ _ \ | '_ \ / _ \ | '_ \ / _ \ '__/ __|
@@ -607,8 +638,7 @@ _dm_test__execute_and_capture__teardown_hook() {
 # debug output.
 #------------------------------------------------------------------------------
 # Globals:
-#   BOLD
-#   RESET
+#   None
 # Arguments:
 #   None
 # STDIN:
@@ -630,8 +660,9 @@ _dm_test__print_test_case_identifier() {
   dm_test__debug '_dm_test__print_test_case_identifier' \
     'displaying test case identifier..'
 
-  ___identifier="$(dm_test__test_case__get_current_test_case_identifier)"
-  ___identifier="${BOLD}${___identifier}${RESET}"
+  ___identifier="$( \
+    dm_test__test_case__get_current_colorized_test_case_identifier \
+  )"
 
   if dm_test__config__debug_is_enabled
   then

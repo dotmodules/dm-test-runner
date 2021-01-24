@@ -555,45 +555,54 @@ dm_test__test_suite__print_header() {
   printf '%s' "$DIM"
   printf '%s' '---------------------------------------------------------------'
   echo '----------------'
-  echo '>> DM TEST <<'
+  echo '>> DM.TEST <<'
 
   #============================================================================
   # CONFIG SECTION
   #============================================================================
   printf '%s' '---------------------------------------------------------------'
   echo '----------------'
-  echo '$ dm.test.sh --config'
+  printf '%s' "$RESET"
 
   # Mandatory config variables
-  printf '%s' 'DM_TEST__CONFIG__MANDATORY__SUBMODULE_PATH_PREFIX='
-  echo "'${DM_TEST__CONFIG__MANDATORY__SUBMODULE_PATH_PREFIX}'"
+  _dm_test__test_suite__print_header__print_config \
+    'DM_TEST__CONFIG__MANDATORY__SUBMODULE_PATH_PREFIX' \
+    "$DM_TEST__CONFIG__MANDATORY__SUBMODULE_PATH_PREFIX"
 
-  printf '%s' 'DM_TEST__CONFIG__MANDATORY__TEST_FILES_ROOT='
-  echo "'${DM_TEST__CONFIG__MANDATORY__TEST_FILES_ROOT}'"
+  _dm_test__test_suite__print_header__print_config \
+    'DM_TEST__CONFIG__MANDATORY__TEST_FILES_ROOT' \
+    "$DM_TEST__CONFIG__MANDATORY__TEST_FILES_ROOT"
 
-  printf '%s' 'DM_TEST__CONFIG__MANDATORY__TEST_FILE_PREFIX='
-  echo "'${DM_TEST__CONFIG__MANDATORY__TEST_FILE_PREFIX}'"
+  _dm_test__test_suite__print_header__print_config \
+    'DM_TEST__CONFIG__MANDATORY__TEST_FILE_PREFIX' \
+    "$DM_TEST__CONFIG__MANDATORY__TEST_FILE_PREFIX"
 
-  printf '%s' 'DM_TEST__CONFIG__MANDATORY__TEST_CASE_PREFIX='
-  echo "'${DM_TEST__CONFIG__MANDATORY__TEST_CASE_PREFIX}'"
+  _dm_test__test_suite__print_header__print_config \
+    'DM_TEST__CONFIG__MANDATORY__TEST_CASE_PREFIX' \
+    "$DM_TEST__CONFIG__MANDATORY__TEST_CASE_PREFIX"
 
   # Optional config variables
-  printf '%s' 'DM_TEST__CONFIG__OPTIONAL__CACHE_PARENT_DIRECTORY='
-  echo "'${DM_TEST__CONFIG__OPTIONAL__CACHE_PARENT_DIRECTORY}'"
+  _dm_test__test_suite__print_header__print_config \
+    'DM_TEST__CONFIG__OPTIONAL__CACHE_PARENT_DIRECTORY' \
+    "$DM_TEST__CONFIG__OPTIONAL__CACHE_PARENT_DIRECTORY"
 
-  printf '%s' 'DM_TEST__CONFIG__OPTIONAL__EXIT_ON_FAILURE='
-  echo "'${DM_TEST__CONFIG__OPTIONAL__EXIT_ON_FAILURE}'"
+  _dm_test__test_suite__print_header__print_config \
+    'DM_TEST__CONFIG__OPTIONAL__EXIT_ON_FAILURE' \
+    "$DM_TEST__CONFIG__OPTIONAL__EXIT_ON_FAILURE"
 
-  printf '%s' 'DM_TEST__CONFIG__OPTIONAL__EXIT_STATUS_ON_FAILURE='
-  echo "'${DM_TEST__CONFIG__OPTIONAL__EXIT_STATUS_ON_FAILURE}'"
+  _dm_test__test_suite__print_header__print_config \
+    'DM_TEST__CONFIG__OPTIONAL__EXIT_STATUS_ON_FAILURE' \
+    "$DM_TEST__CONFIG__OPTIONAL__EXIT_STATUS_ON_FAILURE"
 
-  printf '%s' \
-    'DM_TEST__CONFIG__OPTIONAL__ALWAYS_DISPLAY_FILE_LEVEL_HOOK_OUTPUT='
-  echo "'${DM_TEST__CONFIG__OPTIONAL__ALWAYS_DISPLAY_FILE_LEVEL_HOOK_OUTPUT}'"
+  _dm_test__test_suite__print_header__print_config \
+    'DM_TEST__CONFIG__OPTIONAL__ALWAYS_DISPLAY_FILE_LEVEL_HOOK_OUTPUT' \
+    "$DM_TEST__CONFIG__OPTIONAL__ALWAYS_DISPLAY_FILE_LEVEL_HOOK_OUTPUT"
 
-  printf '%s' 'DM_TEST__CONFIG__OPTIONAL__DEBUG_ENABLED='
-  echo "'${DM_TEST__CONFIG__OPTIONAL__DEBUG_ENABLED}'"
+  _dm_test__test_suite__print_header__print_config \
+    'DM_TEST__CONFIG__OPTIONAL__DEBUG_ENABLED' \
+    "$DM_TEST__CONFIG__OPTIONAL__DEBUG_ENABLED"
 
+  printf '%s' "$DIM"
   #============================================================================
   # SYSTEM INFO SECTION
   #============================================================================
@@ -616,6 +625,67 @@ dm_test__test_suite__print_header() {
   printf '%s' '---------------------------------------------------------------'
   echo '----------------'
   printf '%s' "$RESET"
+}
+
+#==============================================================================
+# Providas a fancy way to print out a variable and its value.
+#------------------------------------------------------------------------------
+# Globals:
+#   DIM
+#   RESET
+# Arguments:
+#   [1] variable_name - Name of the variable you want to print out.
+#   [2] variable_value - Value that needs to be printed.
+# STDIN:
+#   None
+#------------------------------------------------------------------------------
+# Output variables:
+#   None
+# STDOUT:
+#   Single padded line that contains the variable and the variable value.
+# STDERR:
+#   None
+# Status:
+#   0 - Other status is not expected.
+#------------------------------------------------------------------------------
+# Tools:
+#   wc printf test
+#==============================================================================
+_dm_test__test_suite__print_header__print_config() {
+  ___name="$1"
+  ___value="$2"
+
+  dm_test__debug '_dm_test__test_suite__print_header__print_config' \
+    'printing configuration line for name and value:'
+  dm_test__debug '_dm_test__test_suite__print_header__print_config' \
+    "- '${___name}'"
+  dm_test__debug '_dm_test__test_suite__print_header__print_config' \
+    "- '${___value}'"
+
+  # Space padding after the name and before the value.
+  ___name="${___name} "
+  ___value=" ${___value}"
+
+  ___name_length="$(printf '%s' "$___name" | wc --chars)"
+  ___value_length="$(printf '%s' "$___value" | wc --chars)"
+
+  ___pad_length='79'
+  ___pad='............................................................'  # 60
+  ___pad="${___pad}..................."  # 19
+
+  ___pad_length="$(( ___pad_length - ___name_length - ___value_length ))"
+
+  # Start the printout.
+  printf '%s' "$DIM"
+  printf '%s' "$___name"
+
+  # Print the padding if there is paddable space left.
+  if [ "$___pad_length" -gt '0' ]
+  then
+    printf '%*.*s' 0 "$___pad_length" "$___pad"
+  fi
+
+  printf '%s\n' "${___value}${RESET}"
 }
 
 #==============================================================================
