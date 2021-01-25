@@ -174,3 +174,41 @@ _dm_test__utils__assert_tools() {
   dm_test__debug '_dm_test__utils__assert_tools' \
     'required tool assertion finished with success'
 }
+
+#==============================================================================
+# Strip all coloring characters from the input string if possible.
+#------------------------------------------------------------------------------
+# Globals:
+#   None
+# Arguments:
+#   None
+# STDIN:
+#   String that need to be decolored.
+#------------------------------------------------------------------------------
+# Output variables:
+#   None
+# STDOUT:
+#   None
+# STDERR:
+#   Decolored string.
+# Status:
+#   0 - Other status is not expected.
+#------------------------------------------------------------------------------
+# Tools:
+#   cat sed test
+#==============================================================================
+_dm_test__utils__strip_colors() {
+  # Solution derived from https://superuser.com/a/380778
+  # The output of the 'tput sgr0' reset character could be '033 ( B' so the
+  # replace pattern has to be extended.
+  ___pattern='s/\x1b[\[\(][0-9;]*[mB]//g'
+
+  # Making sure that the running system supports the necessary escape
+  # characters.. If not no stripping will be executed.
+  if echo '' | sed "$___pattern"  >/dev/null 2>&1
+  then
+    cat - | sed "$___pattern"
+  else
+    cat -
+  fi
+}

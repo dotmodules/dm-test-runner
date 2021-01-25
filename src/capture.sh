@@ -45,6 +45,9 @@
 DM_TEST__CAPTURE__CONSTANT__EXECUTE_COMMAND_IN_SUBSHELL='1'
 DM_TEST__CAPTURE__CONSTANT__EXECUTE_COMMAND_DIRECTLY='0'
 
+# Captured line character limit for the capture process debugger output.
+DM_TEST__CAPTURE__CONSTANT__CAPTURED_LINE_EXCERPT_LIMIT='92'
+
 # Runtime variables to be able to store the process outputs.
 DM_TEST__CAPTURE__RUNTIME__TEMP_FILE__FD1='__INVALID__'
 DM_TEST__CAPTURE__RUNTIME__TEMP_FILE__FD2='__INVALID__'
@@ -164,13 +167,13 @@ dm_test__capture__run_and_capture() {
   dm_test__debug 'dm_test__capture__run_and_capture' \
     'starting file descriptor processing workers in the background..'
 
-  _dm_test__capture__capture_output_for_domain 'stdout' "$BLUE" \
+  _dm_test__capture__capture_output_for_domain 'stdout' "$BLUE" 'FD1' \
     <"$___fifo__fd1" >>"$___file__fd1" &
   ___pid__fd1="$!"
-  _dm_test__capture__capture_output_for_domain 'stderr' "$RED" \
+  _dm_test__capture__capture_output_for_domain 'stderr' "$RED" 'FD2' \
     <"$___fifo__fd2" >>"$___file__fd2" &
   ___pid__fd2="$!"
-  _dm_test__capture__capture_output_for_domain 'debug ' "$DIM" \
+  _dm_test__capture__capture_output_for_domain 'debug ' "$DIM" 'FD3' \
     <"$___fifo__fd3" >>"$___file__fd3" &
   ___pid__fd3="$!"
 
@@ -218,14 +221,14 @@ dm_test__capture__run_and_capture() {
   fi
 
   dm_test__debug 'dm_test__capture__run_and_capture' \
-    '%%%%%%%%%%%%%%%% waiting for file descriptor processing workers..'
+    '[..] waiting for capturing processes to finish..'
 
   # Waiting for the output processor background processes to finish. After
   # this, the outputs are available in the temporary files.
   wait "$___pid__fd1" "$___pid__fd2" "$___pid__fd3"
 
   dm_test__debug 'dm_test__capture__run_and_capture' \
-    'evaluating test case results..'
+    '[..] capturing processes finished, evaluating test case results..'
 
   return "$___status"
 }
@@ -440,6 +443,7 @@ _dm_test__capture__create_temp_fifo() {
 # Arguments:
 #   [1] domain - Domain name the processing is happening in.
 #   [2] color - The color the line should be colored with.
+#   [3] file_descriptor - File descriptor number of the capturing process..
 # STDIN:
 #   Processable lines of text.
 #------------------------------------------------------------------------------
@@ -453,24 +457,38 @@ _dm_test__capture__create_temp_fifo() {
 #   0 - Other status is not expected.
 #------------------------------------------------------------------------------
 # Tools:
-#   read echo printf
+#   read echo printf cut
 #==============================================================================
 _dm_test__capture__capture_output_for_domain() {
   ___worker_domain="$1"
   ___worker_color="$2"
+  ___worker_fd="$3"
 
   dm_test__debug '_dm_test__capture__capture_output_for_domain' \
-    ">> processing worker for domain '${___worker_domain}' is waiting for input.."
+    "[${___worker_fd}] capturing process started"
 
   while read -r ___worker_line
   do
     ___timestamp="$(_dm_test__capture__create_timestamp)"
     printf '%s' "${___timestamp} ${___worker_color}${___worker_domain} | "
     echo "${___worker_line}${RESET}"
+
+    # Skipping the excerpt generation if not in debug mode..
+    if dm_test__config__debug_is_enabled
+    then
+      ___limit="$DM_TEST__CAPTURE__CONSTANT__CAPTURED_LINE_EXCERPT_LIMIT"
+      ___excerpt="$( \
+        echo "$___worker_line" | \
+        _dm_test__utils__strip_colors | \
+        cut --characters="1-${___limit}" \
+      )"
+      dm_test__debug '_dm_test__capture__capture_output_for_domain' \
+        "[${___worker_fd}] captured line excerpt: '${___excerpt}'"
+    fi
   done
 
   dm_test__debug '_dm_test__capture__capture_output_for_domain' \
-    ">> worker process finished for domain '${___worker_domain}'"
+    "[${___worker_fd}] capturing process finished"
 }
 
 #==============================================================================
