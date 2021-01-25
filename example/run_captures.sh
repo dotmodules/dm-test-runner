@@ -21,8 +21,8 @@ cd "$(dirname "$(readlink -f "$0")")"
 # Relative path to from the current path to the test runner repo.
 DM_TEST__CONFIG__MANDATORY__SUBMODULE_PATH_PREFIX='./runner'
 
-DM_TEST__CONFIG__MANDATORY__TEST_FILE_PREFIX='test_'
-DM_TEST__CONFIG__MANDATORY__TEST_CASE_PREFIX='capture_test_'
+DM_TEST__CONFIG__MANDATORY__TEST_FILE_PREFIX='capture_'
+DM_TEST__CONFIG__MANDATORY__TEST_CASE_PREFIX='test_'
 DM_TEST__CONFIG__MANDATORY__TEST_FILES_ROOT='./tests'
 
 DM_TEST__CONFIG__OPTIONAL__CACHE_PARENT_DIRECTORY='./temp_cache_directory'
@@ -45,5 +45,5 @@ DM_TEST__CONFIG__OPTIONAL__DEBUG_ENABLED=0
 
 dm_test__run_suite
 
-assert_test_case_count 4
-assert_failure_count 3
+assert_test_case_count 5
+assert_failure_count 4

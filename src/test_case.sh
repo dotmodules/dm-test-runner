@@ -530,7 +530,11 @@ _dm_test__execute_and_capture__setup_hook() {
     dm_test__debug '_dm_test__execute_and_capture__setup_hook' \
       'running setup hook'
 
-    if dm_test__capture__run_and_capture 'dm_test__hooks__trigger_hook__setup'
+    # Running the setup hook triggering directly in this shell to be able to
+    # affect the environment.
+    if dm_test__capture__run_and_capture \
+      "$DM_TEST__CAPTURE__CONSTANT__EXECUTE_COMMAND_DIRECTLY" \
+      'dm_test__hooks__trigger_hook__setup'
     then
       ___status__setup="$?"
     else
@@ -577,7 +581,12 @@ _dm_test__execute_and_capture__test_case() {
   dm_test__debug '_dm_test__execute_and_capture__test_case' \
     'running test case function in a separate subshell'
 
-  if ( dm_test__capture__run_and_capture "$___test_case" )
+  # Running the test case function in an additional subshell to make the exit
+  # call due to a failed assertion isolated from the currently executing shell
+  # to be able to finish capturing all of the outputs.
+  if dm_test__capture__run_and_capture \
+    "$DM_TEST__CAPTURE__CONSTANT__EXECUTE_COMMAND_IN_SUBSHELL" \
+    "$___test_case"
   then
     ___status__test_case="$?"
   else
@@ -617,7 +626,10 @@ _dm_test__execute_and_capture__teardown_hook() {
     dm_test__debug '_dm_test__execute_and_capture__teardown_hook' \
       'running teardown hook'
 
+    # Running the teardown hook triggering directly in this shell to be able to
+    # affect the environment.
     if dm_test__capture__run_and_capture \
+      "$DM_TEST__CAPTURE__CONSTANT__EXECUTE_COMMAND_DIRECTLY" \
       'dm_test__hooks__trigger_hook__teardown'
     then
       ___status__teardown="$?"

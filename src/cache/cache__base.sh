@@ -585,7 +585,4 @@ dm_test__cache__create_temp_directory() {
 _dm_test__cache__generate_postfix() {
   ___postfix="$(date +'%s%N')"
   echo "$___postfix"
-
-  dm_test__debug '_dm_test__cache__generate_postfix' \
-    "postfix generated: '${___postfix}'"
 }

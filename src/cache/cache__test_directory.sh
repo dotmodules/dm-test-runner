@@ -67,7 +67,7 @@ dm_test__cache__init_test_directory__test_suite_level() {
     'test suite level test dir created:'
   dm_test__debug 'dm_test__cache__init_test_directory__test_suite_level' \
     "$( \
-      printf '%s' 'DM_TEST__TEST_DIR__TEST_SUITE_LEVEL: ' \
+      printf '%s' 'DM_TEST__TEST_DIR__TEST_SUITE_LEVEL: '; \
       echo "'${DM_TEST__TEST_DIR__TEST_SUITE_LEVEL}'" \
     )"
 }
@@ -101,7 +101,7 @@ dm_test__cache__init_test_directory__test_file_level() {
     'test file level test dir created:'
   dm_test__debug 'dm_test__cache__init_test_directory__test_file_level' \
     "$( \
-      printf '%s' 'DM_TEST__TEST_DIR__TEST_FILE_LEVEL: ' \
+      printf '%s' 'DM_TEST__TEST_DIR__TEST_FILE_LEVEL: '; \
       echo "'${DM_TEST__TEST_DIR__TEST_FILE_LEVEL}'" \
     )"
 }
@@ -135,7 +135,7 @@ dm_test__cache__init_test_directory__test_case_level() {
     'test case level test dir created:'
   dm_test__debug 'dm_test__cache__init_test_directory__test_case_level' \
     "$( \
-      printf '%s' 'DM_TEST__TEST_DIR__TEST_CASE_LEVEL: ' \
+      printf '%s' 'DM_TEST__TEST_DIR__TEST_CASE_LEVEL: '; \
       echo "'${DM_TEST__TEST_DIR__TEST_CASE_LEVEL}'" \
     )"
 }

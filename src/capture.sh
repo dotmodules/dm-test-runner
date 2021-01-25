@@ -38,15 +38,17 @@
 # process the outputs in the correct order.
 #==============================================================================
 
+# Predefined capture in a subshell flags for the capturing function. See
+# details in the 'dm_test__capture__run_and_capture' function definition. These
+# constants won't be used in this file, hence the shellcheck command.
+# shellcheck disable=SC2034
+DM_TEST__CAPTURE__CONSTANT__EXECUTE_COMMAND_IN_SUBSHELL='1'
+DM_TEST__CAPTURE__CONSTANT__EXECUTE_COMMAND_DIRECTLY='0'
+
 # Runtime variables to be able to store the process outputs.
 DM_TEST__CAPTURE__RUNTIME__TEMP_FILE__FD1='__INVALID__'
 DM_TEST__CAPTURE__RUNTIME__TEMP_FILE__FD2='__INVALID__'
 DM_TEST__CAPTURE__RUNTIME__TEMP_FILE__FD3='__INVALID__'
-
-# Runtime variables to be able to redirect and process the outputs.
-DM_TEST__CAPTURE__RUNTIME__TEMP_FIFO__FD1='__INVALID__'
-DM_TEST__CAPTURE__RUNTIME__TEMP_FIFO__FD2='__INVALID__'
-DM_TEST__CAPTURE__RUNTIME__TEMP_FIFO__FD3='__INVALID__'
 
 #==============================================================================
 #     _    ____ ___    __                  _   _
@@ -74,9 +76,6 @@ DM_TEST__CAPTURE__RUNTIME__TEMP_FIFO__FD3='__INVALID__'
 #   DM_TEST__CAPTURE__RUNTIME__TEMP_FILE__FD1
 #   DM_TEST__CAPTURE__RUNTIME__TEMP_FILE__FD2
 #   DM_TEST__CAPTURE__RUNTIME__TEMP_FILE__FD3
-#   DM_TEST__CAPTURE__RUNTIME__TEMP_FIFO__FD1
-#   DM_TEST__CAPTURE__RUNTIME__TEMP_FIFO__FD2
-#   DM_TEST__CAPTURE__RUNTIME__TEMP_FIFO__FD3
 # STDOUT:
 #   Path to the generated fifo.
 # STDERR:
@@ -103,19 +102,6 @@ dm_test__capture__init() {
   )"
   dm_test__debug 'dm_test__capture__init' 'temporary capture files initialized'
 
-  dm_test__debug 'dm_test__capture__init' \
-    'initializing temporary capture fifos..'
-  DM_TEST__CAPTURE__RUNTIME__TEMP_FIFO__FD1="$( \
-    _dm_test__capture__create_temp_fifo \
-  )"
-  DM_TEST__CAPTURE__RUNTIME__TEMP_FIFO__FD2="$( \
-    _dm_test__capture__create_temp_fifo \
-  )"
-  DM_TEST__CAPTURE__RUNTIME__TEMP_FIFO__FD3="$( \
-    _dm_test__capture__create_temp_fifo \
-  )"
-  dm_test__debug 'dm_test__capture__init' 'temporary capture fifos initialized'
-
   dm_test__debug 'dm_test__capture__init' 'capture system initialized'
 }
 
@@ -132,13 +118,15 @@ dm_test__capture__init() {
 #   DM_TEST__CAPTURE__RUNTIME__TEMP_FILE__FD1
 #   DM_TEST__CAPTURE__RUNTIME__TEMP_FILE__FD2
 #   DM_TEST__CAPTURE__RUNTIME__TEMP_FILE__FD3
-#   DM_TEST__CAPTURE__RUNTIME__TEMP_FIFO__FD1
-#   DM_TEST__CAPTURE__RUNTIME__TEMP_FIFO__FD2
-#   DM_TEST__CAPTURE__RUNTIME__TEMP_FIFO__FD3
 #   BLUE
 #   RED
 #   DIM
 # Arguments:
+#   [1] execute_in_subshell_flag - This flag indicates if the passed command
+#       should be executed in a subshell or not. If the value is nonzero, the
+#       command wil be executed in a subshell. Executing in a subshell make the
+#       capturing processes unaffected by the failed assertion exit call, thus
+#       they can finish the scheduled capturings.
 #   [..] command - Command as a string that will be executed and captured.
 # STDIN:
 #   None
@@ -149,13 +137,13 @@ dm_test__capture__init() {
 #   None
 # STDERR:
 #   None
-# Status:
-#   Status of the executed command.
 #------------------------------------------------------------------------------
 # Tools:
 #   wait test
 #==============================================================================
 dm_test__capture__run_and_capture() {
+  ___execute_in_a_subshell="$1"
+  shift
   ___command="$*"
 
   # Using local variables to have somewhat shorter variable names.
@@ -163,9 +151,13 @@ dm_test__capture__run_and_capture() {
   ___file__fd2="$DM_TEST__CAPTURE__RUNTIME__TEMP_FILE__FD2"
   ___file__fd3="$DM_TEST__CAPTURE__RUNTIME__TEMP_FILE__FD3"
 
-  ___fifo__fd1="$DM_TEST__CAPTURE__RUNTIME__TEMP_FIFO__FD1"
-  ___fifo__fd2="$DM_TEST__CAPTURE__RUNTIME__TEMP_FIFO__FD2"
-  ___fifo__fd3="$DM_TEST__CAPTURE__RUNTIME__TEMP_FIFO__FD3"
+  dm_test__debug 'dm_test__capture__run_and_capture' \
+    'initializing temporary capture fifos..'
+  ___fifo__fd1="$(_dm_test__capture__create_temp_fifo)"
+  ___fifo__fd2="$(_dm_test__capture__create_temp_fifo)"
+  ___fifo__fd3="$(_dm_test__capture__create_temp_fifo)"
+  dm_test__debug 'dm_test__capture__run_and_capture' \
+    'temporary capture fifos initialized'
 
   # Starting the processor functions in the background and storing they pids to
   # be able to wait for them later.
@@ -183,11 +175,11 @@ dm_test__capture__run_and_capture() {
   ___pid__fd3="$!"
 
   dm_test__debug 'dm_test__capture__run_and_capture' \
-    "stdout capture process started on pid ${___pid__fd1}"
+    "capture process started for FD1 on pid ${___pid__fd1}"
   dm_test__debug 'dm_test__capture__run_and_capture' \
-    "stderr capture process started on pid ${___pid__fd2}"
+    "capture process started for FD2 on pid ${___pid__fd2}"
   dm_test__debug 'dm_test__capture__run_and_capture' \
-    "file descriptor 3 capture process started on pid ${___pid__fd3}"
+    "capture process started on FD3 pid ${___pid__fd3}"
 
   dm_test__debug 'dm_test__capture__run_and_capture' \
     "executing command '${___command}'.."
@@ -199,18 +191,34 @@ dm_test__capture__run_and_capture() {
   # 3. Capturing the standard error through a fifo.
   # 4. Capturing the optional file descriptor 3 assuming it is the debugger
   #    output through a fifo.
-  if $___command \
-      1>"$___fifo__fd1" \
-      2>"$___fifo__fd2" \
-      3>"$___fifo__fd3"
+  if [ "$___execute_in_a_subshell" -ne '0' ]
   then
-    ___status="$?"
+    # Executing command in an additional subshell, to prevent the failed
+    # assertion exit call effect this currently executing shell.
+    if ( $___command ) \
+        1>"$___fifo__fd1" \
+        2>"$___fifo__fd2" \
+        3>"$___fifo__fd3"
+    then
+      ___status="$?"
+    else
+      ___status="$?"
+    fi
   else
-    ___status="$?"
+    # Executing command in this shell to be able to affect the environment.
+    if $___command \
+        1>"$___fifo__fd1" \
+        2>"$___fifo__fd2" \
+        3>"$___fifo__fd3"
+    then
+      ___status="$?"
+    else
+      ___status="$?"
+    fi
   fi
 
   dm_test__debug 'dm_test__capture__run_and_capture' \
-    'waiting for file descriptor processing workers..'
+    '%%%%%%%%%%%%%%%% waiting for file descriptor processing workers..'
 
   # Waiting for the output processor background processes to finish. After
   # this, the outputs are available in the temporary files.
@@ -452,7 +460,7 @@ _dm_test__capture__capture_output_for_domain() {
   ___worker_color="$2"
 
   dm_test__debug '_dm_test__capture__capture_output_for_domain' \
-    "processing worker for domain '${___worker_domain}' is waiting for input.."
+    ">> processing worker for domain '${___worker_domain}' is waiting for input.."
 
   while read -r ___worker_line
   do
@@ -462,7 +470,7 @@ _dm_test__capture__capture_output_for_domain() {
   done
 
   dm_test__debug '_dm_test__capture__capture_output_for_domain' \
-    "worker process finished for domain '${___worker_domain}'"
+    ">> worker process finished for domain '${___worker_domain}'"
 }
 
 #==============================================================================

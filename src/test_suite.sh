@@ -377,7 +377,10 @@ _dm_test__test_suite__run_and_capture_setup_file_hook() {
 
   dm_test__capture__init
 
+  # Running the setup file hook triggering directly in this shell to be able to
+  # affect the environment.
   if dm_test__capture__run_and_capture \
+    "$DM_TEST__CAPTURE__CONSTANT__EXECUTE_COMMAND_DIRECTLY" \
     'dm_test__hooks__trigger_hook__setup_file'
   then
     ___status="$?"
@@ -442,7 +445,10 @@ _dm_test__test_suite__run_and_capture_teardown_file_hook() {
 
   dm_test__capture__init
 
+  # Running the teardown file hook triggering directly in this shell to be able
+  # to affect the environment.
   if dm_test__capture__run_and_capture \
+    "$DM_TEST__CAPTURE__CONSTANT__EXECUTE_COMMAND_DIRECTLY" \
     'dm_test__hooks__trigger_hook__teardown_file'
   then
     :
