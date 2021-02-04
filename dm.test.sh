@@ -59,11 +59,11 @@ dm_test__report_error_and_exit() {
   BOLD="${BOLD:=}"
   RESET="${RESET:=}"
 
-  >&2 printf '%s=======================================' "$RED"
-  >&2 echo "========================================${RESET}"
+  >&2 printf '%s=======================================================' "$RED"
+  >&2 echo "========================${RESET}"
   >&2 echo "  ${RED}${BOLD}FATAL ERROR${RESET}"
-  >&2 printf '%s=======================================' "$RED"
-  >&2 echo "========================================${RESET}"
+  >&2 printf '%s=======================================================' "$RED"
+  >&2 echo "========================${RESET}"
   >&2 echo ''
   >&2 echo "  ${RED}${___message}${RESET}"
   >&2 echo "  ${RED}${___details}${RESET}"
@@ -74,8 +74,8 @@ dm_test__report_error_and_exit() {
     echo "${___reason}" | sed "s/^/  ${RED}/" | sed "s/$/${RESET}/" \
   )"
   >&2 echo ''
-  >&2 printf '%s=======================================' "$RED"
-  >&2 echo "========================================${RESET}"
+  >&2 printf '%s=======================================================' "$RED"
+  >&2 echo "========================${RESET}"
 
   exit 1
 }
@@ -107,8 +107,6 @@ ___path_prefix="${DM_TEST__CONFIG__MANDATORY__SUBMODULE_PATH_PREFIX}"
 . "${___path_prefix}/src/config.sh"
 # shellcheck source=./src/variables.sh
 . "${___path_prefix}/src/variables.sh"
-# shellcheck source=./src/assert.sh
-. "${___path_prefix}/src/assert.sh"
 # shellcheck source=./src/utils.sh
 . "${___path_prefix}/src/utils.sh"
 # shellcheck source=./src/test_suite.sh
@@ -132,6 +130,15 @@ ___path_prefix="${DM_TEST__CONFIG__MANDATORY__SUBMODULE_PATH_PREFIX}"
 . "${___path_prefix}/src/cache/cache__global_failure.sh"
 # shellcheck source=./src/cache/cache__test_directory.sh
 . "${___path_prefix}/src/cache/cache__test_directory.sh"
+
+# shellcheck source=./src/assert/assert__common.sh
+. "${___path_prefix}/src/assert/assert__common.sh"
+# shellcheck source=./src/assert/assert__basic.sh
+. "${___path_prefix}/src/assert/assert__basic.sh"
+# shellcheck source=./src/assert/assert__file_system.sh
+. "${___path_prefix}/src/assert/assert__file_system.sh"
+# shellcheck source=./src/assert/assert__context_based.sh
+. "${___path_prefix}/src/assert/assert__context_based.sh"
 
 # shellcheck source=./src/debug.sh
 . "${___path_prefix}/src/debug.sh"

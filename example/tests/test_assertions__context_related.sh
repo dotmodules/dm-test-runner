@@ -87,57 +87,57 @@ should_fail__assert_output_line_count() {
 }
 
 #==============================================================================
-# ASSERT_LINE_AT_INDEX
+# ASSERT_OUTPUT_LINE_AT_INDEX
 #------------------------------------------------------------------------------
 # Asserts the line indexed line of the output of the last function or command
 # runned by the 'run' command. Lines are indexed from 1.
 #==============================================================================
 
-test__assert_line_at_index() {
+test__assert_output_line_at_index() {
   dummy_function() {
     echo 'hello 1'
     echo 'hello 2'
     echo 'hello 3'
   }
   run dummy_function
-  assert_line_at_index 2 'hello 2'
+  assert_output_line_at_index 2 'hello 2'
 }
 
-should_fail__assert_line_at_index__invalid_index__case_1() {
-  echo 'Expected [assert_line_at_index] failure.'
+should_fail__assert_output_line_at_index__invalid_index__case_1() {
+  echo 'Expected [assert_output_line_at_index] failure.'
   dummy_function() {
     echo 'hello'
     echo 'hello'
     echo 'hello'
   }
   run dummy_function
-  assert_line_at_index 42 'invalid index'
+  assert_output_line_at_index 42 'invalid index'
 }
 
-should_fail__assert_line_at_index__invalid_index__case_2() {
-  echo 'Expected [assert_line_at_index] failure.'
+should_fail__assert_output_line_at_index__invalid_index__case_2() {
+  echo 'Expected [assert_output_line_at_index] failure.'
   dummy_function() {
     echo 'hello'
     echo 'hello'
     echo 'hello'
   }
   run dummy_function
-  assert_line_at_index 0 'invalid index'
+  assert_output_line_at_index 0 'invalid index'
 }
 
-should_fail__assert_line_at_index__invalid_index__case_3() {
-  echo 'Expected [assert_line_at_index] failure.'
+should_fail__assert_output_line_at_index__invalid_index__case_3() {
+  echo 'Expected [assert_output_line_at_index] failure.'
   dummy_function() {
     echo 'hello'
     echo 'hello'
     echo 'hello'
   }
   run dummy_function
-  assert_line_at_index -1 'invalid index'
+  assert_output_line_at_index -1 'invalid index'
 }
 
-should_fail__assert_line_at_index__no_match() {
-  echo 'Expected [assert_line_at_index] failure.'
+should_fail__assert_output_line_at_index__no_match() {
+  echo 'Expected [assert_output_line_at_index] failure.'
   dummy_function() {
     echo 'hello 1'
     echo 'hello 2'
@@ -145,100 +145,329 @@ should_fail__assert_line_at_index__no_match() {
   }
   run dummy_function
   # This assertion matches the whole line.
-  assert_line_at_index 2 'hello'
+  assert_output_line_at_index 2 'hello'
 }
 
-test__assert_line_line_at_index__empty_line_can_be_validated() {
+test__assert_output_line_line_at_index__empty_line_can_be_validated() {
   dummy_function() {
     echo ''
   }
   run dummy_function
-  assert_line_at_index 1 ''
+  assert_output_line_at_index 1 ''
 }
 
-should_fail__assert_line_at_index__empty_line_wont_get_ignored() {
+should_fail__assert_output_line_at_index__empty_line_wont_get_ignored() {
   dummy_function() {
     echo ''
   }
   run dummy_function
-  assert_line_at_index 1 'not empty line'
+  assert_output_line_at_index 1 'not empty line'
 }
 
 #==============================================================================
-# ASSERT_LINE_PARTIALLY_AT_INDEX
+# ASSERT_OUTPUT_LINE_PARTIALLY_AT_INDEX
 #------------------------------------------------------------------------------
 # Asserts the line indexed line partially of the output of the last function or
 # command runned by the 'run' command. Lines are indexed from 1.
 #==============================================================================
 
-test__assert_line_partially_at_index() {
+test__assert_output_line_partially_at_index() {
   dummy_function() {
     echo 'hello 1'
     echo 'hello 2'
     echo 'hello 3'
   }
   run dummy_function
-  assert_line_partially_at_index 2 'hello'
+  assert_output_line_partially_at_index 2 'hello'
 }
 
-should_fail__assert_line_partially_at_index__invalid_index__case_1() {
-  echo 'Expected [assert_line_partially_at_index] failure.'
+should_fail__assert_output_line_partially_at_index__invalid_index__case_1() {
+  echo 'Expected [assert_output_line_partially_at_index] failure.'
   dummy_function() {
     echo 'hello'
     echo 'hello'
     echo 'hello'
   }
   run dummy_function
-  assert_line_partially_at_index 42 'hello'
+  assert_output_line_partially_at_index 42 'hello'
 }
 
-should_fail__assert_line_partially_at_index__invalid_index__case_2() {
-  echo 'Expected [assert_line_partially_at_index] failure.'
+should_fail__assert_output_line_partially_at_index__invalid_index__case_2() {
+  echo 'Expected [assert_output_line_partially_at_index] failure.'
   dummy_function() {
     echo 'hello'
     echo 'hello'
     echo 'hello'
   }
   run dummy_function
-  assert_line_partially_at_index 0 'hello'
+  assert_output_line_partially_at_index 0 'hello'
 }
 
-should_fail__assert_line_partially_at_index__invalid_index__case_3() {
-  echo 'Expected [assert_line_partially_at_index] failure.'
+should_fail__assert_output_line_partially_at_index__invalid_index__case_3() {
+  echo 'Expected [assert_output_line_partially_at_index] failure.'
   dummy_function() {
     echo 'hello'
     echo 'hello'
     echo 'hello'
   }
   run dummy_function
-  assert_line_partially_at_index -1 'hello'
+  assert_output_line_partially_at_index -1 'hello'
 }
 
-should_fail__assert_line_partially_at_index__no_match() {
-  echo 'Expected [assert_line_partially_at_index] failure.'
+should_fail__assert_output_line_partially_at_index__no_match() {
+  echo 'Expected [assert_output_line_partially_at_index] failure.'
   dummy_function() {
     echo 'hello 1'
     echo 'hello 2'
     echo 'hello 3'
   }
   run dummy_function
-  assert_line_partially_at_index 2 'unrelated content'
+  assert_output_line_partially_at_index 2 'unrelated content'
 }
 
-test__assert_line_partially_at_index__empty_line_can_be_validated() {
+test__assert_output_line_partially_at_index__empty_line_can_be_validated() {
   dummy_function() {
     echo ''
   }
   run dummy_function
-  assert_line_partially_at_index 1 ''
+  assert_output_line_partially_at_index 1 ''
 }
 
-should_fail__assert_line_partially_at_index__empty_line_wont_get_ignored() {
+should_fail__assert_output_line_partially_at_index__empty_line_wont_get_ignored() {
   dummy_function() {
     echo ''
   }
   run dummy_function
-  assert_line_partially_at_index 1 'not empty line'
+  assert_output_line_partially_at_index 1 'not empty line'
+}
+
+#==============================================================================
+# ASSERT_ERROR
+#------------------------------------------------------------------------------
+# Asserts the whole captured error output of the last function or command
+# runned by the 'run' command.
+#==============================================================================
+
+test__assert_error() {
+  dummy_function() {
+    echo 'hello' >&2
+  }
+  run dummy_function
+  assert_error 'hello'
+}
+
+should_fail__assert_error__mismatch() {
+  echo 'Expected [assert_error] failure.'
+  dummy_function() {
+    echo 'hello' >&2
+  }
+  run dummy_function
+  assert_error 'bye'
+}
+
+should_fail__assert_error__multiline_output_fails_assertion() {
+  echo 'Expected [assert_error] failure.'
+  dummy_function() {
+    echo 'hello 1' >&2
+    echo 'hello 2' >&2
+  }
+  run dummy_function
+  assert_error 'hello 1\nhello 2'
+}
+
+#==============================================================================
+# ASSERT_ERROR_LINE_COUNT
+#------------------------------------------------------------------------------
+# Asserts the line count of the error output of the last function or command
+# runned by the 'run' command.
+#==============================================================================
+
+test__assert_error_line_count() {
+  dummy_function() {
+    echo 'hello 1' >&2
+    echo 'hello 2' >&2
+    echo 'hello 3' >&2
+  }
+  run dummy_function
+  assert_error_line_count 3
+}
+
+should_fail__assert_error_line_count() {
+  echo 'Expected [assert_error_line_count] failure.'
+  dummy_function() {
+    echo 'hello' >&2
+  }
+  run dummy_function
+  assert_error_line_count 42
+}
+
+#==============================================================================
+# ASSERT_ERROR_LINE_AT_INDEX
+#------------------------------------------------------------------------------
+# Asserts the line indexed line of the error output of the last function or
+# command runned by the 'run' command. Lines are indexed from 1.
+#==============================================================================
+
+test__assert_error_line_at_index() {
+  dummy_function() {
+    echo 'hello 1' >&2
+    echo 'hello 2' >&2
+    echo 'hello 3' >&2
+  }
+  run dummy_function
+  assert_error_line_count 3
+  assert_error_line_at_index 2 'hello 2'
+}
+
+should_fail__assert_error_line_at_index__invalid_index__case_1() {
+  echo 'Expected [assert_error_line_at_index] failure.'
+  dummy_function() {
+    echo 'hello' >&2
+    echo 'hello' >&2
+    echo 'hello' >&2
+  }
+  run dummy_function
+  assert_error_line_count 3
+  assert_error_line_at_index 42 'invalid index'
+}
+
+should_fail__assert_error_line_at_index__invalid_index__case_2() {
+  echo 'Expected [assert_error_line_at_index] failure.'
+  dummy_function() {
+    echo 'hello' >&2
+    echo 'hello' >&2
+    echo 'hello' >&2
+  }
+  run dummy_function
+  assert_error_line_count 3
+  assert_error_line_at_index 0 'invalid index'
+}
+
+should_fail__assert_error_line_at_index__invalid_index__case_3() {
+  echo 'Expected [assert_error_line_at_index] failure.'
+  dummy_function() {
+    echo 'hello' >&2
+    echo 'hello' >&2
+    echo 'hello' >&2
+  }
+  run dummy_function
+  assert_error_line_count 3
+  assert_error_line_at_index -1 'invalid index'
+}
+
+should_fail__assert_error_line_at_index__no_match() {
+  echo 'Expected [assert_error_line_at_index] failure.'
+  dummy_function() {
+    echo 'hello 1' >&2
+    echo 'hello 2' >&2
+    echo 'hello 3' >&2
+  }
+  run dummy_function
+  assert_error_line_count 3
+  # This assertion matches the whole line.
+  assert_error_line_at_index 2 'hello'
+}
+
+test__assert_output_line_line_at_index__empty_line_can_be_validated() {
+  dummy_function() {
+    echo '' >&2
+  }
+  run dummy_function
+  assert_error_line_count 1
+  assert_error_line_at_index 1 ''
+}
+
+should_fail__assert_error_line_at_index__empty_line_wont_get_ignored() {
+  dummy_function() {
+    echo '' >&2
+  }
+  run dummy_function
+  assert_error_line_count 1
+  assert_error_line_at_index 1 'not empty line'
+}
+
+#==============================================================================
+# ASSERT_ERROR_LINE_PARTIALLY_AT_INDEX
+#------------------------------------------------------------------------------
+# Asserts the line indexed line partially of the error output of the last
+# function or command runned by the 'run' command. Lines are indexed from 1.
+#==============================================================================
+
+test__assert_error_line_partially_at_index() {
+  dummy_function() {
+    echo 'hello 1' >&2
+    echo 'hello 2' >&2
+    echo 'hello 3' >&2
+  }
+  run dummy_function
+  assert_error_line_count 3
+  assert_error_line_partially_at_index 2 'hello'
+}
+
+should_fail__assert_error_line_partially_at_index__invalid_index__case_1() {
+  echo 'Expected [assert_error_line_partially_at_index] failure.'
+  dummy_function() {
+    echo 'hello' >&2
+    echo 'hello' >&2
+    echo 'hello' >&2
+  }
+  run dummy_function
+  assert_error_line_count 3
+  assert_error_line_partially_at_index 42 'hello'
+}
+
+should_fail__assert_error_line_partially_at_index__invalid_index__case_2() {
+  echo 'Expected [assert_error_line_partially_at_index] failure.'
+  dummy_function() {
+    echo 'hello' >&2
+    echo 'hello' >&2
+    echo 'hello' >&2
+  }
+  run dummy_function
+  assert_error_line_count 3
+  assert_error_line_partially_at_index 0 'hello'
+}
+
+should_fail__assert_error_line_partially_at_index__invalid_index__case_3() {
+  echo 'Expected [assert_error_line_partially_at_index] failure.'
+  dummy_function() {
+    echo 'hello' >&2
+    echo 'hello' >&2
+    echo 'hello' >&2
+  }
+  run dummy_function
+  assert_error_line_count 3
+  assert_error_line_partially_at_index -1 'hello'
+}
+
+should_fail__assert_error_line_partially_at_index__no_match() {
+  echo 'Expected [assert_error_line_partially_at_index] failure.'
+  dummy_function() {
+    echo 'hello 1' >&2
+    echo 'hello 2' >&2
+    echo 'hello 3' >&2
+  }
+  run dummy_function
+  assert_error_line_count 3
+  assert_error_line_partially_at_index 2 'unrelated content'
+}
+
+test__assert_error_line_partially_at_index__empty_line_can_be_validated() {
+  dummy_function() {
+    echo '' >&2
+  }
+  run dummy_function
+  assert_error_line_count 1
+  assert_error_line_partially_at_index 1 ''
+}
+
+should_fail__assert_error_line_partially_at_index__empty_line_wont_get_ignored() {
+  dummy_function() {
+    echo '' >&2
+  }
+  run dummy_function
+  assert_error_line_count 1
+  assert_error_line_partially_at_index 1 'not empty line'
 }
 
 #==============================================================================

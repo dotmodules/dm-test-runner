@@ -305,13 +305,16 @@ _dm_test__execute_test_case() {
   dm_test__cache__test_result__init
   _dm_test__print_test_case_identifier
 
-  ___output="$( \
-    _dm_test__run_test_case \
-      "$___test_case"
-  )"
+  if _dm_test__run_test_case "$___test_case"
+  then
+    ___output=''
+  else
+    ___output="$(dm_test__capture__get_captured_outputs)"
+  fi
 
   _dm_test__print_test_case_result
   _dm_test__update_global_counters
+
   dm_test__utils__print_output_if_has_content "$___output"
 }
 
@@ -353,6 +356,9 @@ _dm_test__run_test_case() {
   # uses internally would be lost if they were created in a subshell.
   dm_test__capture__init
 
+  # Running in a subshell to be able to exit from the test case execution any
+  # time. This is most probably will happen due to an error during the setup
+  # hook execution.
   if ( _dm_test__run_test_case_in_a_subshell "$___test_case" )
   then
     ___status="$?"
@@ -363,7 +369,15 @@ _dm_test__run_test_case() {
   dm_test__debug '_dm_test__run_test_case' \
     "test case execution finished with status '${___status}'"
 
-  _dm_test__evaluate_test_case_result "$___status"
+  if _dm_test__evaluate_test_case_result "$___status"
+  then
+    dm_test__debug '_dm_test__run_test_case' \
+      'test case succeeded'
+
+  else
+    dm_test__cache__test_result__mark_as_failed
+    return 1
+  fi
 }
 
 #==============================================================================
@@ -398,36 +412,28 @@ _dm_test__evaluate_test_case_result() {
 
   # If the status is nonzero or there is any standard error content, the
   # testcase is considered as failed.
+
   if [ "$___status" -ne '0' ]
   then
     dm_test__debug '_dm_test__evaluate_test_case_result' \
       '[!] status was nonzero => test case failed'
     ___result=1
+
   elif dm_test__capture__was_standard_error_captured
   then
     dm_test__debug '_dm_test__evaluate_test_case_result' \
       '[!] there were standard error output => test case failed'
     dm_test__capture__append_to_standard_error \
-      "standard error output present => test case failed automatically"
+      'standard error output present => test case failed automatically'
     ___result=1
+
   else
     dm_test__debug '_dm_test__evaluate_test_case_result' \
       '[ok] zero status + no standard error output => test case succeeded'
     ___result=0
   fi
 
-  # Displaying the captured outputs on failure.
-  if [ "$___result" -ne '0' ]
-  then
-    dm_test__cache__test_result__mark_as_failed
-
-    ___output="$(dm_test__capture__get_captured_outputs)"
-
-    dm_test__debug '_dm_test__evaluate_test_case_result' \
-      'outputs prepared to display'
-
-    echo "$___output"
-  fi
+  return "$___result"
 }
 
 #==============================================================================

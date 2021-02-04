@@ -85,8 +85,8 @@ _assert_count() {
     echo "${BOLD}${RED}"
     echo '==============================================================================='
     echo "  ERROR: ${___message}"
-    echo "    actual count:   ${___count}"
     echo "    expected count: ${___expected_count}"
+    echo "    actual count:   ${___count}"
     echo '==============================================================================='
     echo "$RESET"
     exit 1
