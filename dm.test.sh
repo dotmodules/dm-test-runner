@@ -140,6 +140,9 @@ ___path_prefix="${DM_TEST__CONFIG__MANDATORY__SUBMODULE_PATH_PREFIX}"
 # shellcheck source=./src/assert/assert__context_based.sh
 . "${___path_prefix}/src/assert/assert__context_based.sh"
 
+# shellcheck source=./src/store.sh
+. "${___path_prefix}/src/store.sh"
+
 # shellcheck source=./src/debug.sh
 . "${___path_prefix}/src/debug.sh"
 # shellcheck source=./src/trap.sh

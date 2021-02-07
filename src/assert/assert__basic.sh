@@ -148,3 +148,50 @@ assert_failure() {
     _dm_test__report_failure "$___subject" "$___reason" "$___assertion"
   fi
 }
+
+#==============================================================================
+# Simple assertion helper function that expects a list of parameters that will
+# be interpreted as a test command in an if statement. It is common to use the
+# 'test' command to write simple assertions, but in general anything can be
+# used.
+#------------------------------------------------------------------------------
+# Globals:
+#   None
+# Arguments:
+#   [1] string_a - String that should be compared to the other one.
+#   [2] string_b - String that should be compared to the other one.
+# STDIN:
+#   None
+#------------------------------------------------------------------------------
+# Output variables:
+#   None
+# STDOUT:
+#   None
+# STDERR:
+#   None
+# Status:
+#   0 - Assertion succeeded.
+#   1 - Assertion failed.
+#------------------------------------------------------------------------------
+# Tools:
+#   test
+#==============================================================================
+assert_equal() {
+  ___string_a="$1"
+  ___string_b="$2"
+
+  dm_test__debug 'assert_equal' \
+    "comparing '${___string_a}' to '${___string_b}'"
+
+  if [ "$___string_a" = "$___string_b" ]
+  then
+    dm_test__debug 'assert_equal' '=> assertion succeeded'
+  else
+    dm_test__debug 'assert_equal' '=> assertion failed'
+
+    ___subject='Assertion failed'
+    ___reason="'${___string_a}' not equal to '${___string_b}'"
+    ___assertion='assert_equal'
+    _dm_test__report_failure "$___subject" "$___reason" "$___assertion"
+  fi
+}

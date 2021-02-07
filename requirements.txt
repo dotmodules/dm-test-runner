@@ -21,9 +21,11 @@ sed
 sort
 test
 touch
+tr
 trap
 true
 uname
 wait
 wc
 xargs
+xxd

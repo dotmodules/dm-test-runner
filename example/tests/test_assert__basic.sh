@@ -57,3 +57,38 @@ should_fail__assert_failure() {
   echo 'Expected [assert_failure] failure.'
   assert_failure true
 }
+
+#==============================================================================
+# ASSERT_EQUAL
+#------------------------------------------------------------------------------
+# Succeeds only if the given two string parameters are equal.
+#==============================================================================
+
+test__assert_equal__basic_case() {
+  assert_equal 'string' 'string'
+}
+
+test__assert_equal__plain_numbers() {
+  assert_equal 42 42
+}
+
+test__assert_equal__no_resplitting() {
+  param_1='string string  string'
+  param_2='string string  string'
+  assert_equal "$param_1" "$param_2"
+}
+
+should_fail__assert_equal__different_string_literal() {
+  assert_equal 'one' 'two'
+}
+
+should_fail__assert_equal__different_plain_numbers() {
+  assert_equal 42 43
+}
+
+should_fail__assert_equal__no_resplitting_on_error() {
+  param_1='string string  string 1'
+  param_2='string string  string 2'
+  assert_equal "$param_1" "$param_2"
+}
+

@@ -97,6 +97,7 @@ _dm_test__test_suite__init() {
   dm_test__config__validate_mandatory_config
   dm_test__cache__init
   dm_test__cache__init_test_directory__test_suite_level
+  dm_test__store__init
   dm_test__test_suite__print_header
 
   dm_test__debug '_dm_test__test_suite__init' 'initializing finished'
