@@ -315,7 +315,7 @@ assert_output_line_at_index() {
 #   1 - Assertion failed.
 #------------------------------------------------------------------------------
 # Tools:
-#   test echo grep
+#   None
 #==============================================================================
 assert_output_line_partially_at_index() {
   ___line_index="$1"
@@ -362,7 +362,7 @@ assert_output_line_partially_at_index() {
 #   1 - Assertion failed.
 #------------------------------------------------------------------------------
 # Tools:
-#   test echo wc printf cat
+#   test echo printf
 #==============================================================================
 assert_error() {
   ___expected="$1"
@@ -412,7 +412,7 @@ assert_error() {
 #   1 - Assertion failed.
 #------------------------------------------------------------------------------
 # Tools:
-#   echo wc test
+#   None
 #==============================================================================
 assert_error_line_count() {
   ___expected="$1"
@@ -449,7 +449,7 @@ assert_error_line_count() {
 #   1 - Assertion failed.
 #------------------------------------------------------------------------------
 # Tools:
-#   test
+#   None
 #==============================================================================
 assert_error_line_at_index() {
   ___line_index="$1"
@@ -489,7 +489,7 @@ assert_error_line_at_index() {
 #   1 - Assertion failed.
 #------------------------------------------------------------------------------
 # Tools:
-#   test echo grep
+#   None
 #==============================================================================
 assert_error_line_partially_at_index() {
   ___line_index="$1"
@@ -538,7 +538,7 @@ assert_error_line_partially_at_index() {
 #   2 - Inappropriate assertion function.
 #------------------------------------------------------------------------------
 # Tools:
-#   test echo wc printf cat
+#   test wc
 #==============================================================================
 _dm_test__assert__assert_output() {
   ___expected="$1"
@@ -598,7 +598,7 @@ _dm_test__assert__assert_output() {
 #   1 - Assertion failed.
 #------------------------------------------------------------------------------
 # Tools:
-#   echo wc test
+#   wc test
 #==============================================================================
 _dm_test__assert__assert_line_count() {
   ___expected="$1"
