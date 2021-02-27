@@ -1,4 +1,4 @@
-name: build
+name: test
 
 on:
   push:
@@ -7,10 +7,15 @@ on:
     branches: [ master ]
 
 jobs:
-  build:
+  test-linux:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-
+      - name: Run the test suite
+        run: make test
+  test-macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
       - name: Run the test suite
         run: make test
