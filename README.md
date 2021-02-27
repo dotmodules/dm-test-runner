@@ -1,4 +1,4 @@
-[![test suite](https://github.com/dotmodules/dm-test/actions/workflows/test_suite.yml/badge.svg)](https://github.com/dotmodules/dm-test/actions/workflows/test_suite.yml)
+[![test_suite](https://github.com/dotmodules/dm-test/actions/workflows/test_suite.yml/badge.svg)](https://github.com/dotmodules/dm-test/actions/workflows/test_suite.yml)
 
 # POSIX compliant shell test runner
 
