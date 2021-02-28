@@ -110,7 +110,7 @@ tool_failure() {
 title='cut :: delimiter and field selection'
 data='one/two/three/four'
 expected='two/three/four'
-if result="$(echo "$data" | cut --delimiter '/' --fields '2-')"
+if result="$(echo "$data" | cut -d '/' -f '2-')"
 then
   tool_assert "$title" "$expected" "$result"
 else
@@ -121,7 +121,7 @@ fi
 title='cut :: character range selection'
 data='123456789'
 expected='12345'
-if result="$(echo "$data" | cut --characters='1-5')"
+if result="$(echo "$data" | cut -c '1-5')"
 then
   tool_assert "$title" "$expected" "$result"
 else
