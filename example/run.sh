@@ -14,22 +14,51 @@ set -u  # prevent unset variable expansion
 # PATH CHANGE
 #==============================================================================
 
-cd "$(dirname "$(readlink -f "$0")")"
+if target_path="$(readlink -f "$0")" 2>/dev/null
+then
+  cd "$(dirname "$target_path")"
+else
+  if [ -L "$0" ]
+  then
+    echo "symlinked script won't work on this machine.."
+  else
+    cd "$(dirname "$0")"
+  fi
+fi
 
 #==============================================================================
 # PRETTY PRINTING
 #==============================================================================
 
 # Checking the availibility and usability of tput. If it is available and
-# usable we can set the global coloring variables with it.
+# usable we can set the global coloring variables with it by expecting a
+# possibly missing color/modifier.
 if command -v tput >/dev/null && tput init >/dev/null 2>&1
 then
-  RED="$(tput setaf 1)"
-  GREEN="$(tput setaf 2)"
-  BLUE="$(tput setaf 4)"
-  RESET="$(tput sgr0)"
-  BOLD="$(tput bold)"
-  DIM="$(tput dim)"
+  if ! RED="$(tput setaf 1)"
+  then
+    RED=''
+  fi
+  if ! GREEN="$(tput setaf 2)"
+  then
+    GREEN=''
+  fi
+  if ! BLUE="$(tput setaf 4)"
+  then
+    BLUE=''
+  fi
+  if ! RESET="$(tput sgr0)"
+  then
+    RESET=''
+  fi
+  if ! BOLD="$(tput bold)"
+  then
+    BOLD=''
+  fi
+  if ! DIM="$(tput dim)"
+  then
+    DIM=''
+  fi
 else
   RED=''
   GREEN=''

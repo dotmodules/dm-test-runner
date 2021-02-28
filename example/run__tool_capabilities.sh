@@ -22,9 +22,18 @@ set -u  # prevent unset variable expansion
 # usable we can set the global coloring variables with it.
 if command -v tput >/dev/null && tput init >/dev/null 2>&1
 then
-  RED="$(tput setaf 1)"
-  GREEN="$(tput setaf 2)"
-  BOLD="$(tput bold)"
+  if ! RED="$(tput setaf 1)"
+  then
+    RED=''
+  fi
+  if ! GREEN="$(tput setaf 2)"
+  then
+    GREEN=''
+  fi
+  if ! BOLD="$(tput bold)"
+  then
+    BOLD=''
+  fi
 else
   RED=''
   GREEN=''
@@ -62,6 +71,14 @@ tool_assert() {
   fi
 }
 
+tool_failure() {
+  title="$1"
+  status="$2"
+  log_failure "$title"
+  log_failure "failed with status ${status}, possible unsupported parameter"
+  exit 1
+}
+
 #==============================================================================
 # TOOL: BASENAME
 #==============================================================================
@@ -90,31 +107,46 @@ tool_assert() {
 #==============================================================================
 # TOOL: CUT
 #==============================================================================
-title='cut - delimiter and field selection'
+title='cut :: delimiter and field selection'
 data='one/two/three/four'
 expected='two/three/four'
-result="$(echo "$data" | cut --delimiter '/' --fields '2-')"
-tool_assert "$title" "$expected" "$result"
+if result="$(echo "$data" | cut --delimiter '/' --fields '2-')"
+then
+  tool_assert "$title" "$expected" "$result"
+else
+  status="$?"
+  tool_failure "$title" "$status"
+fi
 
-title='cut - character rane selection'
+title='cut :: character range selection'
 data='123456789'
 expected='12345'
-result="$(echo "$data" | cut --characters='1-5')"
-tool_assert "$title" "$expected" "$result"
+if result="$(echo "$data" | cut --characters='1-5')"
+then
+  tool_assert "$title" "$expected" "$result"
+else
+  status="$?"
+  tool_failure "$title" "$status"
+fi
 
 #==============================================================================
 # TOOL: DATE
 #==============================================================================
-title='date - generated timestamp is numbers only'
-result="$(date +'%s%N')"
-if echo "$result" | grep --silent -E '[[:digit:]]+'
+title='date :: generated timestamp is numbers only'
+if result="$(date +'%s%N')"
 then
-  log_success "$title"
+  if echo "$result" | grep --silent -E '[[:digit:]]+'
+  then
+    log_success "$title"
+  else
+    log_failure "$title"
+    log_failure 'should have generated only digits'
+    log_failure "failed result: '${result}'"
+    exit 1
+  fi
 else
-  log_failure "$title"
-  log_failure 'should have generated only digits'
-  log_failure "failed result: '${result}'"
-  exit 1
+  status="$?"
+  tool_failure "$title" "$status"
 fi
 
 #==============================================================================
@@ -138,50 +170,46 @@ fi
 #==============================================================================
 # TOOL: FIND
 #==============================================================================
-title='find - basic file search by name'
+title='find :: basic file search by name'
 if find . -type 'f' -name '*' >/dev/null
 then
   log_success "$title"
 else
-  log_failure "$title"
-  log_failure 'possible unsupported parameters'
-  exit 1
+  status="$?"
+  tool_failure "$title" "$status"
 fi
 
-title='find - basic file search by name zero terminated'
+title='find :: basic file search by name zero terminated'
 if find . -type 'f' -name '*' -print0 >/dev/null
 then
   log_success "$title"
 else
-  log_failure "$title"
-  log_failure 'possible unsupported parameters'
-  exit 1
+  status="$?"
+  tool_failure "$title" "$status"
 fi
 
-title='find - basic direcroty search by name'
+title='find :: basic direcroty search by name'
 if find . -type 'd' -name '*' >/dev/null
 then
   log_success "$title"
 else
-  log_failure "$title"
-  log_failure 'possible unsupported parameters'
-  exit 1
+  status="$?"
+  tool_failure "$title" "$status"
 fi
 
-title='find - basic directory search by name zero terminated'
+title='find :: basic directory search by name zero terminated'
 if find . -type 'd' -name '*' -print0 >/dev/null
 then
   log_success "$title"
 else
-  log_failure "$title"
-  log_failure 'possible unsupported parameters'
-  exit 1
+  status="$?"
+  tool_failure "$title" "$status"
 fi
 
 #==============================================================================
 # TOOL: GREP
 #==============================================================================
-title='grep - extended regexp mode'
+title='grep :: extended regexp mode'
 expected='hello'
 if result="$(echo "hello" | grep -E 'l+')"
 then
@@ -196,12 +224,11 @@ then
     exit
   fi
 else
-  log_failure "$title"
-  log_failure 'possible unsupported parameters'
-  exit 1
+  status="$?"
+  tool_failure "$title" "$status"
 fi
 
-title='grep - silent mode'
+title='grep :: silent mode'
 expected=''
 if result="$(echo "hello" | grep --silent '.')"
 then
@@ -216,12 +243,11 @@ then
     exit
   fi
 else
-  log_failure "$title"
-  log_failure 'possible unsupported parameters'
-  exit 1
+  status="$?"
+  tool_failure "$title" "$status"
 fi
 
-title='grep - inverted mode'
+title='grep :: inverted mode'
 expected='hello'
 if result="$(echo "hello" | grep --invert-match 'imre')"
 then
@@ -236,12 +262,11 @@ then
     exit
   fi
 else
-  log_failure "$title"
-  log_failure 'possible unsupported parameters'
-  exit 1
+  status="$?"
+  tool_failure "$title" "$status"
 fi
 
-title='grep - count mode'
+title='grep :: count mode'
 expected='1'
 if result="$(echo "hello" | grep --count 'l')"
 then
@@ -256,12 +281,11 @@ then
     exit
   fi
 else
-  log_failure "$title"
-  log_failure 'possible unsupported parameters'
-  exit 1
+  status="$?"
+  tool_failure "$title" "$status"
 fi
 
-title='grep - only matching mode'
+title='grep :: only matching mode'
 expected='ll'
 if result="$(echo "imre hello" | grep --only-matching 'll')"
 then
@@ -276,22 +300,20 @@ then
     exit
   fi
 else
-  log_failure "$title"
-  log_failure 'possible unsupported parameters'
-  exit 1
+  status="$?"
+  tool_failure "$title" "$status"
 fi
 
 #==============================================================================
 # TOOL: MKDIR
 #==============================================================================
-title='mkdir - parents flag'
+title='mkdir :: parents flag'
 if mkdir --parents tests
 then
   log_success "$title"
 else
-  log_failure "$title"
-  log_failure 'possible unsupported parameters'
-  exit 1
+  status="$?"
+  tool_failure "$title" "$status"
 fi
 
 #==============================================================================
@@ -309,7 +331,7 @@ fi
 #==============================================================================
 # TOOL: PRINTF
 #==============================================================================
-title='printf - minimum width specifier'
+title='printf :: minimum width specifier'
 expected=' 42'
 if result="$(printf '%*s' 3 '42')"
 then
@@ -324,12 +346,11 @@ then
     exit
   fi
 else
-  log_failure "$title"
-  log_failure 'possible unsupported parameters'
-  exit 1
+  status="$?"
+  tool_failure "$title" "$status"
 fi
 
-title='printf - precision specifier'
+title='printf :: precision specifier'
 expected='123'
 if result="$(printf '%.*s' 3 '123456')"
 then
@@ -344,12 +365,11 @@ then
     exit
   fi
 else
-  log_failure "$title"
-  log_failure 'possible unsupported parameters'
-  exit 1
+  status="$?"
+  tool_failure "$title" "$status"
 fi
 
-title='printf - combined minimum width and precision specifier'
+title='printf :: combined minimum width and precision specifier'
 expected=' 123'
 if result="$(printf '%*.*s' 4 3 '123456')"
 then
@@ -364,9 +384,8 @@ then
     exit
   fi
 else
-  log_failure "$title"
-  log_failure 'possible unsupported parameters'
-  exit 1
+  status="$?"
+  tool_failure "$title" "$status"
 fi
 
 #==============================================================================
@@ -378,33 +397,31 @@ fi
 #==============================================================================
 # TOOL: READLINK
 #==============================================================================
-title='readlink - canonicalize mode'
+title='readlink :: canonicalize mode'
 if readlink -f . >/dev/null 2>&1
 then
   log_success "$title"
 else
-  log_failure "$title"
-  log_failure 'possible unsupported parameters'
-  exit 1
+  status="$?"
+  tool_failure "$title" "$status"
 fi
 
 #==============================================================================
 # TOOL: REALPATH
 #==============================================================================
-title='realpath - no symlink mode'
+title='realpath :: no symlink mode'
 if realpath --no-symlink . >/dev/null 2>&1
 then
   log_success "$title"
 else
-  log_failure "$title"
-  log_failure 'possible unsupported parameters'
-  exit 1
+  status="$?"
+  tool_failure "$title" "$status"
 fi
 
 #==============================================================================
 # TOOL: RM
 #==============================================================================
-title='rm - recursive and force mode'
+title='rm :: recursive and force mode'
 expected=''
 if result="$(rm --recursive --force 'something-that-surely-does-not-exist-123456789')"
 then
@@ -419,15 +436,14 @@ then
     exit
   fi
 else
-  log_failure "$title"
-  log_failure 'possible unsupported parameters'
-  exit 1
+  status="$?"
+  tool_failure "$title" "$status"
 fi
 
 #==============================================================================
 # TOOL: SED
 #==============================================================================
-title='sed - append prefix before line'
+title='sed :: append prefix before line'
 expected='prefix - hello'
 if result="$(echo 'hello' | sed 's/^/prefix - /')"
 then
@@ -442,12 +458,11 @@ then
     exit
   fi
 else
-  log_failure "$title"
-  log_failure 'possible unsupported parameters'
-  exit 1
+  status="$?"
+  tool_failure "$title" "$status"
 fi
 
-title='sed - remove digits only'
+title='sed :: remove digits only'
 expected='and other text'
 if result="$(echo '42 and other text' | sed -E 's/^[[:digit:]]+\s//')"
 then
@@ -462,12 +477,11 @@ then
     exit
   fi
 else
-  log_failure "$title"
-  log_failure 'possible unsupported parameters'
-  exit 1
+  status="$?"
+  tool_failure "$title" "$status"
 fi
 
-title='sed - select line'
+title='sed :: select line'
 expected='line 2'
 if result="$( ( echo 'line 1'; echo 'line 2'; echo 'line 3' ) | sed '2q;d')"
 then
@@ -482,22 +496,20 @@ then
     exit
   fi
 else
-  log_failure "$title"
-  log_failure 'possible unsupported parameters'
-  exit 1
+  status="$?"
+  tool_failure "$title" "$status"
 fi
 
 #==============================================================================
 # TOOL: SORT
 #==============================================================================
-title='sort - parameter checking'
+title='sort :: parameter checking'
 if echo 'hello' | sort --zero-terminated --dictionary-order >/dev/null 2>&1
 then
   log_success "$title"
 else
-  log_failure "$title"
-  log_failure 'possible unsupported parameters'
-  exit 1
+  status="$?"
+  tool_failure "$title" "$status"
 fi
 
 #==============================================================================
@@ -515,7 +527,7 @@ fi
 #==============================================================================
 # TOOL: TR
 #==============================================================================
-title='tr - delete newline'
+title='tr :: delete newline'
 expected='abc'
 if result="$( ( echo 'a'; echo 'b'; echo 'c' ) | tr --delete '\n')"
 then
@@ -530,9 +542,8 @@ then
     exit
   fi
 else
-  log_failure "$title"
-  log_failure 'possible unsupported parameters'
-  exit 1
+  status="$?"
+  tool_failure "$title" "$status"
 fi
 
 #==============================================================================
@@ -550,14 +561,13 @@ fi
 #==============================================================================
 # TOOL: UNAME
 #==============================================================================
-title='uname - parameter checking'
+title='uname :: parameter checking'
 if uname --kernel-name --kernel-release --machine --operating-system >/dev/null 2>&1
 then
   log_success "$title"
 else
-  log_failure "$title"
-  log_failure 'possible unsupported parameters'
-  exit 1
+  status="$?"
+  tool_failure "$title" "$status"
 fi
 
 #==============================================================================
@@ -569,7 +579,7 @@ fi
 #==============================================================================
 # TOOL: WC
 #==============================================================================
-title='wc - lines'
+title='wc :: lines'
 expected='3'
 if result="$( ( echo 'a'; echo 'b'; echo 'c' ) | wc --lines)"
 then
@@ -584,12 +594,11 @@ then
     exit
   fi
 else
-  log_failure "$title"
-  log_failure 'possible unsupported parameters'
-  exit 1
+  status="$?"
+  tool_failure "$title" "$status"
 fi
 
-title='wc - chars'
+title='wc :: chars'
 expected='12' # 11 character + 1 newline
 if result="$( echo 'this is ok!' | wc --chars)"
 then
@@ -604,15 +613,14 @@ then
     exit
   fi
 else
-  log_failure "$title"
-  log_failure 'possible unsupported parameters'
-  exit 1
+  status="$?"
+  tool_failure "$title" "$status"
 fi
 
 #==============================================================================
 # TOOL: XARGS
 #==============================================================================
-title='xargs - placeholder and additional parameters'
+title='xargs :: placeholder and additional parameters'
 expected='hello'
 if result="$( echo 'hello' | xargs --no-run-if-empty -I {} echo {})"
 then
@@ -627,12 +635,11 @@ then
     exit
   fi
 else
-  log_failure "$title"
-  log_failure 'possible unsupported parameters'
-  exit 1
+  status="$?"
+  tool_failure "$title" "$status"
 fi
 
-title='xargs - null terminated'
+title='xargs :: null terminated'
 expected='hello'
 if result="$( echo 'hello' | xargs --null)"
 then
@@ -647,12 +654,11 @@ then
     exit
   fi
 else
-  log_failure "$title"
-  log_failure 'possible unsupported parameters'
-  exit 1
+  status="$?"
+  tool_failure "$title" "$status"
 fi
 
-title='xargs - arg length 1'
+title='xargs :: arg length 1'
 expected='hello'
 if result="$( echo 'hello' | xargs -n1)"
 then
@@ -667,12 +673,11 @@ then
     exit
   fi
 else
-  log_failure "$title"
-  log_failure 'possible unsupported parameters'
-  exit 1
+  status="$?"
+  tool_failure "$title" "$status"
 fi
 
-title='xargs - arg length 2'
+title='xargs :: arg length 2'
 expected='hello'
 if result="$( echo 'hello' | xargs --max-args=1)"
 then
@@ -687,15 +692,14 @@ then
     exit
   fi
 else
-  log_failure "$title"
-  log_failure 'possible unsupported parameters'
-  exit 1
+  status="$?"
+  tool_failure "$title" "$status"
 fi
 
 #==============================================================================
 # TOOL: XXD
 #==============================================================================
-title='xxd - encode'
+title='xxd :: encode'
 expected='68656c6c6f0a'
 if result="$( echo 'hello' | xxd -plain)"
 then
@@ -710,12 +714,11 @@ then
     exit
   fi
 else
-  log_failure "$title"
-  log_failure 'possible unsupported parameters'
-  exit 1
+  status="$?"
+  tool_failure "$title" "$status"
 fi
 
-title='xxd - decode'
+title='xxd :: decode'
 expected='hello'
 if result="$( echo '68656c6c6f0a' | xxd -plain -reverse)"
 then
@@ -730,7 +733,6 @@ then
     exit
   fi
 else
-  log_failure "$title"
-  log_failure 'possible unsupported parameters'
-  exit 1
+  status="$?"
+  tool_failure "$title" "$status"
 fi
