@@ -261,7 +261,10 @@ dm_test__capture__get_captured_outputs() {
     dm_tools__cat "$DM_TEST__CAPTURE__RUNTIME__TEMP_FILE__FD3"
   } | \
     dm_tools__sort | \
-    dm_tools__sed --extended --expression 's/^[[:digit:]]+\s//'
+    dm_tools__sed --extended --expression 's/^[[:digit:]]+N?[[:space:]]//'
+    # Due to the lack of nanoseconds support on BSD date command, we have to
+    # accept an optional 'N' in the timestamp.. This also means that sorting on
+    # old BSD systems will be off..
 }
 
 #==============================================================================

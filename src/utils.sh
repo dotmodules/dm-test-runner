@@ -134,12 +134,15 @@ _dm_test__utils__strip_colors() {
   # replace pattern has to be extended.
   ___pattern='s/\x1b[\[\(][0-9;]*[mB]//g'
 
+  dm_test__debug '_dm_test__utils__strip_colors' \
+    'stripping colors from input stream..'
+
   # Making sure that the running system supports the necessary escape
   # characters.. If not no stripping will be executed.
   if dm_tools__echo '' | \
     dm_tools__sed --expression "$___pattern" >/dev/null 2>&1
   then
-    dm_tools__cat - | dm_tools__sed --pattern "$___pattern"
+    dm_tools__cat - | dm_tools__sed --expression "$___pattern"
   else
     dm_tools__cat -
   fi
