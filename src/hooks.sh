@@ -90,9 +90,6 @@ DM_TEST__HOOKS__RUNTIME__FLAG__TEARDOWN_FILE='__INVALID__'
 #   None
 # Status:
 #   0 - Other status is not expected.
-#------------------------------------------------------------------------------
-# Tools:
-#   None
 #==============================================================================
 dm_test__hooks__init_hooks_for_test_file() {
   ___test_file_path="$1"
@@ -156,9 +153,6 @@ dm_test__hooks__init_hooks_for_test_file() {
 #   Outputs the given hook's error output.
 # Status:
 #   Returns the given hook's status.
-#------------------------------------------------------------------------------
-# Tools:
-#   None
 #==============================================================================
 dm_test__hooks__trigger_hook__setup() {
   _dm_test__hooks__trigger_hook \
@@ -185,9 +179,6 @@ dm_test__hooks__trigger_hook__setup() {
 #   Outputs the given hook's error output.
 # Status:
 #   Returns the given hook's status.
-#------------------------------------------------------------------------------
-# Tools:
-#   None
 #==============================================================================
 dm_test__hooks__trigger_hook__teardown() {
   _dm_test__hooks__trigger_hook \
@@ -214,9 +205,6 @@ dm_test__hooks__trigger_hook__teardown() {
 #   Outputs the given hook's error output.
 # Status:
 #   Returns the given hook's status.
-#------------------------------------------------------------------------------
-# Tools:
-#   None
 #==============================================================================
 dm_test__hooks__trigger_hook__setup_file() {
   _dm_test__hooks__trigger_hook \
@@ -243,9 +231,6 @@ dm_test__hooks__trigger_hook__setup_file() {
 #   Outputs the given hook's error output.
 # Status:
 #   Returns the given hook's status.
-#------------------------------------------------------------------------------
-# Tools:
-#   None
 #==============================================================================
 dm_test__hooks__trigger_hook__teardown_file() {
   _dm_test__hooks__trigger_hook \
@@ -273,9 +258,6 @@ dm_test__hooks__trigger_hook__teardown_file() {
 # Status:
 #   0 - Given hook is available.
 #   1 - Given hook is not available.
-#------------------------------------------------------------------------------
-# Tools:
-#   None
 #==============================================================================
 dm_test__hooks__is_hook_available__setup() {
   _dm_test__hooks__is_hook_available \
@@ -303,9 +285,6 @@ dm_test__hooks__is_hook_available__setup() {
 # Status:
 #   0 - Given hook is available.
 #   1 - Given hook is not available.
-#------------------------------------------------------------------------------
-# Tools:
-#   None
 #==============================================================================
 dm_test__hooks__is_hook_available__teardown() {
   _dm_test__hooks__is_hook_available \
@@ -333,9 +312,6 @@ dm_test__hooks__is_hook_available__teardown() {
 # Status:
 #   0 - Given hook is available.
 #   1 - Given hook is not available.
-#------------------------------------------------------------------------------
-# Tools:
-#   None
 #==============================================================================
 dm_test__hooks__is_hook_available__setup_file() {
   _dm_test__hooks__is_hook_available \
@@ -363,9 +339,6 @@ dm_test__hooks__is_hook_available__setup_file() {
 # Status:
 #   0 - Given hook is available.
 #   1 - Given hook is not available.
-#------------------------------------------------------------------------------
-# Tools:
-#   None
 #==============================================================================
 dm_test__hooks__is_hook_available__teardown_file() {
   _dm_test__hooks__is_hook_available \
@@ -406,9 +379,6 @@ dm_test__hooks__is_hook_available__teardown_file() {
 #   None
 # Status:
 #   0 - Other status is not expected.
-#------------------------------------------------------------------------------
-# Tools:
-#   grep true echo
 #==============================================================================
 _dm_test__hooks__get_hook_flag() {
   ___pattern="$1"
@@ -418,13 +388,13 @@ _dm_test__hooks__get_hook_flag() {
     "checking hook pattern '${___pattern}' in test file '${___test_file_path}'"
 
   ___result="$( \
-    grep --count "$___pattern" "$___test_file_path" || true \
+    dm_tools__grep --count "$___pattern" "$___test_file_path" || true \
   )"
 
   dm_test__debug '_dm_test__hooks__get_hook_flag' \
     "${___result} match was found"
 
-  echo "$___result"
+  dm_tools__echo "$___result"
 }
 
 #==============================================================================
@@ -447,9 +417,6 @@ _dm_test__hooks__get_hook_flag() {
 #   Outputs the given hook's error output.
 # Status:
 #   Returns the given hook's status.
-#------------------------------------------------------------------------------
-# Tools:
-#   test
 #==============================================================================
 _dm_test__hooks__trigger_hook() {
   ___hook_name="$1"
@@ -488,9 +455,6 @@ _dm_test__hooks__trigger_hook() {
 # Status:
 #   0 - Given hook is available.
 #   1 - Given hook is not available.
-#------------------------------------------------------------------------------
-# Tools:
-#   test
 #==============================================================================
 _dm_test__hooks__is_hook_available() {
   ___hook_name="$1"
@@ -530,18 +494,15 @@ _dm_test__hooks__is_hook_available() {
 #   None
 # Status:
 #   0 - Other status is not expected.
-#------------------------------------------------------------------------------
-# Tools:
-#   echo test printf
 #==============================================================================
 _dm_test__hooks__check_singular_flag() {
   ___hook_flag="$1"
 
   if [ "$___hook_flag" -gt '1' ]
   then
-    printf '%s' \
+    dm_tools__printf '%s' \
       "WARNING: mutiple definitions of hook function '${___hook_name}' "
-    echo 'found, only the last one will be executed.'
+    dm_tools__echo 'found, only the last one will be executed.'
   fi
 }
 
@@ -563,9 +524,6 @@ _dm_test__hooks__check_singular_flag() {
 #   Outputs the given hook's error output and an error message on failure.
 # Status:
 #   Returns the given hook's status.
-#------------------------------------------------------------------------------
-# Tools:
-#   echo test printf
 #==============================================================================
 _dm_test__hooks__execute_hook() {
   ___hook_name="$1"
@@ -578,8 +536,8 @@ _dm_test__hooks__execute_hook() {
     return 0
   else
     ___hook_status="$?"
-    >&2 printf '%s' "ERROR: Error during '${___hook_name}' hook execution! "
-    >&2 echo "Status: ${___hook_status}"
+    >&2 dm_tools__printf '%s' "ERROR: Error during '${___hook_name}' "
+    >&2 dm_tools__echo "hook execution! Status: ${___hook_status}"
     return "$___hook_status"
   fi
 

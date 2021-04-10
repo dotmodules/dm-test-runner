@@ -38,15 +38,12 @@ DM_TEST__CACHE__RUNTIME__GLOBAL_FAILURES='__INVALID__'
 #   None
 # Status:
 #   0 - Other status is not expected.
-#------------------------------------------------------------------------------
-# Tools:
-#   echo
 #==============================================================================
 _dm_test__cache__global_failures__init() {
   DM_TEST__CACHE__RUNTIME__GLOBAL_FAILURES="$( \
     dm_test__cache__create_temp_file \
   )"
-  echo '0' > "$DM_TEST__CACHE__RUNTIME__GLOBAL_FAILURES"
+  dm_tools__echo '0' > "$DM_TEST__CACHE__RUNTIME__GLOBAL_FAILURES"
 
   dm_test__debug '_dm_test__cache__global_failures__init' \
     "failure count file created: '${DM_TEST__CACHE__RUNTIME__GLOBAL_FAILURES}'"
@@ -70,9 +67,6 @@ _dm_test__cache__global_failures__init() {
 #   None
 # Status:
 #   0 - Other status is not expected.
-#------------------------------------------------------------------------------
-# Tools:
-#   None
 #==============================================================================
 dm_test__cache__global_failure__increment() {
   _dm_test__utils__increment_file_content \
@@ -100,13 +94,10 @@ dm_test__cache__global_failure__increment() {
 #   None
 # Status:
 #   0 - Other status is not expected.
-#------------------------------------------------------------------------------
-# Tools:
-#   cat echo
 #==============================================================================
 dm_test__cache__global_failure__get() {
-  ___count="$(cat "$DM_TEST__CACHE__RUNTIME__GLOBAL_FAILURES")"
-  echo "$___count"
+  ___count="$(dm_tools__cat "$DM_TEST__CACHE__RUNTIME__GLOBAL_FAILURES")"
+  dm_tools__echo "$___count"
 
   dm_test__debug 'dm_test__cache__global_failure__get' \
     "global failure count value returned: '${___count}'"
@@ -131,15 +122,12 @@ dm_test__cache__global_failure__get() {
 # Status:
 #   0 - Global failures count is nonzero.
 #   1 - Global failures count is zero.
-#------------------------------------------------------------------------------
-# Tools:
-#   grep
 #==============================================================================
 dm_test__cache__global_failure__failures_happened() {
   dm_test__debug 'dm_test__cache__global_failure__failures_happened' \
     'checking if there were failures..'
 
-  grep \
+  dm_tools__grep \
     --silent \
     --invert-match \
     '^0$' \

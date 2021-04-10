@@ -85,9 +85,6 @@ DM_TEST__CAPTURE__RUNTIME__TEMP_FILE__FD3='__INVALID__'
 #   None
 # Status:
 #   0 - Other status is not expected.
-#------------------------------------------------------------------------------
-# Tools:
-#   None
 #==============================================================================
 dm_test__capture__init() {
   dm_test__debug 'dm_test__capture__init' 'initializing capture system..'
@@ -140,9 +137,6 @@ dm_test__capture__init() {
 #   None
 # STDERR:
 #   None
-#------------------------------------------------------------------------------
-# Tools:
-#   wait test
 #==============================================================================
 dm_test__capture__run_and_capture() {
   ___execute_in_a_subshell="$1"
@@ -255,9 +249,6 @@ dm_test__capture__run_and_capture() {
 #   None
 # Status:
 #   0 - Other status is not expected.
-#------------------------------------------------------------------------------
-# Tools:
-#   cat sort sed
 #==============================================================================
 dm_test__capture__get_captured_outputs() {
   dm_test__debug 'dm_test__capture__get_captured_outputs' \
@@ -265,10 +256,12 @@ dm_test__capture__get_captured_outputs() {
 
   # Using the timestamps preceding every line for sorting, then removing it.
   {
-    cat "$DM_TEST__CAPTURE__RUNTIME__TEMP_FILE__FD1"
-    cat "$DM_TEST__CAPTURE__RUNTIME__TEMP_FILE__FD2"
-    cat "$DM_TEST__CAPTURE__RUNTIME__TEMP_FILE__FD3"
-  } | sort | sed -E 's/^[[:digit:]]+\s//'
+    dm_tools__cat "$DM_TEST__CAPTURE__RUNTIME__TEMP_FILE__FD1"
+    dm_tools__cat "$DM_TEST__CAPTURE__RUNTIME__TEMP_FILE__FD2"
+    dm_tools__cat "$DM_TEST__CAPTURE__RUNTIME__TEMP_FILE__FD3"
+  } | \
+    dm_tools__sort | \
+    dm_tools__sed --extended --expression 's/^[[:digit:]]+\s//'
 }
 
 #==============================================================================
@@ -290,9 +283,6 @@ dm_test__capture__get_captured_outputs() {
 # Status:
 #   0 - There was output on standard error.
 #   1 - There was no output on standard error.
-#------------------------------------------------------------------------------
-# Tools:
-#   test
 #==============================================================================
 dm_test__capture__was_standard_error_captured() {
   dm_test__debug 'dm_test__capture__was_standard_error_captured' \
@@ -332,9 +322,6 @@ dm_test__capture__was_standard_error_captured() {
 #   None
 # Status:
 #   0 - Other status is not expected.
-#------------------------------------------------------------------------------
-# Tools:
-#   echo
 #==============================================================================
 dm_test__capture__append_to_standard_error() {
   ___message="$1"
@@ -344,7 +331,7 @@ dm_test__capture__append_to_standard_error() {
 
   ___timestamp="$(_dm_test__capture__create_timestamp)"
 
-  echo "${___timestamp} ${RED}stderr | ${___message}${RESET}" >> \
+  dm_tools__echo "${___timestamp} ${RED}stderr | ${___message}${RESET}" >> \
     "$DM_TEST__CAPTURE__RUNTIME__TEMP_FILE__FD2"
 }
 
@@ -376,9 +363,6 @@ dm_test__capture__append_to_standard_error() {
 #   None
 # Status:
 #   0 - Other status is not expected.
-#------------------------------------------------------------------------------
-# Tools:
-#   touch echo
 #==============================================================================
 _dm_test__capture__create_temp_file() {
   dm_test__debug '_dm_test__capture__create_temp_file' \
@@ -388,12 +372,12 @@ _dm_test__capture__create_temp_file() {
   # Touching might not be necessary as redirecting an output would create a
   # file, but touching it anyway, if the capturing process fails for some
   # reason.
-  touch "$___tmp_path"
+  dm_tools__touch "$___tmp_path"
 
   dm_test__debug '_dm_test__capture__create_temp_file' \
     "temporary file created: '${___tmp_path}'"
 
-  echo "$___tmp_path"
+  dm_tools__echo "$___tmp_path"
 }
 
 #==============================================================================
@@ -414,21 +398,18 @@ _dm_test__capture__create_temp_file() {
 #   None
 # Status:
 #   0 - Other status is not expected.
-#------------------------------------------------------------------------------
-# Tools:
-#   mkfifo echo
 #==============================================================================
 _dm_test__capture__create_temp_fifo() {
   dm_test__debug '_dm_test__capture__create_temp_fifo' \
     'creating temporary fifo..'
 
   ___tmp_path="$(dm_test__cache__create_temp_file)"
-  mkfifo "$___tmp_path"
+  dm_tools__mkfifo "$___tmp_path"
 
   dm_test__debug '_dm_test__capture__create_temp_fifo' \
     "temporary fifo created: '${___tmp_path}'"
 
-  echo "$___tmp_path"
+  dm_tools__echo "$___tmp_path"
 }
 
 #==============================================================================
@@ -455,9 +436,6 @@ _dm_test__capture__create_temp_fifo() {
 #   None
 # Status:
 #   0 - Other status is not expected.
-#------------------------------------------------------------------------------
-# Tools:
-#   read echo printf cut
 #==============================================================================
 _dm_test__capture__capture_output_for_domain() {
   ___worker_domain="$1"
@@ -470,17 +448,17 @@ _dm_test__capture__capture_output_for_domain() {
   while read -r ___worker_line
   do
     ___timestamp="$(_dm_test__capture__create_timestamp)"
-    printf '%s' "${___timestamp} ${___worker_color}${___worker_domain} | "
-    echo "${___worker_line}${RESET}"
+    dm_tools__printf '%s' "${___timestamp} ${___worker_color}"
+    dm_tools__echo "${___worker_domain} | ${___worker_line}${RESET}"
 
     # Skipping the excerpt generation if not in debug mode..
     if dm_test__config__debug_is_enabled
     then
       ___limit="$DM_TEST__CAPTURE__CONSTANT__CAPTURED_LINE_EXCERPT_LIMIT"
       ___excerpt="$( \
-        echo "$___worker_line" | \
+        dm_tools__echo "$___worker_line" | \
         _dm_test__utils__strip_colors | \
-        cut --characters="1-${___limit}" \
+        dm_tools__cut --characters "1-${___limit}" \
       )"
       dm_test__debug '_dm_test__capture__capture_output_for_domain' \
         "[${___worker_fd}] captured line excerpt: '${___excerpt}'"
@@ -509,11 +487,8 @@ _dm_test__capture__capture_output_for_domain() {
 #   None
 # Status:
 #   0 - Other status is not expected.
-#------------------------------------------------------------------------------
-# Tools:
-#   echo date
 #==============================================================================
 _dm_test__capture__create_timestamp() {
-  ___timestamp="$(date +'%s%N')"
-  echo "$___timestamp"
+  ___timestamp="$(dm_tools__date +'%s%N')"
+  dm_tools__echo "$___timestamp"
 }

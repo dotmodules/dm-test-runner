@@ -61,16 +61,13 @@ DM_TEST__STORE__RUNTIME__STORAGE_FILE='__INVALID__'
 #   None
 # Status:
 #   0 - Other status is not expected.
-#------------------------------------------------------------------------------
-# Tools:
-#   touch
 #==============================================================================
 dm_test__store__init() {
   dm_test__debug 'dm_test__store__init' \
     'initializing store system..'
 
   DM_TEST__STORE__RUNTIME__STORAGE_FILE="$(dm_test__cache__create_temp_file)"
-  touch "$DM_TEST__STORE__RUNTIME__STORAGE_FILE"
+  dm_tools__touch "$DM_TEST__STORE__RUNTIME__STORAGE_FILE"
 
   dm_test__debug_list 'dm_test__store__init' \
     "store system initialized with storage file path:" \
@@ -96,9 +93,6 @@ dm_test__store__init() {
 #   None
 # Status:
 #   0 - Other status is not expected.
-#------------------------------------------------------------------------------
-# Tools:
-#   test
 #==============================================================================
 dm_test__store__set() {
   ___key="$1"
@@ -138,9 +132,6 @@ dm_test__store__set() {
 # Status:
 #   0 - Key exists, value returned.
 #   1 - Key does not exist.
-#------------------------------------------------------------------------------
-# Tools:
-#   echo
 #==============================================================================
 dm_test__store__get() {
   ___key="$1"
@@ -149,7 +140,7 @@ dm_test__store__get() {
 
   if ___value="$(_dm_test__store__get_value_for_key "$___key")"
   then
-    echo "$___value"
+    dm_tools__echo "$___value"
     return 0
   else
     return 1
@@ -184,9 +175,6 @@ dm_test__store__get() {
 #   None
 # Status:
 #   0 - Other status is not expected.
-#------------------------------------------------------------------------------
-# Tools:
-#   cat test
 #==============================================================================
 _dm_test__store__log_store_content() {
   ___message="$1"
@@ -198,7 +186,7 @@ _dm_test__store__log_store_content() {
     then
       dm_test__debug_list '_dm_test__store__log_store_content' \
         "$___message" \
-        "$(cat "$___store_file")"
+        "$(dm_tools__cat "$___store_file")"
     else
       dm_test__debug '_dm_test__store__log_store_content' 'store file is empty'
     fi
@@ -225,9 +213,6 @@ _dm_test__store__log_store_content() {
 # Status:
 #   0 - Key found.
 #   1 - Key not fount.
-#------------------------------------------------------------------------------
-# Tools:
-#   grep test
 #==============================================================================
 _dm_test__store__key_exists() {
   ___key="$1"
@@ -238,7 +223,7 @@ _dm_test__store__key_exists() {
 
   ___pattern="^${___encoded_key}${___separator}"
 
-  if grep --silent "$___pattern" "$___store_file"
+  if dm_tools__grep --silent "$___pattern" "$___store_file"
   then
     dm_test__debug '_dm_test__store__key_exists' 'key found in the store'
     return 0
@@ -270,9 +255,6 @@ _dm_test__store__key_exists() {
 #   0 - Key found, value returned.
 #   1 - Key not fount.
 #   2 - Unexpected error, it should be reported..
-#------------------------------------------------------------------------------
-# Tools:
-#   grep test echo sed wc
 #==============================================================================
 _dm_test__store__get_value_for_key() {
   ___key="$1"
@@ -283,13 +265,13 @@ _dm_test__store__get_value_for_key() {
 
   ___pattern="^${___encoded_key}${___separator}"
 
-  if ___result="$(grep "$___pattern" "$___store_file")"
+  if ___result="$(dm_tools__grep "$___pattern" "$___store_file")"
   then
     dm_test__debug_list '_dm_test__store__get_value_for_key' \
       'key found in the store:' "$___result"
 
     # This is a very unlikely case, but should be prepared for it..
-    ___line_count="$(echo "$___result" | wc --lines)"
+    ___line_count="$(dm_tools__echo "$___result" | dm_tools__wc --lines)"
     if [ "$___line_count" -ne '1' ]
     then
       dm_test__debug_list '_dm_test__store__get_value_for_key' \
@@ -302,7 +284,10 @@ _dm_test__store__get_value_for_key() {
     # Want to remain fully POSIX compliante, variable expansion is not required
     # by POSIX. Read more: https://stackoverflow.com/a/21913014/1565331
     # shellcheck disable=SC2001
-    ___encoded_value="$(echo "$___result" | sed "s/${___pattern}//g")"
+    ___encoded_value="$( \
+      dm_tools__echo "$___result" | \
+      dm_tools__sed --expression "s/${___pattern}//g" \
+    )"
 
     dm_test__debug_list '_dm_test__store__get_value_for_key' \
       'value separated:' "$___encoded_value"
@@ -312,7 +297,7 @@ _dm_test__store__get_value_for_key() {
     dm_test__debug_list '_dm_test__store__get_value_for_key' \
       'value decoded:' "$___value"
 
-    echo "$___value"
+    dm_tools__echo "$___value"
     return 0
 
   else
@@ -343,9 +328,6 @@ _dm_test__store__get_value_for_key() {
 #   None
 # Status:
 #   0 - Other status is not expected.
-#------------------------------------------------------------------------------
-# Tools:
-#   echo
 #==============================================================================
 _dm_test__store__insert() {
   ___key="$1"
@@ -360,7 +342,7 @@ _dm_test__store__insert() {
   ___encoded_value="$(_dm_test__store__encode "$___value")"
 
   ___line="${___encoded_key}${___separator}${___encoded_value}"
-  echo "$___line" >> "$___store_file"
+  dm_tools__echo "$___line" >> "$___store_file"
 
   dm_test__debug '_dm_test__store__insert' \
     'key-value pair has been inserted to the store file'
@@ -386,9 +368,6 @@ _dm_test__store__insert() {
 #   None
 # Status:
 #   0 - Other status is not expected.
-#------------------------------------------------------------------------------
-# Tools:
-#   sed
 #==============================================================================
 _dm_test__store__replace() {
   ___key="$1"
@@ -405,7 +384,10 @@ _dm_test__store__replace() {
   ___pattern="^${___encoded_key}${___separator}.*"
   ___new="${___encoded_key}${___separator}${___encoded_value}"
 
-  sed -i "s/${___pattern}/${___new}/g" "$___store_file"
+  dm_tools__sed \
+    --in-place '' \
+    --expression "s/${___pattern}/${___new}/g" \
+    "$___store_file"
 
   dm_test__debug '_dm_test__store__replace' \
     'key value has been replaced'
@@ -432,9 +414,6 @@ _dm_test__store__replace() {
 #   None
 # Status:
 #   0 - Other status is not expected.
-#------------------------------------------------------------------------------
-# Tools:
-#   echo xxd tr
 #==============================================================================
 _dm_test__store__encode() {
   ___value="$1"
@@ -442,12 +421,16 @@ _dm_test__store__encode() {
   dm_test__debug_list '_dm_test__store__encode' \
     'encoding input value:' "$___value"
 
-  ___encoded="$(echo "$___value" | xxd -plain | tr --delete '\n')"
+  ___encoded="$( \
+    dm_tools__echo "$___value" | \
+    dm_tools__xxd --plain | \
+    dm_tools__tr --delete '\n' \
+  )"
 
   dm_test__debug_list '_dm_test__store__encode' \
     'input value encoded:' "$___encoded"
 
-  echo "$___encoded"
+  dm_tools__echo "$___encoded"
 }
 
 #==============================================================================
@@ -469,9 +452,6 @@ _dm_test__store__encode() {
 #   None
 # Status:
 #   0 - Other status is not expected.
-#------------------------------------------------------------------------------
-# Tools:
-#   echo xxd
 #==============================================================================
 _dm_test__store__decode() {
   ___encoded_value="$1"
@@ -479,10 +459,13 @@ _dm_test__store__decode() {
   dm_test__debug_list '_dm_test__store__decode' \
     'decoding input value:' "$___encoded_value"
 
-  ___value="$(echo "$___encoded_value" | xxd -revert -plain)"
+  ___value="$( \
+    dm_tools__echo "$___encoded_value" | \
+    dm_tools__xxd --revert --plain \
+  )"
 
   dm_test__debug_list '_dm_test__store__decode' \
     'decoded value:' "$___value"
 
-  echo "$___value"
+  dm_tools__echo "$___value"
 }

@@ -37,13 +37,10 @@ DM_TEST__CACHE__RUNTIME__GLOBAL_COUNT='__INVALID__'
 #   None
 # Status:
 #   0 - Other status is not expected.
-#------------------------------------------------------------------------------
-# Tools:
-#   echo
 #==============================================================================
 _dm_test__cache__global_count__init() {
   DM_TEST__CACHE__RUNTIME__GLOBAL_COUNT="$(dm_test__cache__create_temp_file)"
-  echo '0' > "$DM_TEST__CACHE__RUNTIME__GLOBAL_COUNT"
+  dm_tools__echo '0' > "$DM_TEST__CACHE__RUNTIME__GLOBAL_COUNT"
 
   dm_test__debug '_dm_test__cache__global_count__init' \
     "global count file initialized: '${DM_TEST__CACHE__RUNTIME__GLOBAL_COUNT}'"
@@ -67,9 +64,6 @@ _dm_test__cache__global_count__init() {
 #   None
 # Status:
 #   0 - Other status is not expected.
-#------------------------------------------------------------------------------
-# Tools:
-#   None
 #==============================================================================
 dm_test__cache__global_count__increment() {
   _dm_test__utils__increment_file_content \
@@ -97,13 +91,10 @@ dm_test__cache__global_count__increment() {
 #   None
 # Status:
 #   0 - Other status is not expected.
-#------------------------------------------------------------------------------
-# Tools:
-#   echo cat
 #==============================================================================
 dm_test__cache__global_count__get() {
-  ___count="$(cat "$DM_TEST__CACHE__RUNTIME__GLOBAL_COUNT")"
-  echo "$___count"
+  ___count="$(dm_tools__cat "$DM_TEST__CACHE__RUNTIME__GLOBAL_COUNT")"
+  dm_tools__echo "$___count"
 
   dm_test__debug 'dm_test__cache__global_count__get' \
     "global count value returned: '${___count}'"

@@ -23,14 +23,14 @@
 
 # Checking the availibility and usability of tput. If it is available and
 # usable we can set the global coloring variables with it.
-if command -v tput >/dev/null && tput init >/dev/null 2>&1
+if dm_tools__tput__is_available
 then
-  RED="$(tput setaf 1)"
-  GREEN="$(tput setaf 2)"
-  BLUE="$(tput setaf 4)"
-  RESET="$(tput sgr0)"
-  BOLD="$(tput bold)"
-  DIM="$(tput dim)"
+  RED="$(dm_tools__tput setaf 1)"
+  GREEN="$(dm_tools__tput setaf 2)"
+  BLUE="$(dm_tools__tput setaf 4)"
+  RESET="$(dm_tools__tput sgr0)"
+  BOLD="$(dm_tools__tput bold)"
+  DIM="$(dm_tools__tput dim)"
 else
   RED=''
   GREEN=''

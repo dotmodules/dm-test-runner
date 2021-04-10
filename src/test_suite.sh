@@ -42,14 +42,9 @@
 #   None
 # Status:
 #   0 - Other status is not expected.
-#------------------------------------------------------------------------------
-# Tools:
-#   None
 #==============================================================================
 dm_test__test_suite__main() {
   dm_test__debug 'dm_test__test_suite__main' 'test suite execution started..'
-
-  _dm_test__utils__assert_tools
 
   _dm_test__test_suite__init
   _dm_test__test_suite__execute_test_files
@@ -87,9 +82,6 @@ dm_test__test_suite__main() {
 #   None
 # Status:
 #   0 - Other status is not expected.
-#------------------------------------------------------------------------------
-# Tools:
-#   None
 #==============================================================================
 _dm_test__test_suite__init() {
   dm_test__debug '_dm_test__test_suite__init' 'initializing..'
@@ -122,9 +114,6 @@ _dm_test__test_suite__init() {
 #   None
 # Status:
 #   0 - Other status is not expected.
-#------------------------------------------------------------------------------
-# Tools:
-#   mkfifo test read echo
 #==============================================================================
 _dm_test__test_suite__execute_test_files() {
   dm_test__debug '_dm_test__test_suite__execute_test_files' \
@@ -142,8 +131,8 @@ _dm_test__test_suite__execute_test_files() {
   # Using a named pipe here to be able to safely iterate over the file names.
   # See more at shellcheck SC2044.
   ___tmp_pipe="$(dm_test__cache__create_temp_file)"
-  mkfifo "$___tmp_pipe"
-  echo "$___test_files" > "$___tmp_pipe" &
+  dm_tools__mkfifo "$___tmp_pipe"
+  dm_tools__echo "$___test_files" > "$___tmp_pipe" &
 
   while IFS= read -r ___test_file_path
   do
@@ -175,25 +164,20 @@ _dm_test__test_suite__execute_test_files() {
 #   None
 # Status:
 #   0 - Other status is not expected.
-#------------------------------------------------------------------------------
-# Tools:
-#   find sort xargs echo test
 #==============================================================================
 _dm_test__test_suite__get_test_files() {
   dm_test__debug '_dm_test__test_suite__get_test_files' \
     'gathering test files..'
 
   # Pre checking if there would be matches.
-  if ___find_output="$( \
-    find \
+  if ! ___find_output="$( \
+    dm_tools__find \
       "$DM_TEST__CONFIG__MANDATORY__TEST_FILES_ROOT" \
-      -type f \
-      -name "${DM_TEST__CONFIG__MANDATORY__TEST_FILE_PREFIX}*" \
+      --type 'f' \
+      --name "${DM_TEST__CONFIG__MANDATORY__TEST_FILE_PREFIX}*" \
       2>&1 \
   )"
   then
-    :
-  else
     dm_test__report_error_and_exit \
       'Unexpected error during execution!' \
       'Test file loading failed!' \
@@ -201,19 +185,19 @@ _dm_test__test_suite__get_test_files() {
   fi
 
   ___test_files="$( \
-    find \
+    dm_tools__find \
       "$DM_TEST__CONFIG__MANDATORY__TEST_FILES_ROOT" \
-      -type f \
-      -name "${DM_TEST__CONFIG__MANDATORY__TEST_FILE_PREFIX}*" \
-      -print0 | \
-      sort --zero-terminated --dictionary-order | \
-      xargs --null --max-args=1 --no-run-if-empty \
+      --type 'f' \
+      --name "${DM_TEST__CONFIG__MANDATORY__TEST_FILE_PREFIX}*" \
+      --print0 | \
+      dm_tools__sort --zero-terminated --dictionary-order | \
+      dm_tools__xargs --null --max-args '1' \
   )"
   dm_test__debug_list '_dm_test__test_suite__get_test_files' \
     'test files found:' \
     "$___test_files"
 
-  echo "$___test_files"
+  dm_tools__echo "$___test_files"
 }
 
 #==============================================================================
@@ -237,9 +221,6 @@ _dm_test__test_suite__get_test_files() {
 #   None
 # Status:
 #   0 - Other status is not expected.
-#------------------------------------------------------------------------------
-# Tools:
-#   test
 #==============================================================================
 _dm_test__test_suite__execute_test_file() {
   ___test_file_path="$1"
@@ -294,9 +275,6 @@ _dm_test__test_suite__execute_test_file() {
 #   None
 # Status:
 #   0 - Other status is not expected.
-#------------------------------------------------------------------------------
-# Tools:
-#   cd dirname basename echo test exit
 #==============================================================================
 _dm_test__test_suite__execute_test_file_in_a_subshell() {
   ___test_file_path="$1"
@@ -314,7 +292,7 @@ _dm_test__test_suite__execute_test_file_in_a_subshell() {
   # Navigating to the directory of the testcase to be able to use relative
   # imports there. After this, the '___test_file_path' variable won't be
   # usable directly as a path.
-  cd "$(dirname "$___test_file_path")" || exit
+  cd "$(dm_tools__dirname "$___test_file_path")" || exit
 
   dm_test__debug '_dm_test__test_suite__execute_test_file_in_a_subshell' \
     'sourcing test file..'
@@ -324,7 +302,7 @@ _dm_test__test_suite__execute_test_file_in_a_subshell() {
   # dynamically loaded here, and we cannot know the exact source path of
   # them before running the test suite.
   # shellcheck disable=SC1090
-  . "./$(basename "$___test_file_path")"
+  . "./$(dm_tools__basename "$___test_file_path")"
 
   if _dm_test__test_suite__run_and_capture_setup_file_hook
   then
@@ -361,9 +339,6 @@ _dm_test__test_suite__execute_test_file_in_a_subshell() {
 #   None
 # Status:
 #   0 - Other status is not expected.
-#------------------------------------------------------------------------------
-# Tools:
-#   test
 #==============================================================================
 _dm_test__test_suite__run_and_capture_setup_file_hook() {
   if ! dm_test__hooks__is_hook_available__setup_file
@@ -429,9 +404,6 @@ _dm_test__test_suite__run_and_capture_setup_file_hook() {
 #   None
 # Status:
 #   0 - Other status is not expected.
-#------------------------------------------------------------------------------
-# Tools:
-#   test
 #==============================================================================
 _dm_test__test_suite__run_and_capture_teardown_file_hook() {
   if ! dm_test__hooks__is_hook_available__teardown_file
@@ -498,9 +470,6 @@ _dm_test__test_suite__run_and_capture_teardown_file_hook() {
 #   None
 # Status:
 #   0 - Other status is not expected.
-#------------------------------------------------------------------------------
-# Tools:
-#   None
 #==============================================================================
 _dm_test__test_suite__set_result_output_variables() {
   dm_test__debug '_dm_test__test_suite__set_result_output_variables' \
@@ -549,9 +518,6 @@ _dm_test__test_suite__set_result_output_variables() {
 #   None
 # Status:
 #   0 - Other status is not expected.
-#------------------------------------------------------------------------------
-# Tools:
-#   echo uname command printf
 #==============================================================================
 dm_test__test_suite__print_header() {
   dm_test__debug 'dm_test__test_suite__print_header' 'printing suite header..'
@@ -559,17 +525,17 @@ dm_test__test_suite__print_header() {
   #============================================================================
   # TITLE
   #============================================================================
-  printf '%s' "$DIM"
-  printf '%s' '---------------------------------------------------------------'
-  echo '----------------'
-  echo '>> DM.TEST <<'
+  dm_tools__printf '%s' "$DIM"
+  dm_tools__printf '%s' '-----------------------------------------------------'
+  dm_tools__echo '--------------------------'
+  dm_tools__echo '>> DM.TEST <<'
 
   #============================================================================
   # CONFIG SECTION
   #============================================================================
-  printf '%s' '---------------------------------------------------------------'
-  echo '----------------'
-  printf '%s' "$RESET"
+  dm_tools__printf '%s' '-----------------------------------------------------'
+  dm_tools__echo '--------------------------'
+  dm_tools__printf '%s' "$RESET"
 
   # Mandatory config variables
   _dm_test__test_suite__print_header__print_config \
@@ -609,33 +575,33 @@ dm_test__test_suite__print_header() {
     'DM_TEST__CONFIG__OPTIONAL__DEBUG_ENABLED' \
     "$DM_TEST__CONFIG__OPTIONAL__DEBUG_ENABLED"
 
-  printf '%s' "$DIM"
+  dm_tools__printf '%s' "$DIM"
   #============================================================================
   # SYSTEM INFO SECTION
   #============================================================================
-  printf '%s' '---------------------------------------------------------------'
-  echo '----------------'
-  echo '$ uname --kernel-name --kernel-release --machine --operating-system'
-  uname --kernel-name --kernel-release --machine --operating-system
+  dm_tools__printf '%s' '-----------------------------------------------------'
+  dm_tools__echo '--------------------------'
+  dm_tools__echo '$ uname --kernel-name --kernel-release --machine'
+  dm_tools__uname --kernel-name --kernel-release --machine
 
   #============================================================================
   # SHELL INFO SECTION
   #============================================================================
-  printf '%s' '---------------------------------------------------------------'
-  echo '----------------'
-  echo '$ command -v sh'
+  dm_tools__printf '%s' '-----------------------------------------------------'
+  dm_tools__echo '--------------------------'
+  dm_tools__echo '$ command -v sh'
   command -v sh
 
   #============================================================================
   # FOOTER SECTION
   #============================================================================
-  printf '%s' '---------------------------------------------------------------'
-  echo '----------------'
-  printf '%s' "$RESET"
+  dm_tools__printf '%s' '-----------------------------------------------------'
+  dm_tools__echo '--------------------------'
+  dm_tools__printf '%s' "$RESET"
 }
 
 #==============================================================================
-# Providas a fancy way to print out a variable and its value.
+# Provides a fancy way to print out a variable and its value.
 #------------------------------------------------------------------------------
 # Globals:
 #   DIM
@@ -654,9 +620,6 @@ dm_test__test_suite__print_header() {
 #   None
 # Status:
 #   0 - Other status is not expected.
-#------------------------------------------------------------------------------
-# Tools:
-#   wc printf test
 #==============================================================================
 _dm_test__test_suite__print_header__print_config() {
   ___name="$1"
@@ -673,8 +636,12 @@ _dm_test__test_suite__print_header__print_config() {
   ___name="${___name} "
   ___value=" ${___value}"
 
-  ___name_length="$(printf '%s' "$___name" | wc --chars)"
-  ___value_length="$(printf '%s' "$___value" | wc --chars)"
+  ___name_length="$( \
+    dm_tools__printf '%s' "$___name" | dm_tools__wc --chars \
+  )"
+  ___value_length="$( \
+    dm_tools__printf '%s' "$___value" | dm_tools__wc --chars \
+  )"
 
   ___pad_length='79'
   ___pad='............................................................'  # 60
@@ -683,16 +650,16 @@ _dm_test__test_suite__print_header__print_config() {
   ___pad_length="$(( ___pad_length - ___name_length - ___value_length ))"
 
   # Start the printout.
-  printf '%s' "$DIM"
-  printf '%s' "$___name"
+  dm_tools__printf '%s' "$DIM"
+  dm_tools__printf '%s' "$___name"
 
   # Print the padding if there is paddable space left.
   if [ "$___pad_length" -gt '0' ]
   then
-    printf '%*.*s' 0 "$___pad_length" "$___pad"
+    dm_tools__printf '%*.*s' 0 "$___pad_length" "$___pad"
   fi
 
-  printf '%s\n' "${___value}${RESET}"
+  dm_tools__printf '%s\n' "${___value}${RESET}"
 }
 
 #==============================================================================
@@ -721,9 +688,6 @@ _dm_test__test_suite__print_header__print_config() {
 # Status:
 #   0 - test suite passed
 #   1 - test suite failed, process termination
-#------------------------------------------------------------------------------
-# Tools:
-#   echo test exit
 #==============================================================================
 _dm_test__test_suite__print_report() {
   dm_test__debug '_dm_test__test_suite__print_report' \
@@ -732,13 +696,14 @@ _dm_test__test_suite__print_report() {
   ___global_count="$(dm_test__cache__global_count__get)"
   ___failure_count="$(dm_test__cache__global_failure__get)"
 
-  echo ''
-  echo "${BOLD}${___global_count} tests, ${___failure_count} failed${RESET}"
+  dm_tools__echo ''
+  dm_tools__printf '%s'  "${BOLD}${___global_count} tests, "
+  dm_tools__echo "${___failure_count} failed${RESET}"
 
   if dm_test__cache__global_failure__failures_happened
   then
-    echo "${BOLD}Result: ${RED}FAILURE${RESET}"
-    echo ''
+    dm_tools__echo "${BOLD}Result: ${RED}FAILURE${RESET}"
+    dm_tools__echo ''
     if dm_test__cache__global_errors__has_errors
     then
       dm_test__cache__global_errors__print_errors
@@ -757,7 +722,7 @@ _dm_test__test_suite__print_report() {
     fi
 
   else
-    echo "${BOLD}Result: ${GREEN}SUCCESS${RESET}"
-    echo ''
+    dm_tools__echo "${BOLD}Result: ${GREEN}SUCCESS${RESET}"
+    dm_tools__echo ''
   fi
 }

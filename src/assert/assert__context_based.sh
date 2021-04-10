@@ -63,9 +63,6 @@ DM_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD2='__INVALID__'
 # Status:
 #   0 - Other status is not expected, as the status of the given command is
 #       captured.
-#------------------------------------------------------------------------------
-# Tools:
-#   test printf echo cat
 #==============================================================================
 run() {
   dm_test__debug 'run' "running command: '$*'"
@@ -91,13 +88,13 @@ run() {
   fi
 
   dm_test__debug_list 'run' 'captured standard output:' \
-    "$(cat "$DM_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD1")"
+    "$(dm_tools__cat "$DM_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD1")"
   dm_test__debug_list 'run' 'captured standard error:' \
-    "$(cat "$DM_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD2")"
+    "$(dm_tools__cat "$DM_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD2")"
 
   dm_test__debug 'run' "$( \
-    printf '%s' 'captured status: '; \
-    echo "'${DM_TEST__ASSERT__RUNTIME__LAST_STATUS}'" \
+    dm_tools__printf '%s' 'captured status: '; \
+    dm_tools__echo "'${DM_TEST__ASSERT__RUNTIME__LAST_STATUS}'" \
   )"
 }
 
@@ -131,9 +128,6 @@ run() {
 # Status:
 #   0 - Assertion succeeded.
 #   1 - Assertion failed.
-#------------------------------------------------------------------------------
-# Tools:
-#   test
 #==============================================================================
 assert_status() {
   ___expected="$1"
@@ -186,9 +180,6 @@ assert_status() {
 # Status:
 #   0 - Assertion succeeded.
 #   1 - Assertion failed.
-#------------------------------------------------------------------------------
-# Tools:
-#   test echo wc printf cat
 #==============================================================================
 assert_output() {
   ___expected="$1"
@@ -208,8 +199,9 @@ assert_output() {
 
     ___subject='Inappropriate assertion function'
     ___reason="$( \
-      printf '%s' 'Multiline output should be asserted with '; \
-      echo "'assert_output_line_at_index' or 'assert_output_line_partially_at_index'." \
+      dm_tools__printf '%s' 'Multiline output should be asserted with '; \
+      dm_tools__printf '%s' "assert_output_line_at_index' or "; \
+      dm_tools__echo "'assert_output_line_partially_at_index'." \
     )"
     ___assertion='assert_output'
     _dm_test__report_failure "$___subject" "$___reason" "$___assertion"
@@ -236,9 +228,6 @@ assert_output() {
 # Status:
 #   0 - Assertion succeeded.
 #   1 - Assertion failed.
-#------------------------------------------------------------------------------
-# Tools:
-#   echo wc test
 #==============================================================================
 assert_output_line_count() {
   ___expected="$1"
@@ -273,9 +262,6 @@ assert_output_line_count() {
 # Status:
 #   0 - Assertion succeeded.
 #   1 - Assertion failed.
-#------------------------------------------------------------------------------
-# Tools:
-#   test
 #==============================================================================
 assert_output_line_at_index() {
   ___line_index="$1"
@@ -313,9 +299,6 @@ assert_output_line_at_index() {
 # Status:
 #   0 - Assertion succeeded.
 #   1 - Assertion failed.
-#------------------------------------------------------------------------------
-# Tools:
-#   None
 #==============================================================================
 assert_output_line_partially_at_index() {
   ___line_index="$1"
@@ -360,9 +343,6 @@ assert_output_line_partially_at_index() {
 # Status:
 #   0 - Assertion succeeded.
 #   1 - Assertion failed.
-#------------------------------------------------------------------------------
-# Tools:
-#   test echo printf
 #==============================================================================
 assert_error() {
   ___expected="$1"
@@ -382,8 +362,9 @@ assert_error() {
 
     ___subject='Inappropriate assertion function'
     ___reason="$( \
-      printf '%s' 'Multiline output should be asserted with '; \
-      echo "'assert_error_line_at_index' or 'assert_error_line_partially_at_index'." \
+      dm_tools__printf '%s' 'Multiline output should be asserted with '; \
+      dm_tools__printf '%s' "'assert_error_line_at_index' or "; \
+      dm_tools__echo "'assert_error_line_partially_at_index'." \
     )"
     ___assertion='assert_error'
     _dm_test__report_failure "$___subject" "$___reason" "$___assertion"
@@ -410,9 +391,6 @@ assert_error() {
 # Status:
 #   0 - Assertion succeeded.
 #   1 - Assertion failed.
-#------------------------------------------------------------------------------
-# Tools:
-#   None
 #==============================================================================
 assert_error_line_count() {
   ___expected="$1"
@@ -447,9 +425,6 @@ assert_error_line_count() {
 # Status:
 #   0 - Assertion succeeded.
 #   1 - Assertion failed.
-#------------------------------------------------------------------------------
-# Tools:
-#   None
 #==============================================================================
 assert_error_line_at_index() {
   ___line_index="$1"
@@ -487,9 +462,6 @@ assert_error_line_at_index() {
 # Status:
 #   0 - Assertion succeeded.
 #   1 - Assertion failed.
-#------------------------------------------------------------------------------
-# Tools:
-#   None
 #==============================================================================
 assert_error_line_partially_at_index() {
   ___line_index="$1"
@@ -536,17 +508,14 @@ assert_error_line_partially_at_index() {
 #   0 - Assertion succeeded.
 #   1 - Assertion failed.
 #   2 - Inappropriate assertion function.
-#------------------------------------------------------------------------------
-# Tools:
-#   test wc
 #==============================================================================
 _dm_test__assert__assert_output() {
   ___expected="$1"
   ___target_buffer="$2"
   ___assertion_name="$3"
 
-  ___result="$(cat "$___target_buffer")"
-  ___count="$(wc --lines < "$___target_buffer")"
+  ___result="$(dm_tools__cat "$___target_buffer")"
+  ___count="$(dm_tools__wc --lines < "$___target_buffer")"
 
   if [ "$___count" -gt '1' ]
   then
@@ -596,16 +565,13 @@ _dm_test__assert__assert_output() {
 # Status:
 #   0 - Assertion succeeded.
 #   1 - Assertion failed.
-#------------------------------------------------------------------------------
-# Tools:
-#   wc test
 #==============================================================================
 _dm_test__assert__assert_line_count() {
   ___expected="$1"
   ___target_buffer="$2"
   ___assertion_name="$3"
 
-  ___result="$(wc --lines < "$___target_buffer")"
+  ___result="$(dm_tools__wc --lines < "$___target_buffer")"
 
   dm_test__debug '_dm_test__assert__assert_line_count' \
     'asserting output line count:'
@@ -653,9 +619,6 @@ _dm_test__assert__assert_line_count() {
 # Status:
 #   0 - Assertion succeeded.
 #   1 - Assertion failed.
-#------------------------------------------------------------------------------
-# Tools:
-#   test
 #==============================================================================
 _dm_test__assert__assert_line_at_index() {
   ___index="$1"
@@ -727,9 +690,6 @@ _dm_test__assert__assert_line_at_index() {
 # Status:
 #   0 - Assertion succeeded.
 #   1 - Assertion failed.
-#------------------------------------------------------------------------------
-# Tools:
-#   test echo grep
 #==============================================================================
 _dm_test__assert__assert_line_partially_at_index() {
   ___index="$1"
@@ -761,7 +721,7 @@ _dm_test__assert__assert_line_partially_at_index() {
   dm_test__debug '_dm_test__assert__assert_line_partially_at_index' \
     "- target:   '${___result}'"
 
-  if echo "$___result" | grep --silent "$___expected"
+  if dm_tools__echo "$___result" | dm_tools__grep --silent "$___expected"
   then
     dm_test__debug '_dm_test__assert__assert_line_partially_at_index' \
       '=> assertion succeeded'

@@ -45,9 +45,6 @@
 #   None
 # Status:
 #   0 - Other status is not expected.
-#------------------------------------------------------------------------------
-# Tools:
-#   None
 #==============================================================================
 dm_test__cache__init() {
   dm_test__debug 'dm_test__cache__init' 'initializing cache system..'
@@ -135,13 +132,10 @@ DM_TEST__CACHE__RUNTIME__CACHE_PATH='__INVALID__'
 #   None
 # Status:
 #   0 - Other status is not expected.
-#------------------------------------------------------------------------------
-# Tools:
-#   realpath mkdir test
 #==============================================================================
 _dm_test__cache__normalize_cache_parent_directory() {
   ___raw_parent="$DM_TEST__CONFIG__OPTIONAL__CACHE_PARENT_DIRECTORY"
-  ___parent="$(realpath --no-symlinks "$___raw_parent")"
+  ___parent="$(dm_tools__realpath --no-symlinks "$___raw_parent")"
 
   dm_test__debug '_dm_test__cache__normalize_cache_parent_directory' \
     "normalizing raw cache parent directory: '${___raw_parent}'"
@@ -150,7 +144,7 @@ _dm_test__cache__normalize_cache_parent_directory() {
   then
     :
   else
-    if ___output="$(mkdir --parents "$___parent" 2>&1)"
+    if ___output="$(dm_tools__mkdir --parents "$___parent" 2>&1)"
     then
       :
     else
@@ -197,16 +191,12 @@ _dm_test__cache__normalize_cache_parent_directory() {
 #   None
 # Status:
 #   0 - Other status is not expected.
-#------------------------------------------------------------------------------
-# Tools:
-#   mktemp test
 #==============================================================================
 _dm_test__cache__create_base_cache_directory() {
   if ___mktemp_output="$( \
-    mktemp \
-      -t \
+    dm_tools__mktemp \
       --directory \
-      --tmpdir="$DM_TEST__CACHE__RUNTIME__NORMALIZED_CACHE_PARENT_DIRECTORY" \
+      --tmpdir "$DM_TEST__CACHE__RUNTIME__NORMALIZED_CACHE_PARENT_DIRECTORY" \
       "$DM_TEST__CACHE__CONFIG__MKTEMP_TEMPLATE" \
       2>&1 \
   )"
@@ -242,15 +232,16 @@ _dm_test__cache__create_base_cache_directory() {
 #   None
 # Status:
 #   0 - Other status is not expected.
-#------------------------------------------------------------------------------
-# Tools:
-#   test
 #==============================================================================
 dm_test__cache__cleanup() {
   dm_test__debug 'dm_test__cache__cleanup' \
     'cleanup process started..'
 
-  ___cleanup_targets="$(_dm_test__cache__cleanup__find_targets)"
+  if ! ___cleanup_targets="$(_dm_test__cache__cleanup__find_targets)"
+  then
+    ___status="$?"
+    exit "$___status"
+  fi
 
   if [ -n "$___cleanup_targets" ]
   then
@@ -286,26 +277,28 @@ dm_test__cache__cleanup() {
 #   None
 # Status:
 #   0 - Other status is not expected.
-#------------------------------------------------------------------------------
-# Tools:
-#   find echo wc test
 #==============================================================================
 _dm_test__cache__cleanup__find_targets() {
   dm_test__debug '_dm_test__cache__cleanup__find_targets' \
     'looking for deletable cache directories..'
 
   if ___find_output="$( \
-    find "$DM_TEST__CACHE__RUNTIME__NORMALIZED_CACHE_PARENT_DIRECTORY" \
-      -maxdepth 1 \
-      -type d \
-      -name "${DM_TEST__CACHE__CONFIG__DIRECTORY_PREFIX}*" \
+    dm_tools__find "$DM_TEST__CACHE__RUNTIME__NORMALIZED_CACHE_PARENT_DIRECTORY" \
+      --max-depth '1' \
+      --type 'd' \
+      --name "${DM_TEST__CACHE__CONFIG__DIRECTORY_PREFIX}*" \
       2>&1 \
   )"
   then
-
+    ___directory_count="$( \
+      dm_tools__echo "$___find_output" | dm_tools__wc --lines \
+    )"
     dm_test__debug '_dm_test__cache__cleanup__find_targets' \
-      "deletable directory count: $(echo "$___find_output" | wc --lines)"
-    echo "$___find_output"
+      "deletable directory count: ${___directory_count}"
+    dm_test__debug_list '_dm_test__cache__cleanup__find_targets' \
+      'target result:' \
+      "$___find_output"
+    dm_tools__echo "$___find_output"
 
   else
 
@@ -314,7 +307,7 @@ _dm_test__cache__cleanup__find_targets() {
 
     dm_test__report_error_and_exit \
       'Cache system clean up failed!' \
-      'An unexpected error happened during the clean up process!' \
+      'An unexpected error happened during the clean up target findig process!' \
       "$___find_output"
 
   fi
@@ -338,9 +331,6 @@ _dm_test__cache__cleanup__find_targets() {
 #   None
 # Status:
 #   0 - Other status is not expected.
-#------------------------------------------------------------------------------
-# Tools:
-#   rm test
 #==============================================================================
 _dm_test__cache__cleanup__delete_target() {
   ___target="$1"
@@ -348,7 +338,7 @@ _dm_test__cache__cleanup__delete_target() {
   dm_test__debug '_dm_test__cache__cleanup__delete_target' \
     "deleting '${___target}'.."
 
-  if ___rm_output="$(rm --recursive --force "$___target" 2>&1)"
+  if ___rm_output="$(dm_tools__rm --recursive --force "$___target" 2>&1)"
   then
     dm_test__debug '_dm_test__cache__cleanup__delete_target' \
       "deleted '${___target}'"
@@ -405,18 +395,15 @@ DM_TEST__CACHE__RUNTIME__TEMP_FILES_PATH='__INVALID__'
 #   None
 # Status:
 #   0 - Other status is not expected.
-#------------------------------------------------------------------------------
-# Tools:
-#   mkdir echo printf
 #==============================================================================
 _dm_test__cache__init__temp_files_base_directory() {
   # Using a subshell here to prevent the long line.
   # shellcheck disable=2116
   DM_TEST__CACHE__RUNTIME__TEMP_FILES_PATH="$( \
-    printf '%s' "${DM_TEST__CACHE__RUNTIME__CACHE_PATH}/"; \
-    echo "$DM_TEST__CACHE__CONFIG__TEMP_FILES_PATH_NAME" \
+    dm_tools__printf '%s' "${DM_TEST__CACHE__RUNTIME__CACHE_PATH}/"; \
+    dm_tools__echo "$DM_TEST__CACHE__CONFIG__TEMP_FILES_PATH_NAME" \
   )"
-  mkdir --parents "$DM_TEST__CACHE__RUNTIME__TEMP_FILES_PATH"
+  dm_tools__mkdir --parents "$DM_TEST__CACHE__RUNTIME__TEMP_FILES_PATH"
 
   dm_test__debug '_dm_test__cache__init__temp_files_base_directory' \
     "temp files base created: '${DM_TEST__CACHE__RUNTIME__TEMP_FILES_PATH}'"
@@ -442,14 +429,11 @@ _dm_test__cache__init__temp_files_base_directory() {
 #   None
 # Status:
 #   0 - Other status is not expected.
-#------------------------------------------------------------------------------
-# Tools:
-#   echo
 #==============================================================================
 dm_test__cache__create_temp_file() {
   ___postfix="$(_dm_test__cache__generate_postfix)"
   ___file="${DM_TEST__CACHE__RUNTIME__TEMP_FILES_PATH}/${___postfix}"
-  echo "$___file"
+  dm_tools__echo "$___file"
 
   dm_test__debug 'dm_test__cache__create_temp_file' \
     "temp file created: '${___file}'"
@@ -500,18 +484,15 @@ DM_TEST__CACHE__RUNTIME__TEMP_DIRS_PATH='__INVALID__'
 #   None
 # Status:
 #   0 - Other status is not expected.
-#------------------------------------------------------------------------------
-# Tools:
-#   mkdir echo printf
 #==============================================================================
 _dm_test__cache__init__temp_directories_base_directory() {
   # Using a subshell here to prevent the long line.
   # shellcheck disable=2116
   DM_TEST__CACHE__RUNTIME__TEMP_DIRS_PATH="$( \
-    printf '%s' "${DM_TEST__CACHE__RUNTIME__CACHE_PATH}/"; \
-    echo "$DM_TEST__CACHE__CONFIG__TEMP_DIRS_PATH_NAME" \
+    dm_tools__printf '%s' "${DM_TEST__CACHE__RUNTIME__CACHE_PATH}/"; \
+    dm_tools__echo "$DM_TEST__CACHE__CONFIG__TEMP_DIRS_PATH_NAME" \
   )"
-  mkdir --parents "$DM_TEST__CACHE__RUNTIME__TEMP_DIRS_PATH"
+  dm_tools__mkdir --parents "$DM_TEST__CACHE__RUNTIME__TEMP_DIRS_PATH"
 
   dm_test__debug '_dm_test__cache__init__temp_directories_base_directory' \
     "temp dirs base created: '${DM_TEST__CACHE__RUNTIME__TEMP_DIRS_PATH}'"
@@ -535,15 +516,12 @@ _dm_test__cache__init__temp_directories_base_directory() {
 #   None
 # Status:
 #   0 - Other status is not expected.
-#------------------------------------------------------------------------------
-# Tools:
-#   mkdir echo
 #==============================================================================
 dm_test__cache__create_temp_directory() {
   ___postfix="$(_dm_test__cache__generate_postfix)"
   ___dir="${DM_TEST__CACHE__RUNTIME__TEMP_DIRS_PATH}/${___postfix}.d"
-  mkdir --parents "$___dir"
-  echo "$___dir"
+  dm_tools__mkdir --parents "$___dir"
+  dm_tools__echo "$___dir"
 
   dm_test__debug 'dm_test__cache__create_temp_directory' \
     "temporary directory created: '${___dir}'"
@@ -578,11 +556,8 @@ dm_test__cache__create_temp_directory() {
 #   None
 # Status:
 #   0 - Other status is not expected.
-#------------------------------------------------------------------------------
-# Tools:
-#   date echo
 #==============================================================================
 _dm_test__cache__generate_postfix() {
-  ___postfix="$(date +'%s%N')"
-  echo "$___postfix"
+  ___postfix="$(dm_tools__date +'%s%N')"
+  dm_tools__echo "$___postfix"
 }

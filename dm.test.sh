@@ -81,7 +81,7 @@ dm_test__report_error_and_exit() {
 }
 
 #==============================================================================
-# SOURCING SUBMODULES
+# GLOBAL PATH PREFIX
 #==============================================================================
 
 #==============================================================================
@@ -102,6 +102,35 @@ then
 fi
 
 ___path_prefix="${DM_TEST__CONFIG__MANDATORY__SUBMODULE_PATH_PREFIX}"
+
+#==============================================================================
+# DM_TOOLS INTEGRATION
+#==============================================================================
+
+if [ -z ${DM_TOOLS__READY+x} ]
+then
+  # If dm_tools has not sourced yet, we have to source it from this repository.
+  ___dm_tools_path_prefix="${___path_prefix}/dependencies/dm-tools"
+  DM_TOOLS__CONFIG__MANDATORY__SUBMODULE_PATH_PREFIX="$___dm_tools_path_prefix"
+  if [ -d  "$DM_TOOLS__CONFIG__MANDATORY__SUBMODULE_PATH_PREFIX" ]
+  then
+    # shellcheck source=./dependencies/dm-tools/dm.tools.sh
+    . "${DM_TOOLS__CONFIG__MANDATORY__SUBMODULE_PATH_PREFIX}/dm.tools.sh"
+  else
+    dm_test__report_error_and_exit \
+      'Initialization failed!' \
+      'dm_tools needs to be initialized but its git submodule is missing!' \
+      'You need to source it or init its submodule here: git submodule init'
+  fi
+fi
+
+# IMPORTANT: After this, every non shell built-in command should be called
+# through the provided dm_tools API to ensure the compatibility on different
+# environments.
+
+#==============================================================================
+# SOURCING SUBMODULES
+#==============================================================================
 
 # shellcheck source=./src/config.sh
 . "${___path_prefix}/src/config.sh"

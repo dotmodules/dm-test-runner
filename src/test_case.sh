@@ -49,9 +49,6 @@ DM_TEST__TEST_CASE__RUNTIME__TEST_UNDER_EXECUTION='__INVALID__'
 #   None
 # Status:
 #   0 - Other status is not expected.
-#------------------------------------------------------------------------------
-# Tools:
-#   grep echo printf test
 #==============================================================================
 dm_test__test_case__get_test_cases_from_test_file() {
   ___test_file_path="$1"
@@ -60,12 +57,12 @@ dm_test__test_case__get_test_cases_from_test_file() {
 
   dm_test__debug 'dm_test__test_case__get_test_cases_from_test_file' \
     "$( \
-      printf '%s' 'gathering test cases in test file '; \
-      echo "'${___test_file_path}' based on prefix '${___prefix}'.." \
+      dm_tools__printf '%s' 'gathering test cases in test file '; \
+      dm_tools__echo "'${___test_file_path}' based on prefix '${___prefix}'" \
     )"
 
   if ___test_cases="$( \
-    grep -E --only-matching \
+    dm_tools__grep --extended --match-only \
       "^${___prefix}[^\(]+" \
       "$___test_file_path" \
   )"
@@ -80,9 +77,9 @@ dm_test__test_case__get_test_cases_from_test_file() {
       dm_test__debug 'dm_test__test_case__get_test_cases_from_test_file' \
         'sorting test case list to be able to execute in alphabetical order'
 
-      echo "$___test_cases" | sort --dictionary-order
+      dm_tools__echo "$___test_cases" | dm_tools__sort --dictionary-order
     else
-      echo "$___test_cases"
+      dm_tools__echo "$___test_cases"
     fi
   else
     dm_test__debug 'dm_test__test_case__get_test_cases_from_test_file' \
@@ -108,9 +105,6 @@ dm_test__test_case__get_test_cases_from_test_file() {
 #   None
 # Status:
 #   0 - Other status is not expected.
-#------------------------------------------------------------------------------
-# Tools:
-#   None
 #==============================================================================
 dm_test__test_case__execute_test_cases() {
   ___test_cases="$1"
@@ -149,15 +143,13 @@ dm_test__test_case__execute_test_cases() {
 #   None
 # Status:
 #   0 - Other status is not expected.
-#------------------------------------------------------------------------------
-# Tools:
-#   basename cut
 #==============================================================================
 dm_test__test_case__set_current_test_file() {
   ___test_file_path="$1"
 
   DM_TEST__TEST_CASE__RUNTIME__FILE_UNDER_EXECUTION="$( \
-    echo "$___test_file_path" | cut --delimiter '/' --field '2-' \
+    dm_tools__echo "$___test_file_path" | \
+    dm_tools__cut --delimiter '/' --fields '2-' \
   )"
 
   dm_test__debug 'dm_test__test_case__set_current_test_file' \
@@ -183,9 +175,6 @@ dm_test__test_case__set_current_test_file() {
 #   None
 # Status:
 #   0 - Other status is not expected.
-#------------------------------------------------------------------------------
-# Tools:
-#   None
 #==============================================================================
 dm_test__test_case__set_current_test_case() {
   ___test_case="$1"
@@ -218,14 +207,11 @@ dm_test__test_case__set_current_test_case() {
 #   None
 # Status:
 #   0 - Other status is not expected.
-#------------------------------------------------------------------------------
-# Tools:
-#   echo printf
 #==============================================================================
 dm_test__test_case__get_current_test_case_identifier() {
-  printf '%s' "$DM_TEST__TEST_CASE__RUNTIME__FILE_UNDER_EXECUTION"
-  printf '%s' ' - '
-  echo "$DM_TEST__TEST_CASE__RUNTIME__TEST_UNDER_EXECUTION"
+  dm_tools__printf '%s' "$DM_TEST__TEST_CASE__RUNTIME__FILE_UNDER_EXECUTION"
+  dm_tools__printf '%s' ' - '
+  dm_tools__echo "$DM_TEST__TEST_CASE__RUNTIME__TEST_UNDER_EXECUTION"
 }
 
 #==============================================================================
@@ -249,14 +235,13 @@ dm_test__test_case__get_current_test_case_identifier() {
 #   None
 # Status:
 #   0 - Other status is not expected.
-#------------------------------------------------------------------------------
-# Tools:
-#   echo printf
 #==============================================================================
 dm_test__test_case__get_current_colorized_test_case_identifier() {
-  printf '%s' "${RESET}${DM_TEST__TEST_CASE__RUNTIME__FILE_UNDER_EXECUTION}"
-  printf '%s' ' - '
-  echo "${BOLD}${DM_TEST__TEST_CASE__RUNTIME__TEST_UNDER_EXECUTION}${RESET}"
+  dm_tools__printf '%s' "${RESET}"
+  dm_tools__printf '%s' "${DM_TEST__TEST_CASE__RUNTIME__FILE_UNDER_EXECUTION}"
+  dm_tools__printf '%s' ' - '
+  dm_tools__printf '%s' "${BOLD}"
+  dm_tools__echo "${DM_TEST__TEST_CASE__RUNTIME__TEST_UNDER_EXECUTION}${RESET}"
 }
 
 #==============================================================================
@@ -291,9 +276,6 @@ dm_test__test_case__get_current_colorized_test_case_identifier() {
 #   None
 # Status:
 #   0 - Other status is not expected. Failing test case is handled.
-#------------------------------------------------------------------------------
-# Tools:
-#   None
 #==============================================================================
 _dm_test__execute_test_case() {
   ___test_case="$1"
@@ -341,9 +323,6 @@ _dm_test__execute_test_case() {
 #   None
 # Status:
 #   0 - Other status is not expected.
-#------------------------------------------------------------------------------
-# Tools:
-#   test
 #==============================================================================
 _dm_test__run_test_case() {
   ___test_case="$1"
@@ -400,9 +379,6 @@ _dm_test__run_test_case() {
 #   None
 # Status:
 #   0 - Other status is not expected.
-#------------------------------------------------------------------------------
-# Tools:
-#   echo test
 #==============================================================================
 _dm_test__evaluate_test_case_result() {
   ___status="$1"
@@ -469,9 +445,6 @@ _dm_test__evaluate_test_case_result() {
 # Status:
 #   0 - Test case exectution succeeded.
 #   1 - Test case exectution failed.
-#------------------------------------------------------------------------------
-# Tools:
-#   test exit
 #==============================================================================
 _dm_test__run_test_case_in_a_subshell() {
   ___test_case="$1"
@@ -526,9 +499,6 @@ _dm_test__run_test_case_in_a_subshell() {
 #   None
 # Status:
 #   0 - Other status is not expected.
-#------------------------------------------------------------------------------
-# Tools:
-#   test exit
 #==============================================================================
 _dm_test__execute_and_capture__setup_hook() {
   if dm_test__hooks__is_hook_available__setup
@@ -577,9 +547,6 @@ _dm_test__execute_and_capture__setup_hook() {
 #   None
 # Status:
 #   0 - Other status is not expected.
-#------------------------------------------------------------------------------
-# Tools:
-#   test
 #==============================================================================
 _dm_test__execute_and_capture__test_case() {
   ___test_case="$1"
@@ -622,9 +589,6 @@ _dm_test__execute_and_capture__test_case() {
 #   None
 # Status:
 #   0 - Other status is not expected.
-#------------------------------------------------------------------------------
-# Tools:
-#   test
 #==============================================================================
 _dm_test__execute_and_capture__teardown_hook() {
   if dm_test__hooks__is_hook_available__teardown
@@ -670,9 +634,6 @@ _dm_test__execute_and_capture__teardown_hook() {
 #   None
 # Status:
 #   0 - Other status is not expected.
-#------------------------------------------------------------------------------
-# Tools:
-#   echo test printf
 #==============================================================================
 _dm_test__print_test_case_identifier() {
   dm_test__debug '_dm_test__print_test_case_identifier' \
@@ -684,9 +645,9 @@ _dm_test__print_test_case_identifier() {
 
   if dm_test__config__debug_is_enabled
   then
-    echo "$___identifier"
+    dm_tools__echo "$___identifier"
   else
-    printf '%s' "$___identifier"
+    dm_tools__printf '%s' "$___identifier"
   fi
 }
 
@@ -711,9 +672,6 @@ _dm_test__print_test_case_identifier() {
 #   None
 # Status:
 #   0 - Other status is not expected.
-#------------------------------------------------------------------------------
-# Tools:
-#   echo test
 #==============================================================================
 _dm_test__print_test_case_result() {
   dm_test__debug '_dm_test__print_test_case_result' \
@@ -721,9 +679,9 @@ _dm_test__print_test_case_result() {
 
   if dm_test__cache__test_result__was_success
   then
-    echo "  ${BOLD}${GREEN}ok${RESET}"
+    dm_tools__echo "  ${BOLD}${GREEN}ok${RESET}"
   else
-    echo "  ${BOLD}${RED}NOT OK${RESET}"
+    dm_tools__echo "  ${BOLD}${RED}NOT OK${RESET}"
   fi
 }
 
@@ -745,9 +703,6 @@ _dm_test__print_test_case_result() {
 #   None
 # Status:
 #   0 - Other status is not expected.
-#------------------------------------------------------------------------------
-# Tools:
-#   test
 #==============================================================================
 _dm_test__update_global_counters() {
   dm_test__debug '_dm_test__update_global_counters' \

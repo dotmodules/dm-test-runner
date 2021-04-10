@@ -41,18 +41,16 @@
 # Status:
 #   0 - Line extraction succeeded.
 #   1 - Line extraction failed.
-#------------------------------------------------------------------------------
-# Tools:
-#   echo wc sed test cat
 #==============================================================================
 dm_test__get_line_from_output_buffer_by_index() {
   ___line_index="$1"
   ___buffer="$2"
 
   dm_test__debug_list 'dm_test__get_line_from_output_buffer_by_index' \
-    "getting line for index '${___line_index}' from output:" "$(cat "$___buffer")"
+    "getting line for index '${___line_index}' from output:" \
+    "$(dm_tools__cat "$___buffer")"
 
-  ___line_count="$(wc --lines < "$___buffer")"
+  ___line_count="$(dm_tools__wc --lines < "$___buffer")"
   if [ "$___line_index" -gt "$___line_count" ] || [ "$___line_index" -lt '1' ]
   then
     dm_test__debug 'dm_test__get_line_from_buffer_output_by_index' \
@@ -60,20 +58,20 @@ dm_test__get_line_from_output_buffer_by_index() {
 
     ___subject='Line index is out of range'
     ___reason="$( \
-      echo "index should be in range: [1-${___line_count}]"; \
-      echo "given index: '${___line_index}'" \
+      dm_tools__echo "index should be in range: [1-${___line_count}]"; \
+      dm_tools__echo "given index: '${___line_index}'" \
     )"
     ___assertion='utils__get_line_from_output_by_index'
     _dm_test__report_failure "$___subject" "$___reason" "$___assertion"
   fi
 
   # Getting the indexed line.
-  ___line="$(sed "${___line_index}q;d" "$___buffer")"
+  ___line="$(dm_tools__sed --expression "${___line_index}q;d" "$___buffer")"
 
   dm_test__debug_list 'dm_test__get_line_from_output_buffer_by_index' \
     'line selected:' "$___line"
 
-  echo "$___line"
+  dm_tools__echo "$___line"
 }
 
 #==============================================================================
@@ -110,9 +108,6 @@ dm_test__get_line_from_output_buffer_by_index() {
 #   None
 # Status:
 #   1 - This function will exit the caller process with status 1.
-#------------------------------------------------------------------------------
-# Tools:
-#   echo printf sed exit
 #==============================================================================
 _dm_test__report_failure() {
   ___subject="$1"
@@ -129,19 +124,21 @@ _dm_test__report_failure() {
   )"
   # Appending the current error report to the error cache file.
   {
-    echo "${RED}${BOLD}${___test_case_identifier}${RESET}";
-    printf '%s' "  ${RED}${___subject}: ";
-    echo "[${BOLD}${___assertion}${RESET}${RED}]${RESET}";
+    dm_tools__echo "${RED}${BOLD}${___test_case_identifier}${RESET}";
+    dm_tools__printf '%s' "  ${RED}${___subject}: ";
+    dm_tools__echo "[${BOLD}${___assertion}${RESET}${RED}]${RESET}";
     # We want to use printf here to display the inline line newlines, so using
     # only the template parameter, shellcheck can be disabled.
     # shellcheck disable=SC2059
-    printf "${RED}${___reason}${RESET}\n" | sed 's/^/    /';
-    echo "";
+    dm_tools__printf "${RED}${___reason}${RESET}\n" | \
+      dm_tools__sed --expression 's/^/    /';
+    dm_tools__echo "";
   } | dm_test__cache__global_errors__write_errors
 
   # Report the concise error report to the standard error.
-  >&2 printf '%s' "${___assertion} | "
-  >&2 echo "Aborting due to failed assertion: ${BOLD}${___subject}${RESET}."
+  >&2 dm_tools__printf '%s' "${___assertion} | "
+  >&2 dm_tools__printf '%s' 'Aborting due to failed assertion: '
+  >&2 dm_tools__echo "${BOLD}${___subject}${RESET}."
 
   # Only the first  assertion error should be reported, the latter ones could
   # be the direct result of the first one, so they have minimal new information

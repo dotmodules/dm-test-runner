@@ -14,17 +14,46 @@ set -u  # prevent unset variable expansion
 # PATH CHANGE
 #==============================================================================
 
+# This is the only part where the code has to be prepared for missing tool
+# capabilities. It is known that on MacOS readlink does not support the -f flag
+# by default.
 if target_path="$(readlink -f "$0")" 2>/dev/null
 then
   cd "$(dirname "$target_path")"
 else
+  # If the path cannot be determined with readlink, we have to check if this
+  # script is executed through a symlink or not.
   if [ -L "$0" ]
   then
+    # If the current script is executed through a symlink, we are out of luck,
+    # because without readlink, there is no universal solution for this problem
+    # that uses the default shell toolset.
     echo "symlinked script won't work on this machine.."
   else
     cd "$(dirname "$0")"
   fi
 fi
+
+#==============================================================================
+# DM_TOOLS INTEGRATION
+#==============================================================================
+
+if [ -z ${DM_TOOLS__READY+x} ]
+then
+  # If dm_tools has not sourced yet, we have to source it from this repository.
+  DM_TOOLS__CONFIG__MANDATORY__SUBMODULE_PATH_PREFIX='../dependencies/dm-tools'
+  if [ -d  "$DM_TOOLS__CONFIG__MANDATORY__SUBMODULE_PATH_PREFIX" ]
+  then
+    # shellcheck source=../dependencies/dm-tools/dm.tools.sh
+    . "${DM_TOOLS__CONFIG__MANDATORY__SUBMODULE_PATH_PREFIX}/dm.tools.sh"
+  else
+    echo 'dm-tools submodule needs to be initialized. run make init'
+  fi
+fi
+
+# IMPORTANT: After this, every non shell built-in command should be called
+# through the provided dm_tools API to ensure the compatibility on different
+# environments.
 
 #==============================================================================
 # PRETTY PRINTING
@@ -33,29 +62,29 @@ fi
 # Checking the availibility and usability of tput. If it is available and
 # usable we can set the global coloring variables with it by expecting a
 # possibly missing color/modifier.
-if command -v tput >/dev/null && tput init >/dev/null 2>&1
+if dm_tools__tput__is_available
 then
-  if ! RED="$(tput setaf 1)"
+  if ! RED="$(dm_tools__tput setaf 1)"
   then
     RED=''
   fi
-  if ! GREEN="$(tput setaf 2)"
+  if ! GREEN="$(dm_tools__tput setaf 2)"
   then
     GREEN=''
   fi
-  if ! BLUE="$(tput setaf 4)"
+  if ! BLUE="$(dm_tools__tput setaf 4)"
   then
     BLUE=''
   fi
-  if ! RESET="$(tput sgr0)"
+  if ! RESET="$(dm_tools__tput sgr0)"
   then
     RESET=''
   fi
-  if ! BOLD="$(tput bold)"
+  if ! BOLD="$(dm_tools__tput bold)"
   then
     BOLD=''
   fi
-  if ! DIM="$(tput dim)"
+  if ! DIM="$(dm_tools__tput dim)"
   then
     DIM=''
   fi
@@ -70,17 +99,17 @@ fi
 
 log_task() {
   message="$1"
-    echo "${BOLD}[ ${BLUE}..${RESET}${BOLD} ]${RESET} ${message}"
+    dm_tools__echo "${BOLD}[ ${BLUE}..${RESET}${BOLD} ]${RESET} ${message}"
 }
 
 log_success() {
   message="$1"
-    echo "${BOLD}[ ${GREEN}OK${RESET}${BOLD} ]${RESET} ${message}"
+    dm_tools__echo "${BOLD}[ ${GREEN}OK${RESET}${BOLD} ]${RESET} ${message}"
 }
 
 log_failure() {
   message="$1"
-    echo "${BOLD}[ ${RED}!!${RESET}${BOLD} ]${RESET} ${message}"
+    dm_tools__echo "${BOLD}[ ${RED}!!${RESET}${BOLD} ]${RESET} ${message}"
 }
 
 #==============================================================================
@@ -131,25 +160,6 @@ assert_failure_count() {
     exit 1
   fi
 }
-
-#==============================================================================
-# RUNNING THE TOOL CAPABILITY TESTS
-#==============================================================================
-
-echo "${DIM}==============================================================================="
-echo '   _____                            _                 _'
-echo '  |  __ \                          | |               (_)'
-echo '  | |  | | ___ _ __   ___ _ __   __| | ___ _ __   ___ _  ___  ___'
-echo '  | |  | |/ _ \ '\''_ \ / _ \ '\''_ \ / _` |/ _ \ '\''_ \ / __| |/ _ \/ __|'
-echo '  | |__| |  __/ |_) |  __/ | | | (_| |  __/ | | | (__| |  __/\__ \'
-echo '  |_____/ \___| .__/ \___|_| |_|\__,_|\___|_| |_|\___|_|\___||___/'
-echo '              | |'
-echo '==============|_|=============================================================='
-echo '  DEPENDENCY CAPABILITY CHECKS'
-echo '==============================================================================='
-echo "${RESET}"
-. ./run__tool_capabilities.sh
-echo ''
 
 #==============================================================================
 # RUNNING TEST SUITES

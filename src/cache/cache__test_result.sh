@@ -40,13 +40,10 @@ DM_TEST__CACHE__RUNTIME__TEST_RESULTS='__INVALID__'
 #   None
 # Status:
 #   0 - Other status is not expected.
-#------------------------------------------------------------------------------
-# Tools:
-#   touch
 #==============================================================================
 _dm_test__cache__test_result__init() {
   DM_TEST__CACHE__RUNTIME__TEST_RESULTS="$(dm_test__cache__create_temp_file)"
-  touch "$DM_TEST__CACHE__RUNTIME__TEST_RESULTS"
+  dm_tools__touch "$DM_TEST__CACHE__RUNTIME__TEST_RESULTS"
 
   dm_test__debug '_dm_test__cache__test_result__init' \
     "test result temp file created: '${DM_TEST__CACHE__RUNTIME__TEST_RESULTS}'"
@@ -73,12 +70,9 @@ _dm_test__cache__test_result__init() {
 #   None
 # Status:
 #   0 - Other status is not expected.
-#------------------------------------------------------------------------------
-# Tools:
-#   echo
 #==============================================================================
 dm_test__cache__test_result__init() {
-  echo "$DM_TEST__CONSTANT__TEST_RESULT__SUCCESS" > \
+  dm_tools__echo "$DM_TEST__CONSTANT__TEST_RESULT__SUCCESS" > \
     "$DM_TEST__CACHE__RUNTIME__TEST_RESULTS"
 
   dm_test__debug 'dm_test__cache__test_result__init' \
@@ -104,12 +98,9 @@ dm_test__cache__test_result__init() {
 #   None
 # Status:
 #   0 - Other status is not expected.
-#------------------------------------------------------------------------------
-# Tools:
-#   echo
 #==============================================================================
 dm_test__cache__test_result__mark_as_failed() {
-  echo "$DM_TEST__CONSTANT__TEST_RESULT__FAILURE" > \
+  dm_tools__echo "$DM_TEST__CONSTANT__TEST_RESULT__FAILURE" > \
     "$DM_TEST__CACHE__RUNTIME__TEST_RESULTS"
 
   dm_test__debug 'dm_test__cache__test_result__mark_as_failed' \
@@ -136,12 +127,9 @@ dm_test__cache__test_result__mark_as_failed() {
 # Status:
 #   0 - Test case was succeeded.
 #   1 - Test case was failed.
-#------------------------------------------------------------------------------
-# Tools:
-#   grep test
 #==============================================================================
 dm_test__cache__test_result__was_success() {
-  if grep --silent \
+  if dm_tools__grep --silent \
     "$DM_TEST__CONSTANT__TEST_RESULT__SUCCESS" \
     "$DM_TEST__CACHE__RUNTIME__TEST_RESULTS"
   then

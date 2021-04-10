@@ -60,15 +60,12 @@
 #   attempt.
 # Status:
 #   0 - Other status is not expected.
-#------------------------------------------------------------------------------
-# Tools:
-#   printf
 #==============================================================================
 dm_test__debug__printf() {
   # This function behaves like a proxy thus having parameters in the first
   # argument of printf is okay in this case.
   # shellcheck disable=SC2059
-  >&4 printf "$@"
+  >&4 dm_tools__printf "$@"
 }
 
 #==============================================================================
@@ -93,9 +90,6 @@ dm_test__debug__printf() {
 #   Output of the given command.
 # Status:
 #   Status of the given command.
-#------------------------------------------------------------------------------
-# Tools:
-#   None
 #==============================================================================
 dm_test__debug__wrapper() {
   "$@" 4>&1
@@ -132,9 +126,6 @@ dm_test__debug__wrapper() {
 #   None
 # Status:
 #   0 - Other status is not expected.
-#------------------------------------------------------------------------------
-# Tools:
-#   test
 #==============================================================================
 dm_test__debug() {
   if dm_test__config__debug_is_enabled
@@ -169,9 +160,6 @@ dm_test__debug() {
 #   None
 # Status:
 #   0 - Other status is not expected.
-#------------------------------------------------------------------------------
-# Tools:
-#   echo read test
 #==============================================================================
 dm_test__debug_list() {
   if dm_test__config__debug_is_enabled
@@ -182,7 +170,7 @@ dm_test__debug_list() {
 
     dm_test__debug "$___debug_domain" "$___debug_message"
 
-    echo "$___debug_list" | while IFS= read -r ___debug_list_item
+    dm_tools__echo "$___debug_list" | while IFS= read -r ___debug_list_item
     do
       dm_test__debug "$___debug_domain" "- '${___debug_list_item}'"
     done

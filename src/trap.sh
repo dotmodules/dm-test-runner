@@ -45,9 +45,6 @@
 #   None
 # Status:
 #   0 - Other status is not expected.
-#------------------------------------------------------------------------------
-# Tools:
-#   trap
 #==============================================================================
 dm_test__arm_trap_system() {
   dm_test__debug '_dm_test__init_trap' \
@@ -90,9 +87,6 @@ dm_test__arm_trap_system() {
 #   None
 # Status:
 #   Original exit code replayed from the called level.
-#------------------------------------------------------------------------------
-# Tools:
-#   trap exit
 #==============================================================================
 _dm_test__exit_trap() {
   ___original_exit_code="$1"
@@ -129,9 +123,6 @@ _dm_test__exit_trap() {
 # STDERR:
 #   None
 # Status:
-#   None
-#------------------------------------------------------------------------------
-# Tools:
 #   None
 #==============================================================================
 _dm_test__exit_trap__wrapper() {

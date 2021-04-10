@@ -38,13 +38,10 @@ DM_TEST__CACHE__RUNTIME__ERRORS='__INVALID__'
 #   None
 # Status:
 #   0 - Other status is not expected.
-#------------------------------------------------------------------------------
-# Tools:
-#   touch
 #==============================================================================
 _dm_test__cache__global_errors__init() {
   DM_TEST__CACHE__RUNTIME__ERRORS="$(dm_test__cache__create_temp_file)"
-  touch "$DM_TEST__CACHE__RUNTIME__ERRORS"
+  dm_tools__touch "$DM_TEST__CACHE__RUNTIME__ERRORS"
 
   dm_test__debug '_dm_test__cache__global_errors__init' \
     "global errors file created: '${DM_TEST__CACHE__RUNTIME__ERRORS}'"
@@ -69,9 +66,6 @@ _dm_test__cache__global_errors__init() {
 # Status:
 #    0 - There are errors present in the global test cache file.
 #    1 - No errors in the global test cache file.
-#------------------------------------------------------------------------------
-# Tools:
-#   test
 #==============================================================================
 dm_test__cache__global_errors__has_errors() {
   dm_test__debug 'dm_test__cache__global_errors__has_errors' \
@@ -98,12 +92,9 @@ dm_test__cache__global_errors__has_errors() {
 #   None
 # Status:
 #   0 - Other status is not expected.
-#------------------------------------------------------------------------------
-# Tools:
-#   cat
 #==============================================================================
 dm_test__cache__global_errors__print_errors() {
-  cat "$DM_TEST__CACHE__RUNTIME__ERRORS"
+  dm_tools__cat "$DM_TEST__CACHE__RUNTIME__ERRORS"
 
   dm_test__debug 'dm_test__cache__global_errors__print_errors' \
     'global errors printed'
@@ -128,12 +119,9 @@ dm_test__cache__global_errors__print_errors() {
 #   None
 # Status:
 #   0 - Other status is not expected.
-#------------------------------------------------------------------------------
-# Tools:
-#   cat
 #==============================================================================
 dm_test__cache__global_errors__write_errors() {
-  cat - >> "$DM_TEST__CACHE__RUNTIME__ERRORS"
+  dm_tools__cat - >> "$DM_TEST__CACHE__RUNTIME__ERRORS"
 
   dm_test__debug 'dm_test__cache__global_errors__write_errors' \
     'error saved to the global errors file'

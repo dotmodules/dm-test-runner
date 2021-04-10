@@ -35,9 +35,6 @@
 # Status:
 #   0 - Assertion succeeded.
 #   1 - Assertion failed.
-#------------------------------------------------------------------------------
-# Tools:
-#   test
 #==============================================================================
 assert_file() {
   ___file_path="$1"
@@ -77,9 +74,6 @@ assert_file() {
 # Status:
 #   0 - Assertion succeeded.
 #   1 - Assertion failed.
-#------------------------------------------------------------------------------
-# Tools:
-#   test
 #==============================================================================
 assert_no_file() {
   ___file_path="$1"
@@ -121,9 +115,6 @@ assert_no_file() {
 # Status:
 #   0 - Assertion succeeded.
 #   1 - Assertion failed.
-#------------------------------------------------------------------------------
-# Tools:
-#   test
 #==============================================================================
 assert_file_has_content() {
   ___file_path="$1"
@@ -174,9 +165,6 @@ assert_file_has_content() {
 # Status:
 #   0 - Assertion succeeded.
 #   1 - Assertion failed.
-#------------------------------------------------------------------------------
-# Tools:
-#   test
 #==============================================================================
 assert_file_has_no_content() {
   ___file_path="$1"
@@ -227,9 +215,6 @@ assert_file_has_no_content() {
 # Status:
 #   0 - Assertion succeeded.
 #   1 - Assertion failed.
-#------------------------------------------------------------------------------
-# Tools:
-#   test
 #==============================================================================
 assert_directory() {
   ___directory_path="$1"
@@ -270,9 +255,6 @@ assert_directory() {
 # Status:
 #   0 - Assertion succeeded.
 #   1 - Assertion failed.
-#------------------------------------------------------------------------------
-# Tools:
-#   test
 #==============================================================================
 assert_no_directory() {
   ___directory_path="$1"
@@ -314,9 +296,6 @@ assert_no_directory() {
 # Status:
 #   0 - Assertion succeeded.
 #   1 - Assertion failed.
-#------------------------------------------------------------------------------
-# Tools:
-#   test
 #==============================================================================
 assert_directory_empty() {
   ___directory_path="$1"
@@ -326,7 +305,7 @@ assert_directory_empty() {
 
   if [ -d "$___directory_path" ]
   then
-    if [ -z "$(ls -A "$___directory_path")" ]
+    if [ -z "$(dm_tools__ls --almost-all "$___directory_path")" ]
     then
       dm_test__debug 'assert_directory_empty' '=> assertion succeeded'
     else
@@ -368,9 +347,6 @@ assert_directory_empty() {
 # Status:
 #   0 - Assertion succeeded.
 #   1 - Assertion failed.
-#------------------------------------------------------------------------------
-# Tools:
-#   test
 #==============================================================================
 assert_directory_not_empty() {
   ___directory_path="$1"
@@ -380,7 +356,7 @@ assert_directory_not_empty() {
 
   if [ -d "$___directory_path" ]
   then
-    if [ -n "$(ls -A "$___directory_path")" ]
+    if [ -n "$(dm_tools__ls --almost-all "$___directory_path")" ]
     then
       dm_test__debug 'assert_directory_not_empty' '=> assertion succeeded'
     else
@@ -421,9 +397,6 @@ assert_directory_not_empty() {
 # Status:
 #   0 - Assertion succeeded.
 #   1 - Assertion failed.
-#------------------------------------------------------------------------------
-# Tools:
-#   test
 #==============================================================================
 assert_symlink() {
   ___link_path="$1"
@@ -464,9 +437,6 @@ assert_symlink() {
 # Status:
 #   0 - Assertion succeeded.
 #   1 - Assertion failed.
-#------------------------------------------------------------------------------
-# Tools:
-#   test
 #==============================================================================
 assert_no_symlink() {
   ___link_path="$1"
@@ -508,9 +478,6 @@ assert_no_symlink() {
 # Status:
 #   0 - Assertion succeeded.
 #   1 - Assertion failed.
-#------------------------------------------------------------------------------
-# Tools:
-#   test readlink echo
 #==============================================================================
 assert_symlink_target() {
   ___link_path="$1"
@@ -521,7 +488,7 @@ assert_symlink_target() {
 
   if [ -L "$___link_path" ]
   then
-    ___actual_target="$(readlink "$___link_path")"
+    ___actual_target="$(dm_tools__readlink "$___link_path")"
     if [ "$___target_path" = "$___actual_target" ]
     then
       dm_test__debug 'assert_symlink_target' '=> assertion succeeded'

@@ -1,0 +1,3 @@
+[submodule "dependencies/dm-tools"]
+	path = dependencies/dm-tools
+	url = https://github.com/dotmodules/dm-tools.git

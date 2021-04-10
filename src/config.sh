@@ -143,9 +143,6 @@ DM_TEST__CONFIG__OPTIONAL__EXIT_ON_FAILURE=\
 # Status:
 #   0 - exit command should be executed on failure
 #   1 - exit command should not be executed on failure
-#------------------------------------------------------------------------------
-# Tools:
-#   test
 #==============================================================================
 dm_test__config__should_exit_on_failure() {
   test "$DM_TEST__CONFIG__OPTIONAL__EXIT_ON_FAILURE" -eq '1'
@@ -203,9 +200,6 @@ DM_TEST__CONFIG__OPTIONAL__ALWAYS_DISPLAY_FILE_LEVEL_HOOK_OUTPUT=\
 # Status:
 #   0 - file level hook output should be always displayed
 #   1 - file level hook output should be only displayed when the hook failed
-#------------------------------------------------------------------------------
-# Tools:
-#   test
 #==============================================================================
 dm_test__config__should_always_display_file_level_hook_output() {
   test \
@@ -232,9 +226,6 @@ dm_test__config__should_always_display_file_level_hook_output() {
 # Status:
 #   0 - file level hook output should be always displayed
 #   1 - file level hook output should be only displayed when the hook failed
-#------------------------------------------------------------------------------
-# Tools:
-#   test
 #==============================================================================
 dm_test__config__should_only_display_file_level_hook_output_on_failure() {
   test \
@@ -278,9 +269,6 @@ DM_TEST__CONFIG__OPTIONAL__SORTED_TEST_CASE_EXECUTION=\
 # Status:
 #   0 - test case execution should be sorted inside a test file
 #   1 - test case execution should not be sorted inside a test file
-#------------------------------------------------------------------------------
-# Tools:
-#   test
 #==============================================================================
 dm_test__config__should_sort_test_cases() {
   test "$DM_TEST__CONFIG__OPTIONAL__SORTED_TEST_CASE_EXECUTION" -ne '0'
@@ -318,9 +306,6 @@ DM_TEST__CONFIG__OPTIONAL__DEBUG_ENABLED=\
 # Status:
 #   0 - debug mode is enabled
 #   1 - debug mode is disabled
-#------------------------------------------------------------------------------
-# Tools:
-#   test
 #==============================================================================
 dm_test__config__debug_is_enabled() {
   test "$DM_TEST__CONFIG__OPTIONAL__DEBUG_ENABLED" -ne '0'
@@ -361,9 +346,6 @@ dm_test__config__debug_is_enabled() {
 #   None
 # Status:
 #   0 - Other status is not expected.
-#------------------------------------------------------------------------------
-# Tools:
-#   test
 #==============================================================================
 dm_test__config__validate_mandatory_config() {
   dm_test__debug 'dm_test__config__validate_mandatory_config' \
@@ -416,9 +398,6 @@ dm_test__config__validate_mandatory_config() {
 #   Error message about the missing configuration variable.
 # Status:
 #   1 - Exiting with error after printed out the issue.
-#------------------------------------------------------------------------------
-# Tools:
-#   echo
 #==============================================================================
 _dm_test__config__report_configuration_error() {
   ___variable="$1"
