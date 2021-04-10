@@ -369,10 +369,6 @@ _dm_test__capture__create_temp_file() {
     'creating temporary file..'
 
   ___tmp_path="$(dm_test__cache__create_temp_file)"
-  # Touching might not be necessary as redirecting an output would create a
-  # file, but touching it anyway, if the capturing process fails for some
-  # reason.
-  dm_tools__touch "$___tmp_path"
 
   dm_test__debug '_dm_test__capture__create_temp_file' \
     "temporary file created: '${___tmp_path}'"
@@ -403,7 +399,7 @@ _dm_test__capture__create_temp_fifo() {
   dm_test__debug '_dm_test__capture__create_temp_fifo' \
     'creating temporary fifo..'
 
-  ___tmp_path="$(dm_test__cache__create_temp_file)"
+  ___tmp_path="$(dm_test__cache__create_temp_path)"
   dm_tools__mkfifo "$___tmp_path"
 
   dm_test__debug '_dm_test__capture__create_temp_fifo' \

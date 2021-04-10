@@ -361,15 +361,22 @@ _dm_test__cache__cleanup__delete_target() {
 #==============================================================================
 
 #==============================================================================
-# The cache system provides a way to create temporary files that can be used
-# during the test execution. These temporary files are created inside a
-# seprated directory. The files are generated with a precise timestamp postfix,
-# to prevent collision between the generated file names.
+# The cache system provides a way to create temporary files and temporary paths
+# that can be used during the test execution.
 #==============================================================================
 
 # Variable that holds the name of the temporary files directory. This variable
 # is not intended for accessing the directory.
 DM_TEST__CACHE__CONFIG__TEMP_FILES_PATH_NAME='temp_files'
+
+# Temporary file name template for the `mktemp` based temporary file
+# generation.
+DM_TEST__CACHE__CONFIG__TEMP_FILE_TEMPLATE='temp_file.XXXXXXXXXXXXXXXX'
+
+# Postfix that is needed for the unique temporary path creation. It will be
+# appended to the unique temp file path created by `mktemp` to have a unique
+# path that can be returned.
+DM_TEST__CACHE__CONFIG__TEMP_FILE_POSTFIX='.path'
 
 # Variable thar holds the runtime path of the temporary files directory. This
 # variable should be used for writing or reading purposes.
@@ -410,12 +417,13 @@ _dm_test__cache__init__temp_files_base_directory() {
 }
 
 #==============================================================================
-# Creates a temporary file path in the cache directory and returns its path.
-# Note: only a filepath will be created, the caller is responsible for actually
-# creating the file.
+# Creates a temporary file in the cache directory and returns its path.
+# Internally it uses the `mktemp` command to create an actual unique temporary
+# file.
 #------------------------------------------------------------------------------
 # Globals:
 #   DM_TEST__CACHE__RUNTIME__TEMP_FILES_PATH
+#   DM_TEST__CACHE__CONFIG__TEMP_FILE_TEMPLATE
 # Arguments:
 #   None
 # STDIN:
@@ -431,12 +439,53 @@ _dm_test__cache__init__temp_files_base_directory() {
 #   0 - Other status is not expected.
 #==============================================================================
 dm_test__cache__create_temp_file() {
-  ___postfix="$(_dm_test__cache__generate_postfix)"
-  ___file="${DM_TEST__CACHE__RUNTIME__TEMP_FILES_PATH}/${___postfix}"
-  dm_tools__echo "$___file"
+  if ___mktemp_output="$( \
+    dm_tools__mktemp \
+      --tmpdir "$DM_TEST__CACHE__RUNTIME__TEMP_FILES_PATH" \
+      "$DM_TEST__CACHE__CONFIG__TEMP_FILE_TEMPLATE" \
+      2>&1 \
+  )"
+  then
+    ___file="$___mktemp_output"
+    dm_test__debug 'dm_test__cache__create_temp_file' \
+      "temp file created: '${___file}'"
+    dm_tools__echo "$___file"
+  else
+    dm_test__report_error_and_exit \
+      'Temporary file generation failed!' \
+      'Cannot create a unique temporary file!' \
+      "$___mktemp_output"
+  fi
+}
 
-  dm_test__debug 'dm_test__cache__create_temp_file' \
-    "temp file created: '${___file}'"
+#==============================================================================
+# Creates a temporary path without an actual path behind it. Internally it is
+# based on a temporary file which is created as a placeholder, and to its path
+# a postfix gets appended. This wil be the returned unique path. This method
+# guarantees a unique path, because the `mktemp -u` could have race conditions.
+#------------------------------------------------------------------------------
+# Globals:
+#   DM_TEST__CACHE__CONFIG__TEMP_FILE_POSTFIX
+# Arguments:
+#   None
+# STDIN:
+#   None
+#------------------------------------------------------------------------------
+# Output variables:
+#   None
+# STDOUT:
+# - Temporary path.
+# STDERR:
+#   None
+# Status:
+#   0 - Other status is not expected.
+#==============================================================================
+dm_test__cache__create_temp_path() {
+  ___file="$(dm_test__cache__create_temp_file)"
+  ___path="${___file}${DM_TEST__CACHE__CONFIG__TEMP_FILE_POSTFIX}"
+  dm_test__debug 'dm_test__cache__create_temp_path' \
+    "temp path created: '${___path}'"
+  dm_tools__echo "$___path"
 }
 
 #==============================================================================
@@ -459,6 +508,11 @@ dm_test__cache__create_temp_file() {
 # Variable that holds the name of the temporary directories directory. This
 # variable is not intended for accessing the directory.
 DM_TEST__CACHE__CONFIG__TEMP_DIRS_PATH_NAME='temp_directories'
+
+# Temporary directory name template for the `mktemp` based temporary directory
+# generation.
+DM_TEST__CACHE__CONFIG__TEMP_DIR_TEMPLATE='temp_directory.XXXXXXXXXXXXXXXX'
+
 
 # Variable thar holds the runtime path of the temporary direcotories directory.
 # This variable should be used for writing or reading purposes.
@@ -503,6 +557,7 @@ _dm_test__cache__init__temp_directories_base_directory() {
 #------------------------------------------------------------------------------
 # Globals:
 #   DM_TEST__CACHE__RUNTIME__TEMP_DIRS_PATH
+#   DM_TEST__CACHE__CONFIG__TEMP_DIR_TEMPLATE
 # Arguments:
 #   None
 # STDIN:
@@ -518,46 +573,22 @@ _dm_test__cache__init__temp_directories_base_directory() {
 #   0 - Other status is not expected.
 #==============================================================================
 dm_test__cache__create_temp_directory() {
-  ___postfix="$(_dm_test__cache__generate_postfix)"
-  ___dir="${DM_TEST__CACHE__RUNTIME__TEMP_DIRS_PATH}/${___postfix}.d"
-  dm_tools__mkdir --parents "$___dir"
-  dm_tools__echo "$___dir"
-
-  dm_test__debug 'dm_test__cache__create_temp_directory' \
-    "temporary directory created: '${___dir}'"
-}
-
-#==============================================================================
-#  _   _ _   _ _ _ _   _
-# | | | | |_(_) (_) |_(_) ___  ___
-# | | | | __| | | | __| |/ _ \/ __|
-# | |_| | |_| | | | |_| |  __/\__ \
-#  \___/ \__|_|_|_|\__|_|\___||___/
-#==============================================================================
-# UTILITIES
-#==============================================================================
-
-#==============================================================================
-# Generates the 'should-be-unique' postfix for the temporary files and
-# directories.
-#------------------------------------------------------------------------------
-# Globals:
-#   None
-# Arguments:
-#   None
-# STDIN:
-#   None
-#------------------------------------------------------------------------------
-# Output variables:
-#   None
-# STDOUT:
-#   Unique-ish postfix.
-# STDERR:
-#   None
-# Status:
-#   0 - Other status is not expected.
-#==============================================================================
-_dm_test__cache__generate_postfix() {
-  ___postfix="$(dm_tools__date +'%s%N')"
-  dm_tools__echo "$___postfix"
+  if ___mktemp_output="$( \
+    dm_tools__mktemp \
+      --directory \
+      --tmpdir "$DM_TEST__CACHE__RUNTIME__TEMP_DIRS_PATH" \
+      "$DM_TEST__CACHE__CONFIG__TEMP_DIR_TEMPLATE" \
+      2>&1 \
+  )"
+  then
+    ___dir="$___mktemp_output"
+    dm_test__debug 'dm_test__cache__create_temp_directory' \
+      "temporary directory created: '${___dir}'"
+    dm_tools__echo "$___dir"
+  else
+    dm_test__report_error_and_exit \
+      'Temporary file generation failed!' \
+      'Cannot create a unique temporary file!' \
+      "$___mktemp_output"
+  fi
 }

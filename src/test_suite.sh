@@ -130,7 +130,7 @@ _dm_test__test_suite__execute_test_files() {
 
   # Using a named pipe here to be able to safely iterate over the file names.
   # See more at shellcheck SC2044.
-  ___tmp_pipe="$(dm_test__cache__create_temp_file)"
+  ___tmp_pipe="$(dm_test__cache__create_temp_path)"
   dm_tools__mkfifo "$___tmp_pipe"
   dm_tools__echo "$___test_files" > "$___tmp_pipe" &
 

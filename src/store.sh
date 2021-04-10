@@ -67,7 +67,6 @@ dm_test__store__init() {
     'initializing store system..'
 
   DM_TEST__STORE__RUNTIME__STORAGE_FILE="$(dm_test__cache__create_temp_file)"
-  dm_tools__touch "$DM_TEST__STORE__RUNTIME__STORAGE_FILE"
 
   dm_test__debug_list 'dm_test__store__init' \
     "store system initialized with storage file path:" \

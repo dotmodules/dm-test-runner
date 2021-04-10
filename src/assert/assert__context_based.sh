@@ -70,10 +70,10 @@ run() {
   # Creating temporary files to store the standard output and standard error
   # contents of the executed function.
   DM_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD1="$( \
-    dm_test__cache__create_temp_file \
+    dm_test__cache__create_temp_path \
   )"
   DM_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD2="$( \
-    dm_test__cache__create_temp_file \
+    dm_test__cache__create_temp_path \
   )"
 
   # Storing the passed command as a variable is not an option here, because it

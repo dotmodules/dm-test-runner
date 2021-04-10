@@ -41,7 +41,6 @@ DM_TEST__CACHE__RUNTIME__ERRORS='__INVALID__'
 #==============================================================================
 _dm_test__cache__global_errors__init() {
   DM_TEST__CACHE__RUNTIME__ERRORS="$(dm_test__cache__create_temp_file)"
-  dm_tools__touch "$DM_TEST__CACHE__RUNTIME__ERRORS"
 
   dm_test__debug '_dm_test__cache__global_errors__init' \
     "global errors file created: '${DM_TEST__CACHE__RUNTIME__ERRORS}'"

@@ -43,7 +43,6 @@ DM_TEST__CACHE__RUNTIME__TEST_RESULTS='__INVALID__'
 #==============================================================================
 _dm_test__cache__test_result__init() {
   DM_TEST__CACHE__RUNTIME__TEST_RESULTS="$(dm_test__cache__create_temp_file)"
-  dm_tools__touch "$DM_TEST__CACHE__RUNTIME__TEST_RESULTS"
 
   dm_test__debug '_dm_test__cache__test_result__init' \
     "test result temp file created: '${DM_TEST__CACHE__RUNTIME__TEST_RESULTS}'"
