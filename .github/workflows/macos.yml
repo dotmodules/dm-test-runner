@@ -12,4 +12,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Running the test suite on a MacOS base
-        run: make test
+        run:
+          - make init
+          - make test
