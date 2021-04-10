@@ -57,7 +57,7 @@ test__store__setting_the_key_multiple_times_wont_create_new_entry() {
   dm_test__store__set "$key" "nine"
   dm_test__store__set "$key" "ten"
 
-  line_count="$(wc --lines < "$DM_TEST__STORE__RUNTIME__STORAGE_FILE")"
+  line_count="$(dm_tools__wc --lines < "$DM_TEST__STORE__RUNTIME__STORAGE_FILE")"
 
   assert_equal '1' "$line_count"
 }
@@ -65,8 +65,8 @@ test__store__setting_the_key_multiple_times_wont_create_new_entry() {
 test__store__multiline_values_can_be_stored() {
   key="key"
   value="$( \
-    echo 'line 1'; \
-    echo 'line 2'; \
+    dm_tools__echo 'line 1'; \
+    dm_tools__echo 'line 2'; \
   )"
 
   dummy_test_function() {
@@ -84,12 +84,12 @@ test__store__multiline_values_can_be_stored() {
 
 test__store__even_multiline_keys_can_be_used() {
   key="$( \
-    echo 'key line 1'; \
-    echo 'key line 2'; \
+    dm_tools__echo 'key line 1'; \
+    dm_tools__echo 'key line 2'; \
   )"
   value="$( \
-    echo 'line 1'; \
-    echo 'line 2'; \
+    dm_tools__echo 'line 1'; \
+    dm_tools__echo 'line 2'; \
   )"
 
   dummy_test_function() {

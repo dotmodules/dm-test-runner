@@ -15,24 +15,24 @@
 #==============================================================================
 
 test__captured_output_is_hidden_on_success() {
-  echo "this message won't be visible"
-  >&3 echo "this debug message won't be visible"
+  dm_tools__echo "this message won't be visible"
+  >&3 dm_tools__echo "this debug message won't be visible"
 }
 
 test__captured_output_is_visible_on_failure() {
-  echo 'this message is visible'
-  >&3 echo 'this debug message is visible'
+  dm_tools__echo 'this message is visible'
+  >&3 dm_tools__echo 'this debug message is visible'
   assert false
 }
 
 test__standard_error_makes_the_testcase_fail() {
-  echo 'this message is visible'
-  >&2 echo 'standard error -> test case will fail'
-  >&3 echo 'this debug message is visible'
+  dm_tools__echo 'this message is visible'
+  >&2 dm_tools__echo 'standard error -> test case will fail'
+  >&3 dm_tools__echo 'this debug message is visible'
 }
 
 test__standard_error_makes_the_testcase_fail__command() {
-  echo 'this message is visible'
-  >&3 echo 'this debug message is visible'
-  cat 'nonexistent_file'
+  dm_tools__echo 'this message is visible'
+  >&3 dm_tools__echo 'this debug message is visible'
+  dm_tools__cat 'nonexistent_file'
 }

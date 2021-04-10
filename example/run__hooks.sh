@@ -12,7 +12,8 @@ set -u  # prevent unset variable expansion
 # PATH CHANGE
 #==============================================================================
 
-cd "$(dirname "$(readlink -f "$0")")"
+# At this point we have dm_tools loaded.
+cd "$(dm_tools__dirname "$(dm_tools__readlink -f "$0")")"
 
 #==============================================================================
 # DM_TEST_RUNNER CONFIGURATION

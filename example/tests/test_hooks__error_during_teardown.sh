@@ -19,23 +19,23 @@
 #==============================================================================
 
 setup_file() {
-  echo '--- ERROR DURING TEARDOWN HOOK --------------------------------------------------'
-  echo 'echo during [setup file] hook'
+  dm_tools__echo '--- ERROR DURING TEARDOWN HOOK --------------------------------------------------'
+  dm_tools__echo 'echo during [setup file] hook'
 }
 
 setup() {
-  echo 'echo during [setup] hook'
+  dm_tools__echo 'echo during [setup] hook'
 }
 
 teardown() {
-  echo 'echo during [teardown] hook - error will happen here'
-  cat invalid_file
+  dm_tools__echo 'echo during [teardown] hook - error will happen here'
+  dm_tools__cat invalid_file
 }
 
 teardown_file() {
-  echo 'echo during [teardown file] hook - this hook will still run'
+  dm_tools__echo 'echo during [teardown file] hook - this hook will still run'
 }
 
 test__hooks__test_case__error_during_teardown() {
-  echo 'echo during test case'
+  dm_tools__echo 'echo during test case'
 }

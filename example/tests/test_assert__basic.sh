@@ -22,7 +22,7 @@ test__assert__common_use_case() {
 # These tests are the failure cases picked up by another test runner. In this
 # way the valid and failure cases are in one place.
 should_fail__assert() {
-  echo 'Expected [assert] failure.'
+  dm_tools__echo 'Expected [assert] failure.'
   assert false
 }
 
@@ -38,7 +38,7 @@ test__assert_success() {
 }
 
 should_fail__assert_success() {
-  echo 'Expected [assert_success] failure.'
+  dm_tools__echo 'Expected [assert_success] failure.'
   assert_success false
 }
 
@@ -54,7 +54,7 @@ test__assert_failure() {
 }
 
 should_fail__assert_failure() {
-  echo 'Expected [assert_failure] failure.'
+  dm_tools__echo 'Expected [assert_failure] failure.'
   assert_failure true
 }
 
@@ -91,4 +91,3 @@ should_fail__assert_equal__no_resplitting_on_error() {
   param_2='string string  string 2'
   assert_equal "$param_1" "$param_2"
 }
-

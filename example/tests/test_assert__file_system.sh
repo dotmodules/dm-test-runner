@@ -21,23 +21,23 @@ setup() {
 #==============================================================================
 
 test__assert_file__empty_file() {
-  touch "$dummy_file"
+  dm_tools__touch "$dummy_file"
   assert_file "$dummy_file"
 }
 
 test__assert_file__non_empty_file() {
-  echo 'content' > "$dummy_file"
+  dm_tools__echo 'content' > "$dummy_file"
   assert_file "$dummy_file"
 }
 
 should_fail__assert_file__no_file() {
-  echo 'Expected [assert_file] failure.'
+  dm_tools__echo 'Expected [assert_file] failure.'
   assert_file "$dummy_file"
 }
 
 should_fail__assert_file__has_to_be_a_file() {
-  echo 'Expected [assert_file] failure.'
-  mkdir "$dummy_file"
+  dm_tools__echo 'Expected [assert_file] failure.'
+  dm_tools__mkdir "$dummy_file"
   assert_file "$dummy_file"
 }
 
@@ -52,8 +52,8 @@ test__assert_no_file() {
 }
 
 should_fail__assert_no_file() {
-  echo 'Expected [assert_no_file] failure.'
-  touch "$dummy_file"
+  dm_tools__echo 'Expected [assert_no_file] failure.'
+  dm_tools__touch "$dummy_file"
   assert_no_file "$dummy_file"
 }
 
@@ -64,18 +64,18 @@ should_fail__assert_no_file() {
 #==============================================================================
 
 test__assert_file_has_content() {
-  echo 'content' > "$dummy_file"
+  dm_tools__echo 'content' > "$dummy_file"
   assert_file_has_content "$dummy_file"
 }
 
 should_fail__assert_file_has_content__file_has_to_exist() {
-  echo 'Expected [assert_file_has_content] failure.'
+  dm_tools__echo 'Expected [assert_file_has_content] failure.'
   assert_file_has_content "$dummy_file"
 }
 
 should_fail__assert_file_has_content__file_should_not_be_empty() {
-  echo 'Expected [assert_file_has_content] failure.'
-  touch "$dummy_file"
+  dm_tools__echo 'Expected [assert_file_has_content] failure.'
+  dm_tools__touch "$dummy_file"
   assert_file_has_content "$dummy_file"
 }
 
@@ -86,18 +86,18 @@ should_fail__assert_file_has_content__file_should_not_be_empty() {
 #==============================================================================
 
 test__assert_file_has_no_content() {
-  touch "$dummy_file"
+  dm_tools__touch "$dummy_file"
   assert_file_has_no_content "$dummy_file"
 }
 
 should_fail__assert_file_has_no_content__file_should_exist() {
-  echo 'Expected [assert_file_has_no_content] failure.'
+  dm_tools__echo 'Expected [assert_file_has_no_content] failure.'
   assert_file_has_no_content "$dummy_file"
 }
 
 should_fail__assert_file_has_no_content__file_should_be_empty() {
-  echo 'Expected [assert_file_has_no_content] failure.'
-  echo 'content' > "$dummy_file"
+  dm_tools__echo 'Expected [assert_file_has_no_content] failure.'
+  dm_tools__echo 'content' > "$dummy_file"
   assert_file_has_no_content "$dummy_file"
 }
 
@@ -108,18 +108,18 @@ should_fail__assert_file_has_no_content__file_should_be_empty() {
 #==============================================================================
 
 test__assert_directory() {
-  mkdir "$dummy_directory"
+  dm_tools__mkdir "$dummy_directory"
   assert_directory "$dummy_directory"
 }
 
 should_fail__assert_directory__no_directory() {
-  echo 'Expected [assert_directory] failure.'
+  dm_tools__echo 'Expected [assert_directory] failure.'
   assert_directory "$dummy_directory"
 }
 
 should_fail__assert_directory__not_a_directory() {
-  echo 'Expected [assert_directory] failure.'
-  touch "$dummy_directory"
+  dm_tools__echo 'Expected [assert_directory] failure.'
+  dm_tools__touch "$dummy_directory"
   assert_directory "$dummy_directory"
 }
 
@@ -134,8 +134,8 @@ test__assert_no_directory() {
 }
 
 should_fail__assert_no_directory() {
-  echo 'Expected [assert_no_directory] failure.'
-  mkdir "$dummy_directory"
+  dm_tools__echo 'Expected [assert_no_directory] failure.'
+  dm_tools__mkdir "$dummy_directory"
   assert_no_directory "$dummy_directory"
 }
 
@@ -146,19 +146,19 @@ should_fail__assert_no_directory() {
 #==============================================================================
 
 test__assert_directory_empty() {
-  mkdir "$dummy_directory"
+  dm_tools__mkdir "$dummy_directory"
   assert_directory_empty "$dummy_directory"
 }
 
 should_fail__assert_directory_empty() {
-  echo 'Expected [assert_directory_empty] failure.'
-  mkdir "$dummy_directory"
+  dm_tools__echo 'Expected [assert_directory_empty] failure.'
+  dm_tools__mkdir "$dummy_directory"
   touch "${dummy_directory}/dummy_file"
   assert_directory_empty "$dummy_directory"
 }
 
 should_fail__assert_directory_empty__directory_should_present() {
-  echo 'Expected [assert_directory_empty] failure.'
+  dm_tools__echo 'Expected [assert_directory_empty] failure.'
   assert_directory_empty "$dummy_directory"
 }
 
@@ -169,19 +169,19 @@ should_fail__assert_directory_empty__directory_should_present() {
 #==============================================================================
 
 test__assert_directory_not_empty() {
-  mkdir "$dummy_directory"
+  dm_tools__mkdir "$dummy_directory"
   touch "${dummy_directory}/dummy_file"
   assert_directory_not_empty "$dummy_directory"
 }
 
 should_fail__assert_directory_not_empty() {
-  echo 'Expected [assert_directory_not_empty] failure.'
-  mkdir "$dummy_directory"
+  dm_tools__echo 'Expected [assert_directory_not_empty] failure.'
+  dm_tools__mkdir "$dummy_directory"
   assert_directory_not_empty "$dummy_directory"
 }
 
 should_fail__assert_directory_not_empty__directory_should_present() {
-  echo 'Expected [assert_directory_not_empty] failure.'
+  dm_tools__echo 'Expected [assert_directory_not_empty] failure.'
   assert_directory_not_empty "$dummy_directory"
 }
 
@@ -192,19 +192,19 @@ should_fail__assert_directory_not_empty__directory_should_present() {
 #==============================================================================
 
 test__assert_symlink() {
-  touch "$dummy_file"
-  ln -s "$dummy_file" "$dummy_link"
+  dm_tools__touch "$dummy_file"
+  dm_tools__ln --symbolic --target "$dummy_file" --link-name "$dummy_link"
   assert_symlink "$dummy_link"
 }
 
 should_fail__assert_symlink__has_to_be_a_link() {
-  echo 'Expected [assert_symlink] failure.'
-  touch "$dummy_file"
+  dm_tools__echo 'Expected [assert_symlink] failure.'
+  dm_tools__touch "$dummy_file"
   assert_symlink "$dummy_file"
 }
 
 should_fail__assert_symlink__has_to_exists() {
-  echo 'Expected [assert_symlink] failure.'
+  dm_tools__echo 'Expected [assert_symlink] failure.'
   assert_symlink "$dummy_link"
 }
 
@@ -219,14 +219,14 @@ test__assert_no_symlink__not_exist() {
 }
 
 test__assert_no_symlink__not_file() {
-  touch "$dummy_file"
+  dm_tools__touch "$dummy_file"
   assert_no_symlink "$dummy_file"
 }
 
 should_fail__assert_no_symlink() {
-  echo 'Expected [assert_no_symlink] failure.'
-  touch "$dummy_file"
-  ln -s "$dummy_file" "$dummy_link"
+  dm_tools__echo 'Expected [assert_no_symlink] failure.'
+  dm_tools__touch "$dummy_file"
+  dm_tools__ln --symbolic --target "$dummy_file" --link-name "$dummy_link"
   assert_no_symlink "$dummy_link"
 }
 
@@ -237,26 +237,26 @@ should_fail__assert_no_symlink() {
 #==============================================================================
 
 test__assert_symlink_target() {
-  touch "$dummy_file"
-  ln -s "$dummy_file" "$dummy_link"
+  dm_tools__touch "$dummy_file"
+  dm_tools__ln --symbolic --target "$dummy_file" --link-name "$dummy_link"
   assert_symlink_target "$dummy_link" "$dummy_file"
 }
 
 should_fail__assert_symlink_target__target_mismatch() {
-  echo 'Expected [assert_symlink_target] failure.'
-  touch "$dummy_file"
-  ln -s "$dummy_file" "$dummy_link"
+  dm_tools__echo 'Expected [assert_symlink_target] failure.'
+  dm_tools__touch "$dummy_file"
+  dm_tools__ln --symbolic --target "$dummy_file" --link-name "$dummy_link"
   assert_symlink_target "$dummy_link" "non_existent_target.txt"
 }
 
 should_fail__assert_symlink_target__no_link() {
-  echo 'Expected [assert_symlink_target] failure.'
-  touch "$dummy_file"
+  dm_tools__echo 'Expected [assert_symlink_target] failure.'
+  dm_tools__touch "$dummy_file"
   assert_symlink_target "$dummy_link" "$dummy_file"
 }
 
 should_fail__assert_symlink_target__not_a_link() {
-  echo 'Expected [assert_symlink_target] failure.'
-  touch "$dummy_file"
+  dm_tools__echo 'Expected [assert_symlink_target] failure.'
+  dm_tools__touch "$dummy_file"
   assert_symlink_target "$dummy_link" "$dummy_file"
 }

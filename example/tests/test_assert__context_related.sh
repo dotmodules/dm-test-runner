@@ -18,7 +18,7 @@ test__assert_status() {
 }
 
 should_fail__assert_status() {
-  echo 'Expected [assert_status] failure.'
+  dm_tools__echo 'Expected [assert_status] failure.'
   dummy_function() {
     return 3
   }
@@ -35,26 +35,26 @@ should_fail__assert_status() {
 
 test__assert_output() {
   dummy_function() {
-    echo 'hello'
+    dm_tools__echo 'hello'
   }
   run dummy_function
   assert_output 'hello'
 }
 
 should_fail__assert_output__mismatch() {
-  echo 'Expected [assert_output] failure.'
+  dm_tools__echo 'Expected [assert_output] failure.'
   dummy_function() {
-    echo 'hello'
+    dm_tools__echo 'hello'
   }
   run dummy_function
   assert_output 'bye'
 }
 
 should_fail__assert_output__multiline_output_fails_assertion() {
-  echo 'Expected [assert_output] failure.'
+  dm_tools__echo 'Expected [assert_output] failure.'
   dummy_function() {
-    echo 'hello 1'
-    echo 'hello 2'
+    dm_tools__echo 'hello 1'
+    dm_tools__echo 'hello 2'
   }
   run dummy_function
   assert_output 'hello 1\nhello 2'
@@ -69,18 +69,18 @@ should_fail__assert_output__multiline_output_fails_assertion() {
 
 test__assert_output_line_count() {
   dummy_function() {
-    echo 'hello 1'
-    echo 'hello 2'
-    echo 'hello 3'
+    dm_tools__echo 'hello 1'
+    dm_tools__echo 'hello 2'
+    dm_tools__echo 'hello 3'
   }
   run dummy_function
   assert_output_line_count 3
 }
 
 should_fail__assert_output_line_count() {
-  echo 'Expected [assert_output_line_count] failure.'
+  dm_tools__echo 'Expected [assert_output_line_count] failure.'
   dummy_function() {
-    echo 'hello'
+    dm_tools__echo 'hello'
   }
   run dummy_function
   assert_output_line_count 42
@@ -95,53 +95,53 @@ should_fail__assert_output_line_count() {
 
 test__assert_output_line_at_index() {
   dummy_function() {
-    echo 'hello 1'
-    echo 'hello 2'
-    echo 'hello 3'
+    dm_tools__echo 'hello 1'
+    dm_tools__echo 'hello 2'
+    dm_tools__echo 'hello 3'
   }
   run dummy_function
   assert_output_line_at_index 2 'hello 2'
 }
 
 should_fail__assert_output_line_at_index__invalid_index__case_1() {
-  echo 'Expected [assert_output_line_at_index] failure.'
+  dm_tools__echo 'Expected [assert_output_line_at_index] failure.'
   dummy_function() {
-    echo 'hello'
-    echo 'hello'
-    echo 'hello'
+    dm_tools__echo 'hello'
+    dm_tools__echo 'hello'
+    dm_tools__echo 'hello'
   }
   run dummy_function
   assert_output_line_at_index 42 'invalid index'
 }
 
 should_fail__assert_output_line_at_index__invalid_index__case_2() {
-  echo 'Expected [assert_output_line_at_index] failure.'
+  dm_tools__echo 'Expected [assert_output_line_at_index] failure.'
   dummy_function() {
-    echo 'hello'
-    echo 'hello'
-    echo 'hello'
+    dm_tools__echo 'hello'
+    dm_tools__echo 'hello'
+    dm_tools__echo 'hello'
   }
   run dummy_function
   assert_output_line_at_index 0 'invalid index'
 }
 
 should_fail__assert_output_line_at_index__invalid_index__case_3() {
-  echo 'Expected [assert_output_line_at_index] failure.'
+  dm_tools__echo 'Expected [assert_output_line_at_index] failure.'
   dummy_function() {
-    echo 'hello'
-    echo 'hello'
-    echo 'hello'
+    dm_tools__echo 'hello'
+    dm_tools__echo 'hello'
+    dm_tools__echo 'hello'
   }
   run dummy_function
   assert_output_line_at_index -1 'invalid index'
 }
 
 should_fail__assert_output_line_at_index__no_match() {
-  echo 'Expected [assert_output_line_at_index] failure.'
+  dm_tools__echo 'Expected [assert_output_line_at_index] failure.'
   dummy_function() {
-    echo 'hello 1'
-    echo 'hello 2'
-    echo 'hello 3'
+    dm_tools__echo 'hello 1'
+    dm_tools__echo 'hello 2'
+    dm_tools__echo 'hello 3'
   }
   run dummy_function
   # This assertion matches the whole line.
@@ -150,7 +150,7 @@ should_fail__assert_output_line_at_index__no_match() {
 
 test__assert_output_line_line_at_index__empty_line_can_be_validated() {
   dummy_function() {
-    echo ''
+    dm_tools__echo ''
   }
   run dummy_function
   assert_output_line_at_index 1 ''
@@ -158,7 +158,7 @@ test__assert_output_line_line_at_index__empty_line_can_be_validated() {
 
 should_fail__assert_output_line_at_index__empty_line_wont_get_ignored() {
   dummy_function() {
-    echo ''
+    dm_tools__echo ''
   }
   run dummy_function
   assert_output_line_at_index 1 'not empty line'
@@ -173,53 +173,53 @@ should_fail__assert_output_line_at_index__empty_line_wont_get_ignored() {
 
 test__assert_output_line_partially_at_index() {
   dummy_function() {
-    echo 'hello 1'
-    echo 'hello 2'
-    echo 'hello 3'
+    dm_tools__echo 'hello 1'
+    dm_tools__echo 'hello 2'
+    dm_tools__echo 'hello 3'
   }
   run dummy_function
   assert_output_line_partially_at_index 2 'hello'
 }
 
 should_fail__assert_output_line_partially_at_index__invalid_index__case_1() {
-  echo 'Expected [assert_output_line_partially_at_index] failure.'
+  dm_tools__echo 'Expected [assert_output_line_partially_at_index] failure.'
   dummy_function() {
-    echo 'hello'
-    echo 'hello'
-    echo 'hello'
+    dm_tools__echo 'hello'
+    dm_tools__echo 'hello'
+    dm_tools__echo 'hello'
   }
   run dummy_function
   assert_output_line_partially_at_index 42 'hello'
 }
 
 should_fail__assert_output_line_partially_at_index__invalid_index__case_2() {
-  echo 'Expected [assert_output_line_partially_at_index] failure.'
+  dm_tools__echo 'Expected [assert_output_line_partially_at_index] failure.'
   dummy_function() {
-    echo 'hello'
-    echo 'hello'
-    echo 'hello'
+    dm_tools__echo 'hello'
+    dm_tools__echo 'hello'
+    dm_tools__echo 'hello'
   }
   run dummy_function
   assert_output_line_partially_at_index 0 'hello'
 }
 
 should_fail__assert_output_line_partially_at_index__invalid_index__case_3() {
-  echo 'Expected [assert_output_line_partially_at_index] failure.'
+  dm_tools__echo 'Expected [assert_output_line_partially_at_index] failure.'
   dummy_function() {
-    echo 'hello'
-    echo 'hello'
-    echo 'hello'
+    dm_tools__echo 'hello'
+    dm_tools__echo 'hello'
+    dm_tools__echo 'hello'
   }
   run dummy_function
   assert_output_line_partially_at_index -1 'hello'
 }
 
 should_fail__assert_output_line_partially_at_index__no_match() {
-  echo 'Expected [assert_output_line_partially_at_index] failure.'
+  dm_tools__echo 'Expected [assert_output_line_partially_at_index] failure.'
   dummy_function() {
-    echo 'hello 1'
-    echo 'hello 2'
-    echo 'hello 3'
+    dm_tools__echo 'hello 1'
+    dm_tools__echo 'hello 2'
+    dm_tools__echo 'hello 3'
   }
   run dummy_function
   assert_output_line_partially_at_index 2 'unrelated content'
@@ -227,7 +227,7 @@ should_fail__assert_output_line_partially_at_index__no_match() {
 
 test__assert_output_line_partially_at_index__empty_line_can_be_validated() {
   dummy_function() {
-    echo ''
+    dm_tools__echo ''
   }
   run dummy_function
   assert_output_line_partially_at_index 1 ''
@@ -235,7 +235,7 @@ test__assert_output_line_partially_at_index__empty_line_can_be_validated() {
 
 should_fail__assert_output_line_partially_at_index__empty_line_wont_get_ignored() {
   dummy_function() {
-    echo ''
+    dm_tools__echo ''
   }
   run dummy_function
   assert_output_line_partially_at_index 1 'not empty line'
@@ -250,26 +250,26 @@ should_fail__assert_output_line_partially_at_index__empty_line_wont_get_ignored(
 
 test__assert_error() {
   dummy_function() {
-    echo 'hello' >&2
+    dm_tools__echo 'hello' >&2
   }
   run dummy_function
   assert_error 'hello'
 }
 
 should_fail__assert_error__mismatch() {
-  echo 'Expected [assert_error] failure.'
+  dm_tools__echo 'Expected [assert_error] failure.'
   dummy_function() {
-    echo 'hello' >&2
+    dm_tools__echo 'hello' >&2
   }
   run dummy_function
   assert_error 'bye'
 }
 
 should_fail__assert_error__multiline_output_fails_assertion() {
-  echo 'Expected [assert_error] failure.'
+  dm_tools__echo 'Expected [assert_error] failure.'
   dummy_function() {
-    echo 'hello 1' >&2
-    echo 'hello 2' >&2
+    dm_tools__echo 'hello 1' >&2
+    dm_tools__echo 'hello 2' >&2
   }
   run dummy_function
   assert_error 'hello 1\nhello 2'
@@ -284,18 +284,18 @@ should_fail__assert_error__multiline_output_fails_assertion() {
 
 test__assert_error_line_count() {
   dummy_function() {
-    echo 'hello 1' >&2
-    echo 'hello 2' >&2
-    echo 'hello 3' >&2
+    dm_tools__echo 'hello 1' >&2
+    dm_tools__echo 'hello 2' >&2
+    dm_tools__echo 'hello 3' >&2
   }
   run dummy_function
   assert_error_line_count 3
 }
 
 should_fail__assert_error_line_count() {
-  echo 'Expected [assert_error_line_count] failure.'
+  dm_tools__echo 'Expected [assert_error_line_count] failure.'
   dummy_function() {
-    echo 'hello' >&2
+    dm_tools__echo 'hello' >&2
   }
   run dummy_function
   assert_error_line_count 42
@@ -310,9 +310,9 @@ should_fail__assert_error_line_count() {
 
 test__assert_error_line_at_index() {
   dummy_function() {
-    echo 'hello 1' >&2
-    echo 'hello 2' >&2
-    echo 'hello 3' >&2
+    dm_tools__echo 'hello 1' >&2
+    dm_tools__echo 'hello 2' >&2
+    dm_tools__echo 'hello 3' >&2
   }
   run dummy_function
   assert_error_line_count 3
@@ -320,11 +320,11 @@ test__assert_error_line_at_index() {
 }
 
 should_fail__assert_error_line_at_index__invalid_index__case_1() {
-  echo 'Expected [assert_error_line_at_index] failure.'
+  dm_tools__echo 'Expected [assert_error_line_at_index] failure.'
   dummy_function() {
-    echo 'hello' >&2
-    echo 'hello' >&2
-    echo 'hello' >&2
+    dm_tools__echo 'hello' >&2
+    dm_tools__echo 'hello' >&2
+    dm_tools__echo 'hello' >&2
   }
   run dummy_function
   assert_error_line_count 3
@@ -332,11 +332,11 @@ should_fail__assert_error_line_at_index__invalid_index__case_1() {
 }
 
 should_fail__assert_error_line_at_index__invalid_index__case_2() {
-  echo 'Expected [assert_error_line_at_index] failure.'
+  dm_tools__echo 'Expected [assert_error_line_at_index] failure.'
   dummy_function() {
-    echo 'hello' >&2
-    echo 'hello' >&2
-    echo 'hello' >&2
+    dm_tools__echo 'hello' >&2
+    dm_tools__echo 'hello' >&2
+    dm_tools__echo 'hello' >&2
   }
   run dummy_function
   assert_error_line_count 3
@@ -344,11 +344,11 @@ should_fail__assert_error_line_at_index__invalid_index__case_2() {
 }
 
 should_fail__assert_error_line_at_index__invalid_index__case_3() {
-  echo 'Expected [assert_error_line_at_index] failure.'
+  dm_tools__echo 'Expected [assert_error_line_at_index] failure.'
   dummy_function() {
-    echo 'hello' >&2
-    echo 'hello' >&2
-    echo 'hello' >&2
+    dm_tools__echo 'hello' >&2
+    dm_tools__echo 'hello' >&2
+    dm_tools__echo 'hello' >&2
   }
   run dummy_function
   assert_error_line_count 3
@@ -356,11 +356,11 @@ should_fail__assert_error_line_at_index__invalid_index__case_3() {
 }
 
 should_fail__assert_error_line_at_index__no_match() {
-  echo 'Expected [assert_error_line_at_index] failure.'
+  dm_tools__echo 'Expected [assert_error_line_at_index] failure.'
   dummy_function() {
-    echo 'hello 1' >&2
-    echo 'hello 2' >&2
-    echo 'hello 3' >&2
+    dm_tools__echo 'hello 1' >&2
+    dm_tools__echo 'hello 2' >&2
+    dm_tools__echo 'hello 3' >&2
   }
   run dummy_function
   assert_error_line_count 3
@@ -370,7 +370,7 @@ should_fail__assert_error_line_at_index__no_match() {
 
 test__assert_output_line_line_at_index__empty_line_can_be_validated() {
   dummy_function() {
-    echo '' >&2
+    dm_tools__echo '' >&2
   }
   run dummy_function
   assert_error_line_count 1
@@ -379,7 +379,7 @@ test__assert_output_line_line_at_index__empty_line_can_be_validated() {
 
 should_fail__assert_error_line_at_index__empty_line_wont_get_ignored() {
   dummy_function() {
-    echo '' >&2
+    dm_tools__echo '' >&2
   }
   run dummy_function
   assert_error_line_count 1
@@ -395,9 +395,9 @@ should_fail__assert_error_line_at_index__empty_line_wont_get_ignored() {
 
 test__assert_error_line_partially_at_index() {
   dummy_function() {
-    echo 'hello 1' >&2
-    echo 'hello 2' >&2
-    echo 'hello 3' >&2
+    dm_tools__echo 'hello 1' >&2
+    dm_tools__echo 'hello 2' >&2
+    dm_tools__echo 'hello 3' >&2
   }
   run dummy_function
   assert_error_line_count 3
@@ -405,11 +405,11 @@ test__assert_error_line_partially_at_index() {
 }
 
 should_fail__assert_error_line_partially_at_index__invalid_index__case_1() {
-  echo 'Expected [assert_error_line_partially_at_index] failure.'
+  dm_tools__echo 'Expected [assert_error_line_partially_at_index] failure.'
   dummy_function() {
-    echo 'hello' >&2
-    echo 'hello' >&2
-    echo 'hello' >&2
+    dm_tools__echo 'hello' >&2
+    dm_tools__echo 'hello' >&2
+    dm_tools__echo 'hello' >&2
   }
   run dummy_function
   assert_error_line_count 3
@@ -417,11 +417,11 @@ should_fail__assert_error_line_partially_at_index__invalid_index__case_1() {
 }
 
 should_fail__assert_error_line_partially_at_index__invalid_index__case_2() {
-  echo 'Expected [assert_error_line_partially_at_index] failure.'
+  dm_tools__echo 'Expected [assert_error_line_partially_at_index] failure.'
   dummy_function() {
-    echo 'hello' >&2
-    echo 'hello' >&2
-    echo 'hello' >&2
+    dm_tools__echo 'hello' >&2
+    dm_tools__echo 'hello' >&2
+    dm_tools__echo 'hello' >&2
   }
   run dummy_function
   assert_error_line_count 3
@@ -429,11 +429,11 @@ should_fail__assert_error_line_partially_at_index__invalid_index__case_2() {
 }
 
 should_fail__assert_error_line_partially_at_index__invalid_index__case_3() {
-  echo 'Expected [assert_error_line_partially_at_index] failure.'
+  dm_tools__echo 'Expected [assert_error_line_partially_at_index] failure.'
   dummy_function() {
-    echo 'hello' >&2
-    echo 'hello' >&2
-    echo 'hello' >&2
+    dm_tools__echo 'hello' >&2
+    dm_tools__echo 'hello' >&2
+    dm_tools__echo 'hello' >&2
   }
   run dummy_function
   assert_error_line_count 3
@@ -441,11 +441,11 @@ should_fail__assert_error_line_partially_at_index__invalid_index__case_3() {
 }
 
 should_fail__assert_error_line_partially_at_index__no_match() {
-  echo 'Expected [assert_error_line_partially_at_index] failure.'
+  dm_tools__echo 'Expected [assert_error_line_partially_at_index] failure.'
   dummy_function() {
-    echo 'hello 1' >&2
-    echo 'hello 2' >&2
-    echo 'hello 3' >&2
+    dm_tools__echo 'hello 1' >&2
+    dm_tools__echo 'hello 2' >&2
+    dm_tools__echo 'hello 3' >&2
   }
   run dummy_function
   assert_error_line_count 3
@@ -454,7 +454,7 @@ should_fail__assert_error_line_partially_at_index__no_match() {
 
 test__assert_error_line_partially_at_index__empty_line_can_be_validated() {
   dummy_function() {
-    echo '' >&2
+    dm_tools__echo '' >&2
   }
   run dummy_function
   assert_error_line_count 1
@@ -463,7 +463,7 @@ test__assert_error_line_partially_at_index__empty_line_can_be_validated() {
 
 should_fail__assert_error_line_partially_at_index__empty_line_wont_get_ignored() {
   dummy_function() {
-    echo '' >&2
+    dm_tools__echo '' >&2
   }
   run dummy_function
   assert_error_line_count 1
@@ -479,7 +479,7 @@ should_fail__assert_error_line_partially_at_index__empty_line_wont_get_ignored()
 
 test__word_splitting_validation() {
   dummy_function() {
-    echo "$#"
+    dm_tools__echo "$#"
   }
   param_3='param 3'
 

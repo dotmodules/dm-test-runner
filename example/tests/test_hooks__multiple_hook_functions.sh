@@ -23,24 +23,24 @@
 #==============================================================================
 
 setup_file() {
-  echo '--- MULTIPLE HOOK FUNCTIONS -----------------------------------------------------'
-  echo 'echo during [setup file] hook'
+  dm_tools__echo '--- MULTIPLE HOOK FUNCTIONS -----------------------------------------------------'
+  dm_tools__echo 'echo during [setup file] hook'
 }
 
 setup() {
-  echo 'echo during first [setup] hook function'
+  dm_tools__echo 'echo during first [setup] hook function'
 }
 
 setup() {
-  echo 'echo during second [setup] hook function'
+  dm_tools__echo 'echo during second [setup] hook function'
 }
 
 setup() {
   # Only this will be executed!
-  echo 'echo during third [setup] hook function'
+  dm_tools__echo 'echo during third [setup] hook function'
 }
 
 test__hooks__test_case__multiple_hook_functions() {
-  echo 'echo during test case - error will happen after this to see the logs'
-  cat invalid_file
+  dm_tools__echo 'echo during test case - error will happen after this to see the logs'
+  dm_tools__cat invalid_file
 }

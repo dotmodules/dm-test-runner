@@ -17,15 +17,15 @@
 #==============================================================================
 
 test__test_directories__file_1__case_1() {
-  echo "[test case] level path:  ${DM_TEST__TEST_DIR__TEST_CASE_LEVEL}"
-  echo "[test file] level path:  ${DM_TEST__TEST_DIR__TEST_FILE_LEVEL}"
-  echo "[test suite] level path: ${DM_TEST__TEST_DIR__TEST_SUITE_LEVEL}"
-  >&2 echo 'making the test case fail intentionally to print the outputs'
+  dm_tools__echo "[test case] level path:  ${DM_TEST__TEST_DIR__TEST_CASE_LEVEL}"
+  dm_tools__echo "[test file] level path:  ${DM_TEST__TEST_DIR__TEST_FILE_LEVEL}"
+  dm_tools__echo "[test suite] level path: ${DM_TEST__TEST_DIR__TEST_SUITE_LEVEL}"
+  >&2 dm_tools__echo 'making the test case fail intentionally to print the outputs'
 }
 
 test__test_directories__file_1__case_2() {
-  echo "[test case] level path:  ${DM_TEST__TEST_DIR__TEST_CASE_LEVEL}"
-  echo "[test file] level path:  ${DM_TEST__TEST_DIR__TEST_FILE_LEVEL}"
-  echo "[test suite] level path: ${DM_TEST__TEST_DIR__TEST_SUITE_LEVEL}"
-  >&2 echo 'making the test case fail intentionally to print the outputs'
+  dm_tools__echo "[test case] level path:  ${DM_TEST__TEST_DIR__TEST_CASE_LEVEL}"
+  dm_tools__echo "[test file] level path:  ${DM_TEST__TEST_DIR__TEST_FILE_LEVEL}"
+  dm_tools__echo "[test suite] level path: ${DM_TEST__TEST_DIR__TEST_SUITE_LEVEL}"
+  >&2 dm_tools__echo 'making the test case fail intentionally to print the outputs'
 }

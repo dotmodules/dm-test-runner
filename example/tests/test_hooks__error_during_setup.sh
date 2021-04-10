@@ -21,27 +21,27 @@
 #==============================================================================
 
 setup_file() {
-  echo '--- ERROR DURING SETUP HOOK -----------------------------------------------------'
-  echo 'echo during [setup file] hook'
+  dm_tools__echo '--- ERROR DURING SETUP HOOK -----------------------------------------------------'
+  dm_tools__echo 'echo during [setup file] hook'
 }
 
 setup() {
-  echo 'echo during [setup] hook - error will happen here'
+  dm_tools__echo 'echo during [setup] hook - error will happen here'
   cat invalid_file
 }
 
 teardown() {
-  echo 'echo during [teardown] hook'
+  dm_tools__echo 'echo during [teardown] hook'
 }
 
 teardown_file() {
-  echo 'echo during [teardown file] hook'
+  dm_tools__echo 'echo during [teardown file] hook'
 }
 
 test__hooks__test_case__error_during_setup__case_2() {
-  echo 'echo during test case 2'
+  dm_tools__echo 'echo during test case 2'
 }
 
 test__hooks__test_case__error_during_setup__case_1() {
-  echo 'echo during test case 1'
+  dm_tools__echo 'echo during test case 1'
 }
