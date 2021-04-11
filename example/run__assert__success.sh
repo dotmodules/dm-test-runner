@@ -1,4 +1,9 @@
 #!/bin/sh
+# Expressions don't expand inside single quotes.
+# shellcheck disable=SC2016
+# Single quote escapement.
+# shellcheck disable=SC1003
+# Single quote escapement.
 # shellcheck disable=SC2034
 
 #==============================================================================
@@ -12,8 +17,31 @@ set -u  # prevent unset variable expansion
 # PATH CHANGE
 #==============================================================================
 
-# At this point we have dm_tools loaded.
-cd "$(dm_tools__dirname "$(dm_tools__readlink --canonicalize "$0")")"
+# This is the only part where the code has to be prepared for missing tool
+# capabilities. It is known that on MacOS readlink does not support the -f flag
+# by default.
+if target_path="$(readlink -f "$0")" 2>/dev/null
+then
+  cd "$(dirname "$target_path")"
+else
+  # If the path cannot be determined with readlink, we have to check if this
+  # script is executed through a symlink or not.
+  if [ -L "$0" ]
+  then
+    # If the current script is executed through a symlink, we are out of luck,
+    # because without readlink, there is no universal solution for this problem
+    # that uses the default shell toolset.
+    echo "symlinked script won't work on this machine.."
+  else
+    cd "$(dirname "$0")"
+  fi
+fi
+
+#==============================================================================
+# COMMON TEST SUITE LIB
+#==============================================================================
+
+. ./common.sh
 
 #==============================================================================
 # DM_TEST_RUNNER CONFIGURATION
@@ -43,6 +71,19 @@ DM_TEST__CONFIG__OPTIONAL__DEBUG_ENABLED=0
 #==============================================================================
 # ENTRY POINT
 #==============================================================================
+
+dm_tools__echo "${DIM}==============================================================================="
+dm_tools__echo '                             _   _'
+dm_tools__echo '     /\                     | | (_)'
+dm_tools__echo '    /  \   ___ ___  ___ _ __| |_ _  ___  _ __  ___'
+dm_tools__echo '   / /\ \ / __/ __|/ _ \ '\''__| __| |/ _ \| '\''_ \/ __|'
+dm_tools__echo '  / ____ \ __ \__ \  __/ |  | |_| | (_) | | | \__ \'
+dm_tools__echo ' /_/    \_\___/___/\___|_|   \__|_|\___/|_| |_|___/'
+dm_tools__echo ''
+dm_tools__echo '==============================================================================='
+dm_tools__echo '  ASSERTION SUCCESS CASES'
+dm_tools__echo '==============================================================================='
+dm_tools__echo "${RESET}"
 
 dm_test__run_suite
 
