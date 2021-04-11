@@ -324,6 +324,46 @@ assert_output_line_partially_at_index() {
 #==============================================================================
 
 #==============================================================================
+# Context based assertion function that will fail if there are any standard
+# error captured output.
+#------------------------------------------------------------------------------
+# Globals:
+#   DM_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD2
+# Arguments:
+#   None
+# STDIN:
+#   None
+#------------------------------------------------------------------------------
+# Output variables:
+# - None
+# STDOUT:
+#   None
+# STDERR:
+#   None
+# Status:
+#   0 - Assertion succeeded.
+#   1 - Assertion failed.
+#==============================================================================
+assert_no_error() {
+  ___target_buffer="$DM_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD2"
+
+  if [ -s "$___target_buffer" ]
+  then
+    dm_test__debug 'assert_no_error' '=> assertion failed'
+
+    ___subject='Standard output was captured.'
+    ___reason="$( \
+      dm_tools__printf '%s' 'The tested functionality should not have '; \
+      dm_tools__echo 'emitted content to the standard error output: '; \
+      dm_tools__echo '"""'; \
+      dm_tools__cat "$___target_buffer"; \
+      dm_tools__echo '"""'; \
+    )"
+    ___assertion='assert_no_error'
+    _dm_test__report_failure "$___subject" "$___reason" "$___assertion"
+  fi
+}
+#==============================================================================
 # Context based assertion function that will compare the standard error output
 # of the tested function with the given value.
 #------------------------------------------------------------------------------

@@ -276,6 +276,30 @@ should_fail__assert_error__multiline_output_fails_assertion() {
 }
 
 #==============================================================================
+# ASSERT_NO_ERROR
+#------------------------------------------------------------------------------
+# Asserts the whole captured error output of the last function or command
+# runned by the 'run' command.
+#==============================================================================
+
+test__assert_no_error() {
+  dummy_function() {
+    dm_tools__echo 'hello'
+  }
+  run dummy_function
+  assert_no_error
+}
+
+should_fail__assert_no_error() {
+  dummy_function() {
+    dm_tools__echo 'error line 1' >&2
+    dm_tools__echo 'error line 2' >&2
+  }
+  run dummy_function
+  assert_no_error
+}
+
+#==============================================================================
 # ASSERT_ERROR_LINE_COUNT
 #------------------------------------------------------------------------------
 # Asserts the line count of the error output of the last function or command
