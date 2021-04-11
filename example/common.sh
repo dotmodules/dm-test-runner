@@ -82,11 +82,11 @@ assert_test_case_count() {
   else
     log_failure "actual count was: ${BOLD}${___count}${RESET}"
 
-    echo "${BOLD}${RED}"
-    echo '==============================================================================='
-    echo '                         Unexpected test case count!'
-    echo '==============================================================================='
-    echo "$RESET"
+    dm_tools__echo "${BOLD}${RED}"
+    dm_tools__echo '==============================================================================='
+    dm_tools__echo '                         Unexpected test case count!'
+    dm_tools__echo '==============================================================================='
+    dm_tools__echo "$RESET"
 
     exit 1
   fi

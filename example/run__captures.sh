@@ -21,7 +21,7 @@ set -u  # prevent unset variable expansion
 # This is the only part where the code has to be prepared for missing tool
 # capabilities. It is known that on MacOS readlink does not support the -f flag
 # by default.
-if target_path="$(readlink -f "$0")" 2>/dev/null
+if target_path="$(readlink -f "$0" 2>/dev/null)"
 then
   cd "$(dirname "$target_path")"
 else
