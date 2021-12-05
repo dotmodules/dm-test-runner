@@ -8,13 +8,14 @@ based shell implementations.
 
 # Test suite execution
 
-## Simlified internal working
+## Simplified internal workings
 
 ```
 for test_file in test_cases_root:
   for test_case in test_file:
     execute(test_case)
 ```
+
 ## Subshell structure
 
 During the test suite execution __multiple subshell__ levels will be used for
