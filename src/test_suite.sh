@@ -176,7 +176,7 @@ _dm_test__test_suite__get_test_files() {
       --type 'f' \
       --name "${DM_TEST__CONFIG__MANDATORY__TEST_FILE_PREFIX}*" \
       2>&1 \
-  )"
+  )";
   then
     dm_test__report_error_and_exit \
       'Unexpected error during execution!' \
@@ -230,7 +230,8 @@ _dm_test__test_suite__execute_test_file() {
   # Creating the test file level test directory.
   dm_test__cache__init_test_directory__test_file_level
 
-  # Have to collect the test cases before the path change.
+  # Have to collect the test cases before the path change otherwise we have to
+  # transform the test file path.
   ___test_cases="$( \
     dm_test__test_case__get_test_cases_from_test_file "$___test_file_path" \
   )"

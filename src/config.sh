@@ -29,11 +29,11 @@
 #========================|_|===================================================
 # SUBMODULE PATH PREFIX
 #==============================================================================
-# For better readability dm.test.sh is composed of smaller scripts that are
-# sourced into it dynamically. As dm.test.sh is imported to the user codebase
-# by sourcing, the conventional path determination cannot be used. The '$0'
-# variable contains the the host script's path dm.test.sh is sourced from. The
-# relative path to the root of the dm-test-runner subrepo has to be defined
+# For better readability dm.test.sh is composed out of smaller scripts that are
+# sourced dynamically. As dm.test.sh is imported to the user codebase by
+# sourcing, the conventional path determination cannot be used. The '$0'
+# variable contains the host script's path the dm.test.sh file is sourced from.
+# The relative path to the root of the dm-test-runner subrepo has to be defined
 # explicitly to the internal sourcing could be executed.
 DM_TEST__CONFIG__MANDATORY__SUBMODULE_PATH_PREFIX=\
 "${DM_TEST__CONFIG__MANDATORY__SUBMODULE_PATH_PREFIX:=__INVALID__}"
@@ -48,7 +48,7 @@ DM_TEST__CONFIG__MANDATORY__SUBMODULE_PATH_PREFIX=\
 # TEST CASE ROOT
 #==============================================================================
 # Test cases root directory relative to the runner script dm.test.sh is sourced
-# to.
+# from. See the 'example' directory for sample configuration.
 DM_TEST__CONFIG__MANDATORY__TEST_FILES_ROOT=\
 "${DM_TEST__CONFIG__MANDATORY__TEST_FILES_ROOT:=__INVALID__}"
 
@@ -124,7 +124,7 @@ DM_TEST__CONFIG__OPTIONAL__EXIT_ON_FAILURE=\
 "${DM_TEST__CONFIG__OPTIONAL__EXIT_ON_FAILURE:=1}"
 
 #==============================================================================
-# Function that should be used in an if statement determines if the exit
+# Function that should be used in an if statement to determine if the exit
 # command sohuld be called or not on a failure.
 #------------------------------------------------------------------------------
 # Globals:
@@ -181,8 +181,8 @@ DM_TEST__CONFIG__OPTIONAL__ALWAYS_DISPLAY_FILE_LEVEL_HOOK_OUTPUT=\
 "${DM_TEST__CONFIG__OPTIONAL__ALWAYS_DISPLAY_FILE_LEVEL_HOOK_OUTPUT:=0}"
 
 #==============================================================================
-# Function that should be used in an if statement determines if the file level
-# hook's output should be always displayed or not.
+# Function that should be used in an if statement to determine if the file
+# level hook's output should be always displayed or not.
 #------------------------------------------------------------------------------
 # Globals:
 #   DM_TEST__CONFIG__OPTIONAL__ALWAYS_DISPLAY_FILE_LEVEL_HOOK_OUTPUT
@@ -203,12 +203,14 @@ DM_TEST__CONFIG__OPTIONAL__ALWAYS_DISPLAY_FILE_LEVEL_HOOK_OUTPUT=\
 #==============================================================================
 dm_test__config__should_always_display_file_level_hook_output() {
   test \
-    "$DM_TEST__CONFIG__OPTIONAL__ALWAYS_DISPLAY_FILE_LEVEL_HOOK_OUTPUT" -eq '1'
+    "$DM_TEST__CONFIG__OPTIONAL__ALWAYS_DISPLAY_FILE_LEVEL_HOOK_OUTPUT" -ne '0'
 }
 
 #==============================================================================
-# Function that should be used in an if statement determines if the file level
-# hook's output should be only displayed when the hook failed.
+# Function that should be used in an if statement to determine if the file
+# level hook's output should be only displayed when the hook failed. This is
+# the inverted logic pair of the previous function. It exists to be able to
+# provide a more readabe  business logic.
 #------------------------------------------------------------------------------
 # Globals:
 #   DM_TEST__CONFIG__OPTIONAL__ALWAYS_DISPLAY_FILE_LEVEL_HOOK_OUTPUT
@@ -224,8 +226,8 @@ dm_test__config__should_always_display_file_level_hook_output() {
 # STDERR:
 #   None
 # Status:
-#   0 - file level hook output should be always displayed
-#   1 - file level hook output should be only displayed when the hook failed
+#   0 - file level hook output should be only displayed when the hook failed
+#   1 - file level hook output should be always displayed
 #==============================================================================
 dm_test__config__should_only_display_file_level_hook_output_on_failure() {
   test \

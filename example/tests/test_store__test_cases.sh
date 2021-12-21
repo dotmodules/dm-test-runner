@@ -5,7 +5,7 @@
 #==============================================================================
 # The store system has to reliably store and retrieve any kind of textual
 # input. It is doing it by encoding both the key and the value. In this way
-# egzotic characters and multilite textual inputs are not an issue.
+# egzotic characters and multi-lite textual inputs are not an issue.
 #==============================================================================
 
 test__store__single_words_can_be_stored_and_retrieved() {

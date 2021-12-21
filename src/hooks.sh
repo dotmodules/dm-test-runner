@@ -44,7 +44,7 @@ DM_TEST__HOOKS__CONFIG__PATTERN__TEARDOWN_FILE=\
 "^${DM_TEST__HOOKS__CONFIG__FUNCTION_NAME__TEARDOWN_FILE}()"
 
 # Hook flags assigned during runtime that determine if a test file has a
-# particular hook defined. They are contain a single integer value that should
+# particular hook defined. They contain a single integer value that should
 # indicate the matched hook function in the given test file.
 DM_TEST__HOOKS__RUNTIME__FLAG__SETUP='__INVALID__'
 DM_TEST__HOOKS__RUNTIME__FLAG__TEARDOWN='__INVALID__'

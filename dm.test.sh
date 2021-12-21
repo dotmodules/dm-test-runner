@@ -10,6 +10,43 @@
 #==============================================================================
 
 #==============================================================================
+# Welcome to the dm-test source code! As a side-project during implementing the
+# dotmodules configuration manager system, dm-test was born in a need to have a
+# simple yet powerful pure bash testing library, that suit my needs: fast
+# execution, detailed debugging, modern test-suite features (hooks, mocking
+# possibilites, isolated testing). I found the existing test runners for pure
+# shell/bash project lack of these.
+#==============================================================================
+
+#==============================================================================
+# I tried my best to write a well documented code base, and you might find it a
+# bit too much, but don't forget that we are talking with shell code in here
+# with a very poor control over the programming features like parameters and
+# return values. I tried to ballance these shortcommings with painfully
+# explicit documentation. Each and every function in this project is prepended
+# with a documentation section that states the purpose and interface of that
+# function. With this in place, I believe that maintaining this codebase would
+# be easier in the future.
+#==============================================================================
+
+#==============================================================================
+# Since dm-test is intended to be used inside other codebase, and pure shell
+# doesn't have scoping for variables, everything will be in a global namespace.
+# Because of these, the dm-test projet uses long function names with the
+# 'dm_test__' prefix, and for every variable it will use the '___' prefix to
+# (hopefully) not to clash with any other variables in the tested code base.
+#==============================================================================
+
+#==============================================================================
+# To be able to be fully platform independent out-of-the-box, dm-tools is
+# relying on another side-side-project (already down three levelt in the rabbit
+# hole..) called dm-tools. Every command line tool call in this project is
+# executed through the dm-tools interface after it is loaded (that means the
+# first initialization of the test system runs on pure cli tools, which means
+# special care needs to be taken in order to be platform independent!).
+#==============================================================================
+
+#==============================================================================
 # SANE ENVIRONMENT
 #==============================================================================
 
@@ -23,7 +60,8 @@ set -u  # prevent unset variable expansion
 #==============================================================================
 # Error reporting function that will display the given message and abort the
 # execution. This needs to be defined in the highest level to be able to use it
-# without sourcing the sub files.
+# without sourcing the sub files and the external dependencies. It should only
+# use platform independent external commands and shell features.
 #------------------------------------------------------------------------------
 # Globals:
 #   RED
@@ -44,9 +82,6 @@ set -u  # prevent unset variable expansion
 #   None
 # Status:
 #   1 - System will exit at the end of this function.
-#------------------------------------------------------------------------------
-# Tools:
-#   echo sed
 #==============================================================================
 dm_test__report_error_and_exit() {
   ___message="$1"
@@ -68,11 +103,7 @@ dm_test__report_error_and_exit() {
   >&2 echo "  ${RED}${___message}${RESET}"
   >&2 echo "  ${RED}${___details}${RESET}"
   >&2 echo ''
-  # Running in a subshell to keep line length below 80.
-  # shellcheck disable=SC2005
-  >&2 echo "$( \
-    echo "${___reason}" | sed "s/^/  ${RED}/" | sed "s/$/${RESET}/" \
-  )"
+  >&2 echo "${___reason}" | sed "s/^/  ${RED}/" | sed "s/$/${RESET}/"
   >&2 echo ''
   >&2 printf '%s=======================================================' "$RED"
   >&2 echo "========================${RESET}"
@@ -85,11 +116,11 @@ dm_test__report_error_and_exit() {
 #==============================================================================
 
 #==============================================================================
-# For better readability dm.test.sh is composed of smaller scripts that are
-# sourced into it dynamically. As dm.test.sh is imported to the user codebase
-# by sourcing, the conventional path determination cannot be used. The '$0'
-# variable contains the the host script's path dm.test.sh is sourced from. The
-# relative path to the root of the dm-test-runner subrepo has to be defined
+# For better readability dm.test.sh is composed out of smaller scripts that are
+# sourced dynamically. As dm.test.sh is imported to the user codebase by
+# sourcing, the conventional path determination cannot be used. The '$0'
+# variable contains the host script's path the dm.test.sh file is sourced from.
+# The relative path to the root of the dm-test-runner subrepo has to be defined
 # explicitly to the internal sourcing could be executed.
 #==============================================================================
 
@@ -107,12 +138,19 @@ ___path_prefix="${DM_TEST__CONFIG__MANDATORY__SUBMODULE_PATH_PREFIX}"
 # DM_TOOLS INTEGRATION
 #==============================================================================
 
+#==============================================================================
+# The first module we are loading is the dm-tools project that would provide
+# the necessary paltform independent interface for the command line tools. We
+# are only loading the dm-tools system when it hasn't been loaded by the other
+# code (the tested system for example).
+#==============================================================================
+
 if [ -z ${DM_TOOLS__READY+x} ]
 then
   # If dm_tools has not sourced yet, we have to source it from this repository.
   ___dm_tools_path_prefix="${___path_prefix}/dependencies/dm-tools"
   DM_TOOLS__CONFIG__MANDATORY__SUBMODULE_PATH_PREFIX="$___dm_tools_path_prefix"
-  if [ -d  "$DM_TOOLS__CONFIG__MANDATORY__SUBMODULE_PATH_PREFIX" ]
+  if [ -d "$DM_TOOLS__CONFIG__MANDATORY__SUBMODULE_PATH_PREFIX" ]
   then
     # shellcheck source=./dependencies/dm-tools/dm.tools.sh
     . "${DM_TOOLS__CONFIG__MANDATORY__SUBMODULE_PATH_PREFIX}/dm.tools.sh"
@@ -124,9 +162,11 @@ then
   fi
 fi
 
+#==============================================================================
 # IMPORTANT: After this, every non shell built-in command should be called
 # through the provided dm_tools API to ensure the compatibility on different
 # environments.
+#==============================================================================
 
 #==============================================================================
 # SOURCING SUBMODULES
@@ -206,8 +246,6 @@ fi
 #   None
 # Status:
 #   0 - Other status is not expected.
-# Tools:
-#   None
 #==============================================================================
 dm_test__run_suite() {
   dm_test__debug__wrapper 'dm_test__test_suite__main'

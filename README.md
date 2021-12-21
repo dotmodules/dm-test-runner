@@ -16,6 +16,10 @@ for test_file in test_cases_root:
     execute(test_case)
 ```
 
+## Detailed internal workings
+
+![Detailed internal workings](./docs/dm-test-internals.png)
+
 ## Subshell structure
 
 During the test suite execution __multiple subshell__ levels will be used for

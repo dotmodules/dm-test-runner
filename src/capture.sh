@@ -156,11 +156,11 @@ dm_test__capture__run_and_capture() {
   dm_test__debug 'dm_test__capture__run_and_capture' \
     'temporary capture fifos initialized'
 
-  # Starting the processor functions in the background and storing they pids to
-  # be able to wait for them later.
   dm_test__debug 'dm_test__capture__run_and_capture' \
     'starting file descriptor processing workers in the background..'
 
+  # Starting the processor functions in the background and storing they pids to
+  # be able to wait for them later.
   _dm_test__capture__capture_output_for_domain 'stdout' "$BLUE" 'FD1' \
     <"$___fifo__fd1" >>"$___file__fd1" &
   ___pid__fd1="$!"

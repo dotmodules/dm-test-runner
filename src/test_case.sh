@@ -44,7 +44,7 @@ DM_TEST__TEST_CASE__RUNTIME__TEST_UNDER_EXECUTION='__INVALID__'
 # Output variables:
 #   None
 # STDOUT:
-#   Test files matched in the given test file.
+#   Test cases matched in the given test file.
 # STDERR:
 #   None
 # Status:
@@ -100,7 +100,7 @@ dm_test__test_case__get_test_cases_from_test_file() {
 # Output variables:
 #   None
 # STDOUT:
-#   Test files matched in the given test file.
+#   None
 # STDERR:
 #   None
 # Status:
@@ -533,7 +533,7 @@ _dm_test__execute_and_capture__setup_hook() {
 # Runs the given test case while capturing its outputs.
 #------------------------------------------------------------------------------
 # Globals:
-#   None
+#   DM_TEST__CAPTURE__CONSTANT__EXECUTE_COMMAND_IN_SUBSHELL
 # Arguments:
 #   [1] test_case - Test case that needs to be run.
 # STDIN:

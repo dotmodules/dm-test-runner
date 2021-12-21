@@ -4,7 +4,7 @@
 
 #==============================================================================
 # During execution the test runner provides temporary directories that are
-# vailable for the test cases to create and reuse test fixtures. There are
+# available for the test cases to create and reuse test fixtures. There are
 # three level of persistency: test case, test file and test suite. The test
 # case level only valid for a lifetime of a test case. The test case level is
 # available during a test file exeution. The test suite level is available

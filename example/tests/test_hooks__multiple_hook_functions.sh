@@ -7,19 +7,10 @@
 # setting up test fixtures. You can run arbitrary code in them, but you should
 # use the provided temporary directories for storing the fixtures.
 #
-# An error during the test case will make the test case to fail, but the
-# corresponding [teardown] hook will be executed. after that the next test case
-# will be executed.
-#
-# 1. [setup file] hook will be executed
-# 2. [setup] hook will be executed
-# 3. test case will be executed but error happens
-# 4. [teardown] hook will be executed
-# 5. next test case will be executed with the [setup] and [teardown] hooks
-# 6. [teardown file] hook will be executed after the last test case in that
-#    file
-# 7. next test file will be executed with the [setup file] and [teardown file]
-#    hooks
+# The hook functions are gathered during the test file initialization step by
+# looking into the actual test file and collect the functions that are named
+# with the right names. If you have redefined a hook function by mistake, only
+# the last hook function will be executed when calling it.
 #==============================================================================
 
 setup_file() {
