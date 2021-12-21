@@ -18,7 +18,8 @@ for test_file in test_cases_root:
 
 ## Detailed internal workings
 
-![Detailed internal workings](./docs/dm-test-internals.png)
+![Detailed internal workings](./docs/dm-test-internals-dark.png#gh-dark-mode-only)
+![Detailed internal workings](./docs/dm-test-internals-light.png#gh-light-mode-only)
 
 ## Subshell structure
 
