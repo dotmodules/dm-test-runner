@@ -62,7 +62,7 @@ There are a few points to note here:
 
 1. __Each test case__ also has a __separate environment__ that will be destroyed after
    that test case has been executed and it is below of the setup and teardown
-   hook sushell level.
+   hook subshell level.
     1. That means setting a __variable in__ a __test case__ would be
        __unaccessible to__ the optional teardown and teardown file __hooks__.
        To communicate between a test case and a corresponding teardown hook,
