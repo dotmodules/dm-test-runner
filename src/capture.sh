@@ -27,7 +27,7 @@
 # could be inverted or mixed. This is due to the fact how the OS scheduler
 # handles the fifo write events. It can be tested by echoing out a simple
 # text from the test case in sequence to all available outputs, and
-# inspecting the order in the report, ie:
+# inspecting the order in the report, i.e.:
 # >&1 echo 'FD1'
 # >&2 echo 'FD2'
 # >&3 echo 'FD3'
@@ -125,7 +125,7 @@ dm_test__capture__init() {
 # Arguments:
 #   [1] execute_in_subshell_flag - This flag indicates if the passed command
 #       should be executed in a subshell or not. If the value is nonzero, the
-#       command wil be executed in a subshell. Executing in a subshell make the
+#       command will be executed in a subshell. Executing in a subshell make the
 #       capturing processes unaffected by the failed assertion exit call, thus
 #       they can finish the scheduled capturings.
 #   [..] command - Command as a string that will be executed and captured.

@@ -12,11 +12,11 @@
 #==============================================================================
 
 #==============================================================================
-# Context based assertions - as the name implies - needs a predefined context
-# to be able to run. This context is provided by the 'run' function. To be able
-# to use context based assertions you need to run the testable funtion or
-# command with the 'run' function. This will save the output and the status of
-# the runned function or command into the global assertion context, and you can
+# Context based assertions - as the name implies - needs a predefined context to
+# be able to run. This context is provided by the 'run' function. To be able to
+# use context based assertions you need to run the testable function or command
+# with the 'run' function. This will save the output and the status of the
+# executed function or command into the global assertion context, and you can
 # call assertions to test this context. In this way you can check if a function
 # or command provided the expected status code and output without running it
 # multiple times for each assertions.
@@ -40,7 +40,7 @@ DM_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD2='__INVALID__'
 
 #==============================================================================
 # Function under test capturer API function. It excepts a list of parameters
-# that will be executed while the standar output, standard error and the status
+# that will be executed while the standard output, standard error and the status
 # will be captured and will be put into test case level buffer files. Calling
 # the testable function in this way is necessary if we want to use the advanced
 # context based assertion functions, as those are working on the output
@@ -211,7 +211,7 @@ assert_output() {
 
 #==============================================================================
 # Context based assertion function to check the line count of the command
-# output runned with the 'run' function.
+# output executed with the 'run' function.
 #------------------------------------------------------------------------------
 # Globals:
 #   DM_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD1
@@ -414,7 +414,7 @@ assert_error() {
 
 #==============================================================================
 # Context based assertion function to check the line count of the command
-# error output runned with the 'run' function.
+# error output executed with the 'run' function.
 #------------------------------------------------------------------------------
 # Globals:
 #   DM_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD2

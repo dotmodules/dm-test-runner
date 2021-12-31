@@ -303,7 +303,7 @@ _dm_test__execute_test_case() {
 
 #==============================================================================
 # Function that executes the given test case defined in the global execution
-# environment. It executes the testcase in a separate subshell to provide each
+# environment. It executes the test case in a separate subshell to provide each
 # test case a unique sandboxing environment.
 #------------------------------------------------------------------------------
 # Globals:
@@ -388,7 +388,7 @@ _dm_test__evaluate_test_case_result() {
     'evaluating test case result..'
 
   # If the status is nonzero or there is any standard error content, the
-  # testcase is considered as failed.
+  # test case is considered as failed.
 
   if [ "$___status" -ne '0' ]
   then
@@ -424,7 +424,7 @@ _dm_test__evaluate_test_case_result() {
 #
 # The actual test case execution will happen in another subshell in order to be
 # able abort it's execution in case of a failed assertion and have the teardown
-# hook to run. Withouth this extra subshell, the teardown hook couldn't be run
+# hook to run. Without this extra subshell, the teardown hook couldn't be run
 # if the test case exits from execution. This subshell also has a drawback: the
 # teardown hook only can access the environment the setup hook is created. It
 # has no access to the test case environment changes. Most of the use cases
@@ -444,8 +444,8 @@ _dm_test__evaluate_test_case_result() {
 # STDERR:
 #   None
 # Status:
-#   0 - Test case exectution succeeded.
-#   1 - Test case exectution failed.
+#   0 - Test case execution succeeded.
+#   1 - Test case execution failed.
 #==============================================================================
 _dm_test__run_test_case_in_a_subshell() {
   ___test_case="$1"
@@ -459,7 +459,7 @@ _dm_test__run_test_case_in_a_subshell() {
   #  ___status__teardown
   # This has to be done in this way, because variables created in the setup
   # hook needs to be accessed from the test case, and the regular function
-  # exection in a captured subshell would prevent it.
+  # execution in a captured subshell would prevent it.
   _dm_test__execute_and_capture__setup_hook
   _dm_test__execute_and_capture__test_case "$___test_case"
   _dm_test__execute_and_capture__teardown_hook

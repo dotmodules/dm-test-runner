@@ -502,7 +502,7 @@ _dm_test__hooks__check_singular_flag() {
   if [ "$___hook_flag" -gt '1' ]
   then
     dm_tools__printf '%s' \
-      "WARNING: mutiple definitions of hook function '${___hook_name}' "
+      "WARNING: multiple definitions of hook function '${___hook_name}' "
     dm_tools__echo 'found, only the last one will be executed.'
   fi
 }
@@ -530,7 +530,7 @@ _dm_test__hooks__execute_hook() {
   ___hook_name="$1"
 
   dm_test__debug '_dm_test__hooks__execute_hook' \
-    "executin hook function: '${___hook_name}'"
+    "executing hook function: '${___hook_name}'"
 
   if $___hook_name
   then

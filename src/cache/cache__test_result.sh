@@ -15,7 +15,7 @@
 # Individual test cases are executed in subshells. Errors happening there
 # should change the test case result from success to error, and the most
 # trivial way to do that is this test result cache file. Before each test case
-# run, this file wil be initialized to success. If an assertion fails, it
+# run, this file will be initialized to success. If an assertion fails, it
 # should set this file content to failed via the provided API function. Further
 # API function are available to examine the test result file content.
 #==============================================================================
@@ -108,7 +108,7 @@ dm_test__cache__test_result__mark_as_failed() {
 }
 
 #==============================================================================
-# Function that evaulates the test case result cache file content.
+# Function that evaluates the test case result cache file content.
 #------------------------------------------------------------------------------
 # Globals:
 #   DM_TEST__CACHE__RUNTIME__TEST_RESULTS

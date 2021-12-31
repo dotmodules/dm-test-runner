@@ -144,6 +144,6 @@ _dm_test__report_failure() {
   # Only the first  assertion error should be reported, the latter ones could
   # be the direct result of the first one, so they have minimal new information
   # content. Explicitly exiting after the first report. This should end the
-  # testcase subprocess inside the test file subprocess.
+  # test case subprocess inside the test file subprocess.
   exit 1
 }

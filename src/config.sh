@@ -118,7 +118,7 @@ DM_TEST__CONFIG__OPTIONAL__CACHE_PARENT_DIRECTORY=\
 # EXIT ON FAILURE
 #==============================================================================
 # Flag that indicate if the test suite should execute an exit call on failure
-# or not. The exit call will be exeuted by default.
+# or not. The exit call will be executed by default.
 #   0 - exit call won't be executed
 #   1 - exit call will be executed
 DM_TEST__CONFIG__OPTIONAL__EXIT_ON_FAILURE=\
@@ -126,7 +126,7 @@ DM_TEST__CONFIG__OPTIONAL__EXIT_ON_FAILURE=\
 
 #==============================================================================
 # Function that should be used in an if statement to determine if the exit
-# command sohuld be called or not on a failure.
+# command should be called or not on a failure.
 #------------------------------------------------------------------------------
 # Globals:
 #   DM_TEST__CONFIG__OPTIONAL__EXIT_ON_FAILURE
@@ -211,7 +211,7 @@ dm_test__config__should_always_display_file_level_hook_output() {
 # Function that should be used in an if statement to determine if the file
 # level hook's output should be only displayed when the hook failed. This is
 # the inverted logic pair of the previous function. It exists to be able to
-# provide a more readabe  business logic.
+# provide a more readable business logic.
 #------------------------------------------------------------------------------
 # Globals:
 #   DM_TEST__CONFIG__OPTIONAL__ALWAYS_DISPLAY_FILE_LEVEL_HOOK_OUTPUT

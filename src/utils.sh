@@ -118,14 +118,14 @@ _dm_test__utils__decrement_file_content() {
 # Arguments:
 #   None
 # STDIN:
-#   String that need to be decolored.
+#   String that need to be de-colored.
 #------------------------------------------------------------------------------
 # Output variables:
 #   None
 # STDOUT:
 #   None
 # STDERR:
-#   Decolored string.
+#   De-colored string.
 # Status:
 #   0 - Other status is not expected.
 #==============================================================================

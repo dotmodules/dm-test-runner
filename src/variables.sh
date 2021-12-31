@@ -22,7 +22,7 @@
 # PRETTY COLORING
 #==============================================================================
 
-# Checking the availibility and usability of tput. If it is available and
+# Checking the availability and usability of tput. If it is available and
 # usable we can set the global coloring variables with it.
 if dm_tools__tput__is_available
 then

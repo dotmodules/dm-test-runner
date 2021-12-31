@@ -32,7 +32,7 @@
 # Variables that hold the test suite, test file and test case level test
 # directory paths. These could be used in the test cases to set up testing
 # fixtures. The naming of these variables breaks away from the conventions used
-# in the codease to be able to use these variables in the test cases with ease.
+# in the codebase to be able to use these variables in the test cases with ease.
 DM_TEST__TEST_DIR__TEST_SUITE_LEVEL='__INVALID__'
 DM_TEST__TEST_DIR__TEST_FILE_LEVEL='__INVALID__'
 DM_TEST__TEST_DIR__TEST_CASE_LEVEL='__INVALID__'

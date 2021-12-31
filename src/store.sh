@@ -281,7 +281,7 @@ _dm_test__store__get_value_for_key() {
     fi
 
     ___pattern="^${___encoded_key}${___separator}"
-    # Want to remain fully POSIX compliante, variable expansion is not required
+    # Want to remain fully POSIX compliant, variable expansion is not required
     # by POSIX. Read more: https://stackoverflow.com/a/21913014/1565331
     # shellcheck disable=SC2001
     ___encoded_value="$( \
@@ -394,7 +394,7 @@ _dm_test__store__replace() {
 }
 
 #==============================================================================
-# Encodes the given input to be able to store in a failsafe way by generating a
+# Encodes the given input to be able to store in a fail safe way by generating a
 # single line of hexadecimal dump. In this way any multiline text can be stored
 # in a single line in the storage file.
 # Example: 'hello world\n' -> '68656c6c6f20776f726c640a'

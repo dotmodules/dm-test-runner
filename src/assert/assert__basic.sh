@@ -103,7 +103,7 @@ assert_success() {
 }
 
 #==============================================================================
-# Simple assertion that succeeds on failure. It expectes a command or function
+# Simple assertion that succeeds on failure. It expected a command or function
 # name, that will be inserted into an if statement.
 #------------------------------------------------------------------------------
 # Globals:

@@ -34,7 +34,7 @@
 #
 # Note, that there are other ways to have a dynamic file descriptor redirection
 # that is controlled by a configuration variable, but AFAIK it can be only
-# achived by using `eval` which is undesirable in this project.
+# achieved by using `eval` which is undesirable in this project.
 #==============================================================================
 
 #==============================================================================
@@ -114,7 +114,7 @@ dm_test__debug__wrapper() {
 #   BLUE
 #   RESET
 # Arguments:
-#   [1] domain - Debug message's domain, ie. the function it is emitted from.
+#   [1] domain - Debug message's domain, i.e. the function it is emitted from.
 #   [2] message - Content of the debug message.
 # STDIN:
 #   None
@@ -146,7 +146,7 @@ dm_test__debug() {
 # Globals:
 #   None
 # Arguments:
-#   [1] domain - Debug message's domain, ie. the function it is emitted from.
+#   [1] domain - Debug message's domain, i.e. the function it is emitted from.
 #   [2] message - Content of the debug message.
 #   [3] list - Whitespace separated list that will be broken up during
 #       printout.

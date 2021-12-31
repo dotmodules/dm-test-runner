@@ -59,7 +59,7 @@ dm_test__cache__init() {
 
   # Creating the new cache directory..
   _dm_test__cache__create_base_cache_directory
-  # At this point the current cache drectory has been created, so arming the
+  # At this point the current cache directory has been created, so arming the
   # trap system to clean it up on exit or interrupt signals.
   dm_test__arm_trap_system
 
@@ -462,7 +462,7 @@ dm_test__cache__create_temp_file() {
 #==============================================================================
 # Creates a temporary path without an actual path behind it. Internally it is
 # based on a temporary file which is created as a placeholder, and to its path
-# a postfix gets appended. This wil be the returned unique path. This method
+# a postfix gets appended. This will be the returned unique path. This method
 # guarantees a unique path, because the `mktemp -u` could have race conditions.
 #------------------------------------------------------------------------------
 # Globals:
@@ -502,7 +502,7 @@ dm_test__cache__create_temp_path() {
 #==============================================================================
 # The cache system also provides a way to create temporary directories that can
 # be used during the test execution. These temporary directories are created
-# inside a seprated directory. The directories are generated with a precise
+# inside a separated directory. The directories are generated with a precise
 # timestamp postfix, so collision between the names are very unlikely.
 #==============================================================================
 
@@ -515,7 +515,7 @@ DM_TEST__CACHE__CONFIG__TEMP_DIRS_PATH_NAME='temp_directories'
 DM_TEST__CACHE__CONFIG__TEMP_DIR_TEMPLATE='temp_directory.XXXXXXXXXXXXXXXX'
 
 
-# Variable thar holds the runtime path of the temporary direcotories directory.
+# Variable thar holds the runtime path of the temporary directories directory.
 # This variable should be used for writing or reading purposes.
 DM_TEST__CACHE__RUNTIME__TEMP_DIRS_PATH='__INVALID__'
 

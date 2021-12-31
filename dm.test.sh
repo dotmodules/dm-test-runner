@@ -14,7 +14,7 @@
 # dotmodules configuration manager system, dm-test was born in a need to have a
 # simple yet powerful pure bash testing library, that suit my needs: fast
 # execution, detailed debugging, modern test-suite features (hooks, mocking
-# possibilites, isolated testing). I found the existing test runners for pure
+# possibilities, isolated testing). I found the existing test runners for pure
 # shell/bash project lack of these.
 #==============================================================================
 
@@ -22,7 +22,7 @@
 # I tried my best to write a well documented code base, and you might find it a
 # bit too much, but don't forget that we are talking with shell code in here
 # with a very poor control over the programming features like parameters and
-# return values. I tried to ballance these shortcommings with painfully
+# return values. I tried to balance these shortcomings with painfully
 # explicit documentation. Each and every function in this project is prepended
 # with a documentation section that states the purpose and interface of that
 # function. With this in place, I believe that maintaining this codebase would
@@ -32,14 +32,14 @@
 #==============================================================================
 # Since dm-test is intended to be used inside other codebase, and pure shell
 # doesn't have scoping for variables, everything will be in a global namespace.
-# Because of these, the dm-test projet uses long function names with the
+# Because of these, the dm-test project uses long function names with the
 # 'dm_test__' prefix, and for every variable it will use the '___' prefix to
 # (hopefully) not to clash with any other variables in the tested code base.
 #==============================================================================
 
 #==============================================================================
 # To be able to be fully platform independent out-of-the-box, dm-tools is
-# relying on another side-side-project (already down three levelt in the rabbit
+# relying on another side-side-project (already down three levels in the rabbit
 # hole..) called dm-tools. Every command line tool call in this project is
 # executed through the dm-tools interface after it is loaded (that means the
 # first initialization of the test system runs on pure cli tools, which means
@@ -88,7 +88,7 @@ dm_test__report_error_and_exit() {
   ___details="$2"
   ___reason="$3"
 
-  # This function might be called before the global coloring valriables gets
+  # This function might be called before the global coloring variables gets
   # initialized, hence the default value setting.
   RED="${RED:=}"
   BOLD="${BOLD:=}"
@@ -117,7 +117,7 @@ dm_test__report_error_and_exit() {
 
 #==============================================================================
 # For better readability dm.test.sh is composed out of smaller scripts that are
-# sourced dynamically. As dm.test.sh is imported to the user codebase by
+# sourced dynamically. As dm.test.sh is imported to the user code base by
 # sourcing, the conventional path determination cannot be used. The '$0'
 # variable contains the host script's path the dm.test.sh file is sourced from.
 # The relative path to the root of the dm-test-runner subrepo has to be defined
@@ -140,7 +140,7 @@ ___path_prefix="${DM_TEST__CONFIG__MANDATORY__SUBMODULE_PATH_PREFIX}"
 
 #==============================================================================
 # The first module we are loading is the dm-tools project that would provide
-# the necessary paltform independent interface for the command line tools. We
+# the necessary platform independent interface for the command line tools. We
 # are only loading the dm-tools system when it hasn't been loaded by the other
 # code (the tested system for example).
 #==============================================================================

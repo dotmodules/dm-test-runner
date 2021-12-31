@@ -160,7 +160,7 @@ _dm_test__test_suite__execute_test_files() {
 # Output variables:
 #   None
 # STDOUT:
-#   Test files found the the test cases root direcotry. One file path per line.
+#   Test files found the the test cases root directory. One file path per line.
 # STDERR:
 #   None
 # Status:
@@ -205,7 +205,7 @@ _dm_test__test_suite__get_test_files() {
 # Execute the given test file by gathering all the test cases in the file and
 # triggering the file level hook functions if needed. The actual test file will
 # be executed in a separate subshell in order to not to spoil the global test
-# suite environemnt.
+# suite environment.
 #------------------------------------------------------------------------------
 # Globals:
 #   None
@@ -248,7 +248,7 @@ _dm_test__test_suite__execute_test_file() {
     ">> running test file '${___test_file_path}' in a separate subshell.."
 
   # Executing the test file in a subshell to avoid poisoning the test runner
-  # environemnt.
+  # environment.
   (
     _dm_test__test_suite__execute_test_file_in_a_subshell \
       "$___test_file_path" \
@@ -291,7 +291,7 @@ _dm_test__test_suite__execute_test_file_in_a_subshell() {
   dm_test__debug '_dm_test__test_suite__execute_test_file_in_a_subshell' \
     'changing path to the test file path for test case level relative imports'
 
-  # Navigating to the directory of the testcase to be able to use relative
+  # Navigating to the directory of the test case to be able to use relative
   # imports there. After this, the '___test_file_path' variable won't be
   # usable directly as a path.
   cd "$(dm_tools__dirname "$___test_file_path")" || exit
