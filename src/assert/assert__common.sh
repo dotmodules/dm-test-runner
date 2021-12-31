@@ -1,3 +1,4 @@
+#!/bin/sh
 #==============================================================================
 # This file contains the common utilities and test helpers that will be used by
 # the specific assertion functions.
