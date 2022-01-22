@@ -125,9 +125,9 @@ dm_test__test_case__execute_test_cases() {
 }
 
 #==============================================================================
-# Setting the current test file path into a global variable that can be
-# accessed later on. It removes the first dot from the path that is relative to
-# the  test runner script.
+# Setting the current test file path into a global variable that can be accessed
+# later on. It removes the first dot from the path that is relative to the test
+# runner script.
 #------------------------------------------------------------------------------
 # Globals:
 #   DM_TEST__TEST_CASE__RUNTIME__FILE_UNDER_EXECUTION
@@ -158,8 +158,8 @@ dm_test__test_case__set_current_test_file() {
 }
 
 #==============================================================================
-# Setting the current test case name into a global variable that can be
-# accessed later on.
+# Setting the current test case name into a global variable that can be accessed
+# later on.
 #------------------------------------------------------------------------------
 # Globals:
 #   DM_TEST__TEST_CASE__RUNTIME__TEST_UNDER_EXECUTION
@@ -419,7 +419,7 @@ _dm_test__evaluate_test_case_result() {
 # internal helper functions if needed.
 #
 # It runs the setup and teardown hook before and after the test case. The test
-# case result is considered as a success if both three status executed without
+# case result is considered as a success if both three statuses executed without
 # an error.
 #
 # The actual test case execution will happen in another subshell in order to be

@@ -18,9 +18,9 @@
 # a prefix in the merged lines.
 #
 # Besides standard output (FD1) standard error (FD2), file descriptor 3 was
-# considered as a debugger output for the captured commands and functions. If
-# no file descriptor 3 output is present, the capture system will ignore it, so
-# it is not a requirement to have output on that file descriptor.
+# considered as a debugger output for the captured tested commands and
+# functions. If no file descriptor 3 output is present, the capture system will
+# ignore it, so it is not a requirement to have output on that file descriptor.
 #
 # NOTE: the exact time correct ordering is unfortunately not possible with
 # this setup. If two event happens too close to each other, the real order
@@ -67,7 +67,8 @@ DM_TEST__CAPTURE__RUNTIME__TEMP_FILE__FD3='__INVALID__'
 #==============================================================================
 # Initializes the capture system for a new capture. It will set the global
 # runtime variables. It is important to note that the initialization should be
-# executed in the same subshell level as the output gathering.
+# executed in the same subshell level as the output gathering. Otherwise the
+# writing to the buffers would be impossible.
 #------------------------------------------------------------------------------
 # Globals:
 #   None
@@ -125,9 +126,9 @@ dm_test__capture__init() {
 # Arguments:
 #   [1] execute_in_subshell_flag - This flag indicates if the passed command
 #       should be executed in a subshell or not. If the value is nonzero, the
-#       command will be executed in a subshell. Executing in a subshell make the
-#       capturing processes unaffected by the failed assertion exit call, thus
-#       they can finish the scheduled capturings.
+#       command will be executed in a subshell. Executing in a subshell will
+#       make the capturing processes unaffected by the failed assertion exit
+#       call, thus they can finish the scheduled capturings.
 #   [..] command - Command as a string that will be executed and captured.
 # STDIN:
 #   None

@@ -103,8 +103,8 @@ DM_TEST__CONFIG__MANDATORY__TEST_CASE_PREFIX=\
 #==============================================================================
 # Directory where the cache system will create the cache directories. It
 # defaults to the '/tmp' directory. The cache directories will be created
-# inside this parent directory. If the default are kept a cache directory might
-# look like this: '/tmp/dm_test_cache.[random_string]'.
+# inside this parent directory. If the default value is kept a cache directory
+# might look like this: '/tmp/dm_test_cache.[random_string]'.
 DM_TEST__CONFIG__OPTIONAL__CACHE_PARENT_DIRECTORY=\
 "${DM_TEST__CONFIG__OPTIONAL__CACHE_PARENT_DIRECTORY:=/tmp}"
 
@@ -286,7 +286,9 @@ dm_test__config__should_sort_test_cases() {
 #=========================|___/================================================
 # DEBUG MODE
 #==============================================================================
-# Debug mode enabled or not..
+# Debug mode enabled or not. Debugging is turned off by default. If you turn it
+# on, dm.test will emit its internal debugging messages, so be prepared for lots
+# of text on your screen :)
 DM_TEST__CONFIG__OPTIONAL__DEBUG_ENABLED=\
 "${DM_TEST__CONFIG__OPTIONAL__DEBUG_ENABLED:=0}"
 
@@ -328,8 +330,8 @@ dm_test__config__debug_is_enabled() {
 #==============================================================================
 
 #==============================================================================
-# Configuration variables are mandatory, therefore a check need to be executed
-# to ensure that the configuration is complete.
+# Some configuration variables are mandatory, therefore a check need to be
+# executed to ensure that the configuration is complete.
 #------------------------------------------------------------------------------
 # Globals:
 #   DM_TEST__CONFIG__MANDATORY__SUBMODULE_PATH_PREFIX

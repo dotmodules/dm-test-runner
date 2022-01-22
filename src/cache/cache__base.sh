@@ -93,7 +93,6 @@ dm_test__cache__init() {
 # don't need to worry about cleaning up after themselves.
 #==============================================================================
 
-
 # Prefix that every cache directory will have. This uniform prefix would make
 # it easy to recover from an unexpected event when the cache cleanup couldn't
 # be executed, by deleting all temporary directories with this prefix.
@@ -141,6 +140,7 @@ _dm_test__cache__normalize_cache_parent_directory() {
   dm_test__debug '_dm_test__cache__normalize_cache_parent_directory' \
     "normalizing raw cache parent directory: '${___raw_parent}'"
 
+  # Check if the parent directory exists or not. If not, create it!
   if [ -d "$___parent" ]
   then
     :
@@ -156,6 +156,7 @@ _dm_test__cache__normalize_cache_parent_directory() {
     fi
   fi
 
+  # Check for write permission in hte parent directory.
   if [ -w "$___parent" ]
   then
     :
@@ -173,10 +174,11 @@ _dm_test__cache__normalize_cache_parent_directory() {
 }
 
 #==============================================================================
-# Inner function that will create the cache directory and sets the global
-# variable for it.
+# Inner function that will create the cache directory and sets the value in the
+# corresponding global variable.
 #------------------------------------------------------------------------------
 # Globals:
+#   DM_TEST__CACHE__RUNTIME__NORMALIZED_CACHE_PARENT_DIRECTORY
 #   DM_TEST__CACHE__CONFIG__MKTEMP_TEMPLATE
 #   DM_TEST__CACHE__RUNTIME__CACHE_PATH
 # Arguments:
@@ -215,8 +217,8 @@ _dm_test__cache__create_base_cache_directory() {
 }
 
 #==============================================================================
-# Cleans up all existing cache directories that are matches to the predefined
-# prefix in the cache parent directory..
+# Cleans up all existing cache directories that matche to the predefined prefix
+# in the cache parent directory..
 #------------------------------------------------------------------------------
 # Globals:
 #   None
@@ -263,8 +265,8 @@ dm_test__cache__cleanup() {
 # directory.
 #------------------------------------------------------------------------------
 # Globals:
-#   DM_TEST__CACHE__CONFIG__DIRECTORY_PREFIX
 #   DM_TEST__CACHE__RUNTIME__NORMALIZED_CACHE_PARENT_DIRECTORY
+#   DM_TEST__CACHE__CONFIG__DIRECTORY_PREFIX
 # Arguments:
 #   None
 # STDIN:
@@ -463,7 +465,8 @@ dm_test__cache__create_temp_file() {
 # Creates a temporary path without an actual path behind it. Internally it is
 # based on a temporary file which is created as a placeholder, and to its path
 # a postfix gets appended. This will be the returned unique path. This method
-# guarantees a unique path, because the `mktemp -u` could have race conditions.
+# guarantees a unique path, because the `mktemp -u` (dry-run) could have race
+# conditions. So in the end we will have an extra empty temporary file.
 #------------------------------------------------------------------------------
 # Globals:
 #   DM_TEST__CACHE__CONFIG__TEMP_FILE_POSTFIX
@@ -513,7 +516,6 @@ DM_TEST__CACHE__CONFIG__TEMP_DIRS_PATH_NAME='temp_directories'
 # Temporary directory name template for the `mktemp` based temporary directory
 # generation.
 DM_TEST__CACHE__CONFIG__TEMP_DIR_TEMPLATE='temp_directory.XXXXXXXXXXXXXXXX'
-
 
 # Variable thar holds the runtime path of the temporary directories directory.
 # This variable should be used for writing or reading purposes.

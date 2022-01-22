@@ -13,8 +13,8 @@
 
 #==============================================================================
 # Basic assertions can be executed at any time without any context as they are
-# working working on the given parameters only. They can be used to compare
-# values and to check file system related facts.
+# working on the given parameters only. They can be used mostly to compare two
+# or more values.
 #==============================================================================
 
 #==============================================================================
@@ -54,7 +54,7 @@ assert() {
     ___subject='Assertion failed'
     ___reason="Tested command that failed: '${___command}'."
     ___assertion='assert'
-    _dm_test__report_failure "$___subject" "$___reason" "$___assertion"
+    _dm_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
   fi
 }
 
@@ -98,12 +98,12 @@ assert_success() {
     ___subject='Assertion failed'
     ___reason="Tested command that failed: '${___command}'."
     ___assertion='assert_success'
-    _dm_test__report_failure "$___subject" "$___reason" "$___assertion"
+    _dm_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
   fi
 }
 
 #==============================================================================
-# Simple assertion that succeeds on failure. It expected a command or function
+# Simple assertion that succeeds on failure. It expects a command or function
 # name, that will be inserted into an if statement.
 #------------------------------------------------------------------------------
 # Globals:
@@ -137,15 +137,13 @@ assert_failure() {
     ___subject='Inverse assertion failed, command succeeded'
     ___reason="Command succeeded but should have failed: '${___command}'."
     ___assertion='assert_failure'
-    _dm_test__report_failure "$___subject" "$___reason" "$___assertion"
+    _dm_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
   fi
 }
 
 #==============================================================================
-# Simple assertion helper function that expects a list of parameters that will
-# be interpreted as a test command in an if statement. It is common to use the
-# 'test' command to write simple assertions, but in general anything can be
-# used.
+# Simple assertion helper function that expects two comparable strings and tests
+# them in a test statement. It will succeed if the two strings are equal.
 #------------------------------------------------------------------------------
 # Globals:
 #   None
@@ -181,6 +179,6 @@ assert_equal() {
     ___subject='Assertion failed'
     ___reason="'${___string_a}' not equal to '${___string_b}'"
     ___assertion='assert_equal'
-    _dm_test__report_failure "$___subject" "$___reason" "$___assertion"
+    _dm_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
   fi
 }

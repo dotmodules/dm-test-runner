@@ -1,10 +1,5 @@
 #!/bin/sh
 #==============================================================================
-# This file contains the common utilities and test helpers that will be used by
-# the specific assertion functions.
-#==============================================================================
-
-#==============================================================================
 #   _    _ _   _ _ _ _   _
 #  | |  | | | (_) (_) | (_)
 #  | |  | | |_ _| |_| |_ _  ___  ___
@@ -17,10 +12,15 @@
 #==============================================================================
 
 #==============================================================================
-# Utility function to get the Nth line of the output while validating the given
+# This file contains the common utilities and test helpers that will be used by
+# the specific assertion functions.
+#==============================================================================
+
+#==============================================================================
+# Utility function to get the N-th line of the output while validating the given
 # one-based index. If the index is invalid, it will behave as a failed
-# assertion. This function can be used in the test cases as a helper function
-# to access specific lines in the output.
+# assertion. This function can be used in the test cases as a helper function to
+# access specific lines in the captured output.
 #
 # This function is intended to be used in the test cases if needed, hence the
 # missing assert naming scope.
@@ -63,7 +63,7 @@ dm_test__get_line_from_output_buffer_by_index() {
       dm_tools__echo "given index: '${___line_index}'" \
     )"
     ___assertion='utils__get_line_from_output_by_index'
-    _dm_test__report_failure "$___subject" "$___reason" "$___assertion"
+    _dm_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
   fi
 
   # Getting the indexed line.
@@ -110,12 +110,12 @@ dm_test__get_line_from_output_buffer_by_index() {
 # Status:
 #   1 - This function will exit the caller process with status 1.
 #==============================================================================
-_dm_test__report_failure() {
+_dm_test__assert__report_failure() {
   ___subject="$1"
   ___reason="$2"
   ___assertion="$3"
 
-  dm_test__debug '_dm_test__report_failure' \
+  dm_test__debug '_dm_test__assert__report_failure' \
     'reporting failure and exiting from test case..'
 
   dm_test__cache__test_result__mark_as_failed

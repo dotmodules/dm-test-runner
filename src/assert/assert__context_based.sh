@@ -147,7 +147,7 @@ assert_status() {
     ___subject='Status comparison failed'
     ___reason="expected: ${___expected}\n  actual: ${___result}"
     ___assertion='assert_status'
-    _dm_test__report_failure "$___subject" "$___reason" "$___assertion"
+    _dm_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
   fi
 }
 
@@ -205,7 +205,7 @@ assert_output() {
       dm_tools__echo "'assert_output_line_partially_at_index'." \
     )"
     ___assertion='assert_output'
-    _dm_test__report_failure "$___subject" "$___reason" "$___assertion"
+    _dm_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
   fi
 }
 
@@ -361,7 +361,7 @@ assert_no_error() {
       dm_tools__echo '"""'; \
     )"
     ___assertion='assert_no_error'
-    _dm_test__report_failure "$___subject" "$___reason" "$___assertion"
+    _dm_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
   fi
 }
 #==============================================================================
@@ -408,7 +408,7 @@ assert_error() {
       dm_tools__echo "'assert_error_line_partially_at_index'." \
     )"
     ___assertion='assert_error'
-    _dm_test__report_failure "$___subject" "$___reason" "$___assertion"
+    _dm_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
   fi
 }
 
@@ -581,7 +581,7 @@ _dm_test__assert__assert_output() {
     ___subject='Output comparison failed'
     ___reason="expected: '${___expected}'\n  actual: '${___result}'"
     ___assertion="$___assertion_name"
-    _dm_test__report_failure "$___subject" "$___reason" "$___assertion"
+    _dm_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
   fi
 }
 
@@ -632,7 +632,7 @@ _dm_test__assert__assert_line_count() {
     ___subject='Output line count mismatch'
     ___reason="expected: '${___expected}'\n  actual: '${___result}'"
     ___assertion="$___assertion_name"
-    _dm_test__report_failure "$___subject" "$___reason" "$___assertion"
+    _dm_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
   fi
 }
 
@@ -702,7 +702,7 @@ _dm_test__assert__assert_line_at_index() {
     ___subject="Line at index '${___index}' differs from expected"
     ___reason="expected: '${___expected}'\n  actual: '${___result}'"
     ___assertion="$___assertion_name"
-    _dm_test__report_failure "$___subject" "$___reason" "$___assertion"
+    _dm_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
   fi
 }
 
@@ -773,6 +773,6 @@ _dm_test__assert__assert_line_partially_at_index() {
     ___subject="Line at index '${___index}' differs from expected'"
     ___reason="expected: '${___expected}'\n  actual: '${___result}'"
     ___assertion="$___assertion_name"
-    _dm_test__report_failure "$___subject" "$___reason" "$___assertion"
+    _dm_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
   fi
 }

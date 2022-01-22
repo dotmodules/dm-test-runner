@@ -358,9 +358,9 @@ dm_test__hooks__is_hook_available__teardown_file() {
 #==============================================================================
 
 #==============================================================================
-# Checks if in the given test file execution hook [setup, teardown, setup_file,
-# teardown_file] are present. It checks for only one given hook, and returns
-# the match count.
+# Checks if in the given test file execution hooks [setup, teardown, setup_file,
+# teardown_file] are present. It checks for only one given hook, and returns the
+# match count.
 #------------------------------------------------------------------------------
 # Globals:
 #   None

@@ -107,14 +107,17 @@ dm_test__debug__wrapper() {
 #==============================================================================
 
 #==============================================================================
-# General debug message registering.
+# General debug message registering. Since we are writing the test system purely
+# in bash, we cannot determine the caller function name in a portable POSIX
+# compliant way, so we have to pass the function name to the debug message..
 #------------------------------------------------------------------------------
 # Globals:
 #   DIM
 #   BLUE
 #   RESET
 # Arguments:
-#   [1] domain - Debug message's domain, i.e. the function it is emitted from.
+#   [1] domain - Debug message's domain, i.e. the function's name it is emitted
+#                from.
 #   [2] message - Content of the debug message.
 # STDIN:
 #   None

@@ -44,7 +44,7 @@ dm_test__utils__print_output_if_has_content() {
 
 #==============================================================================
 # Function that increments the content of a file that contains a single integer
-# number. Can be used for counting something.
+# number. Can be used to count something.
 #------------------------------------------------------------------------------
 # Globals:
 #   None
@@ -78,7 +78,7 @@ _dm_test__utils__increment_file_content() {
 
 #==============================================================================
 # Function that decrements the content of a file that contains a single integer
-# number. Can be used for counting something.
+# number. Can be used to count something.
 #------------------------------------------------------------------------------
 # Globals:
 #   None

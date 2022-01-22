@@ -20,19 +20,19 @@
 # execution of the whole test suite. The content there would be available for
 # all test files and all test cases. Similarly, the test file and test case
 # level temporary test directories will be available during the test file and
-# test case execution.  After each test file and test case, their content will
+# test case execution. After each test file and test case, their content will
 # be invalidated (the global temp directory variables would point to a
 # different directory).
 #
 # These three levels should help in writing test cases that require less clean
-# up and there is a way to communicate between test files and test cases if
-# needed.
+# up and also they provide a way to communicate between test files and test
+# cases if needed.
 #==============================================================================
 
 # Variables that hold the test suite, test file and test case level test
 # directory paths. These could be used in the test cases to set up testing
-# fixtures. The naming of these variables breaks away from the conventions used
-# in the codebase to be able to use these variables in the test cases with ease.
+# fixtures, but these will be also injected to every test function, so the test
+# case should not have to bother with the really long variable names.
 DM_TEST__TEST_DIR__TEST_SUITE_LEVEL='__INVALID__'
 DM_TEST__TEST_DIR__TEST_FILE_LEVEL='__INVALID__'
 DM_TEST__TEST_DIR__TEST_CASE_LEVEL='__INVALID__'
@@ -60,7 +60,7 @@ dm_test__cache__init_test_directory__test_suite_level() {
   DM_TEST__TEST_DIR__TEST_SUITE_LEVEL="$( \
     dm_test__cache__create_temp_directory \
   )"
-
+  
   dm_test__debug 'dm_test__cache__init_test_directory__test_suite_level' \
     'test suite level test dir created:'
   dm_test__debug 'dm_test__cache__init_test_directory__test_suite_level' \
@@ -102,7 +102,7 @@ dm_test__cache__init_test_directory__test_file_level() {
 }
 
 #==============================================================================
-# Creates the case level test directory.
+# Creates the test case level test directory.
 #------------------------------------------------------------------------------
 # Globals:
 #   DM_TEST__TEST_DIR__TEST_CASE_LEVEL

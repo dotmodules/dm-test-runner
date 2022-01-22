@@ -666,7 +666,7 @@ _dm_test__test_suite__print_header__print_config() {
 
 #==============================================================================
 # Function that prints out the results of the test suite. It provides a total
-# and failed count, a overall test suite result (success or failure), and an
+# and failed count, an overall test suite result (success or failure), and an
 # optional error summary if there was an assertion error during execution. If
 # the test suite fails this function will terminate the execution.
 #------------------------------------------------------------------------------

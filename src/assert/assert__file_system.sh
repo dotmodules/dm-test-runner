@@ -13,8 +13,8 @@
 
 #==============================================================================
 # File system based assertions can be executed at any time without any context
-# as they are working working on the given parameters only. They can be used to
-# check file system related facts.
+# as they are working on the given parameters only. They can be used to check
+# file system related facts.
 #==============================================================================
 
 #==============================================================================
@@ -51,7 +51,7 @@ assert_file() {
     ___subject='Path does not name a file'
     ___reason="File does not exist at path: '${___file_path}'."
     ___assertion='assert_file'
-    _dm_test__report_failure "$___subject" "$___reason" "$___assertion"
+    _dm_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
   fi
 }
 
@@ -91,7 +91,7 @@ assert_no_file() {
     ___subject='File exists on path'
     ___reason="File should not exists at: '${___file_path}'."
     ___assertion='assert_no_file'
-    _dm_test__report_failure "$___subject" "$___reason" "$___assertion"
+    _dm_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
   fi
 }
 
@@ -134,7 +134,7 @@ assert_file_has_content() {
       ___subject='File exists but it is empty'
       ___reason="File should not be empty: '${___file_path}'."
       ___assertion='assert_file_has_content'
-      _dm_test__report_failure "$___subject" "$___reason" "$___assertion"
+      _dm_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
     fi
   else
     dm_test__debug 'assert_file_has_content' '=> assertion failed'
@@ -142,7 +142,7 @@ assert_file_has_content() {
     ___subject='Path does not name a file'
     ___reason="File does not exist at path: '${___file_path}'."
     ___assertion='assert_file_has_content'
-    _dm_test__report_failure "$___subject" "$___reason" "$___assertion"
+    _dm_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
   fi
 }
 
@@ -184,7 +184,7 @@ assert_file_has_no_content() {
       ___subject='File exists but it is not empty'
       ___reason="File should be empty: '${___file_path}'."
       ___assertion='assert_file_has_no_content'
-      _dm_test__report_failure "$___subject" "$___reason" "$___assertion"
+      _dm_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
     fi
   else
     dm_test__debug 'assert_file_has_no_content' '=> assertion failed'
@@ -192,7 +192,7 @@ assert_file_has_no_content() {
     ___subject='Path does not name a file'
     ___reason="File does not exist at path: '${___file_path}'."
     ___assertion='assert_file_has_no_content'
-    _dm_test__report_failure "$___subject" "$___reason" "$___assertion"
+    _dm_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
   fi
 }
 
@@ -232,7 +232,7 @@ assert_directory() {
     ___subject='Path does not name a directory'
     ___reason="Directory does not exist at path: '${___directory_path}'."
     ___assertion='assert_directory'
-    _dm_test__report_failure "$___subject" "$___reason" "$___assertion"
+    _dm_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
   fi
 }
 
@@ -272,7 +272,7 @@ assert_no_directory() {
     ___subject='Path should not name a directory'
     ___reason="Directory should not exist at path: '${___directory_path}'."
     ___assertion='assert_no_directory'
-    _dm_test__report_failure "$___subject" "$___reason" "$___assertion"
+    _dm_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
   fi
 }
 
@@ -315,7 +315,7 @@ assert_directory_empty() {
       ___subject='Directory is not empty'
       ___reason="Directory should be empty: '${___directory_path}'."
       ___assertion='assert_directory_empty'
-      _dm_test__report_failure "$___subject" "$___reason" "$___assertion"
+      _dm_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
     fi
   else
     dm_test__debug 'assert_directory_empty' '=> assertion failed'
@@ -323,13 +323,13 @@ assert_directory_empty() {
     ___subject='Path does not name a directory'
     ___reason="Directory does not exist at path: '${___directory_path}'."
     ___assertion='assert_directory_empty'
-    _dm_test__report_failure "$___subject" "$___reason" "$___assertion"
+    _dm_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
   fi
 }
 
 #==============================================================================
 # File system based assertion that checks if the given path does name a
-# directory an the directory is not empty.
+# directory and the directory is not empty.
 #------------------------------------------------------------------------------
 # Globals:
 #   None
@@ -366,7 +366,7 @@ assert_directory_not_empty() {
       ___subject='Directory is empty'
       ___reason="Directory should not be empty: '${___directory_path}'."
       ___assertion='assert_directory_not_empty'
-      _dm_test__report_failure "$___subject" "$___reason" "$___assertion"
+      _dm_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
     fi
   else
     dm_test__debug 'assert_directory_not_empty' '=> assertion failed'
@@ -374,7 +374,7 @@ assert_directory_not_empty() {
     ___subject='Path does not name a directory'
     ___reason="Directory does not exist at path: '${___directory_path}'."
     ___assertion='assert_directory_not_empty'
-    _dm_test__report_failure "$___subject" "$___reason" "$___assertion"
+    _dm_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
   fi
 }
 
@@ -414,7 +414,7 @@ assert_symlink() {
     ___subject='Path does not name a symbolic link'
     ___reason="Symbolic link does not exist at path: '${___link_path}'."
     ___assertion='assert_symlink'
-    _dm_test__report_failure "$___subject" "$___reason" "$___assertion"
+    _dm_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
   fi
 }
 
@@ -454,7 +454,7 @@ assert_no_symlink() {
     ___subject='Path should not name a symbolic link'
     ___reason="Symbolic link should not exist at path: '${___link_path}'."
     ___assertion='assert_no_symlink'
-    _dm_test__report_failure "$___subject" "$___reason" "$___assertion"
+    _dm_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
   fi
 }
 
@@ -502,7 +502,7 @@ assert_symlink_target() {
         echo "actual target: '${___actual_target}'." \
       )"
       ___assertion='assert_symlink_target'
-      _dm_test__report_failure "$___subject" "$___reason" "$___assertion"
+      _dm_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
     fi
   else
     dm_test__debug 'assert_symlink_target' '=> assertion failed'
@@ -510,6 +510,6 @@ assert_symlink_target() {
     ___subject='Path does not name a symbolic link'
     ___reason="Symbolic link does not exist at path: '${___link_path}'."
     ___assertion='assert_symlink_target'
-    _dm_test__report_failure "$___subject" "$___reason" "$___assertion"
+    _dm_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
   fi
 }

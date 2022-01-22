@@ -15,30 +15,30 @@
 # simple yet powerful pure bash testing library, that suit my needs: fast
 # execution, detailed debugging, modern test-suite features (hooks, mocking
 # possibilities, isolated testing). I found the existing test runners for pure
-# shell/bash project lack of these.
+# shell/bash projects are lacking of these.
 #==============================================================================
 
 #==============================================================================
 # I tried my best to write a well documented code base, and you might find it a
-# bit too much, but don't forget that we are talking with shell code in here
+# bit too much, but don't forget that we are talking about shell code in here
 # with a very poor control over the programming features like parameters and
-# return values. I tried to balance these shortcomings with painfully
-# explicit documentation. Each and every function in this project is prepended
-# with a documentation section that states the purpose and interface of that
-# function. With this in place, I believe that maintaining this codebase would
-# be easier in the future.
+# return values. I tried to balance these shortcomings with painfully explicit
+# documentation. Each and every function in this project is prepended with a
+# documentation section that states the purpose and interface of that function.
+# With this in place, I believe that maintaining this codebase would be easier
+# in the future.
 #==============================================================================
 
 #==============================================================================
 # Since dm-test is intended to be used inside other codebase, and pure shell
 # doesn't have scoping for variables, everything will be in a global namespace.
-# Because of these, the dm-test project uses long function names with the
+# Because of that, the dm-test project uses long function names with the
 # 'dm_test__' prefix, and for every variable it will use the '___' prefix to
 # (hopefully) not to clash with any other variables in the tested code base.
 #==============================================================================
 
 #==============================================================================
-# To be able to be fully platform independent out-of-the-box, dm-tools is
+# To be able to be fully platform independent out-of-the-box, dm-test is
 # relying on another side-side-project (already down three levels in the rabbit
 # hole..) called dm-tools. Every command line tool call in this project is
 # executed through the dm-tools interface after it is loaded (that means the
@@ -139,15 +139,16 @@ ___path_prefix="${DM_TEST__CONFIG__MANDATORY__SUBMODULE_PATH_PREFIX}"
 #==============================================================================
 
 #==============================================================================
-# The first module we are loading is the dm-tools project that would provide
-# the necessary platform independent interface for the command line tools. We
-# are only loading the dm-tools system when it hasn't been loaded by the other
-# code (the tested system for example).
+# The first module we are loading is the dm-tools project that would provide the
+# necessary platform independent interface for the command line tools. We are
+# only loading the dm-tools system when it hasn't been loaded by other code (the
+# tested system for example).
 #==============================================================================
 
 if [ -z ${DM_TOOLS__READY+x} ]
 then
   # If dm_tools has not sourced yet, we have to source it from this repository.
+  # Implementing the dm-tools inporting system variables.
   ___dm_tools_path_prefix="${___path_prefix}/dependencies/dm-tools"
   DM_TOOLS__CONFIG__MANDATORY__SUBMODULE_PATH_PREFIX="$___dm_tools_path_prefix"
   if [ -d "$DM_TOOLS__CONFIG__MANDATORY__SUBMODULE_PATH_PREFIX" ]

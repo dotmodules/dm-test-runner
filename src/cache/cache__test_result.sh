@@ -50,9 +50,9 @@ _dm_test__cache__test_result__init() {
 }
 
 #==============================================================================
-# Function that initializes the test result cache file with the success
-# content. After this only failure content would be written to this file by the
-# test case assertions.
+# Function that initializes the test result cache file with the success content.
+# After this, only failure content would be written to this file by the test
+# case assertions.
 #------------------------------------------------------------------------------
 # Globals:
 #   DM_TEST__CACHE__RUNTIME__TEST_RESULTS

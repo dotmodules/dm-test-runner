@@ -1,3 +1,5 @@
+#!/bin/sh
+
 # This file was intended to be sourced into every test runner.
 # Expressions don't expand inside single quotes.
 # shellcheck disable=SC2016
