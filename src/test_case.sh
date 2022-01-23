@@ -290,7 +290,12 @@ _dm_test__execute_test_case() {
 
   if _dm_test__run_test_case "$___test_case"
   then
-    ___output=''
+    if dm_test__config__should_display_captured_outputs_on_success
+    then
+      ___output="$(dm_test__capture__get_captured_outputs)"
+    else
+      ___output=''
+    fi
   else
     ___output="$(dm_test__capture__get_captured_outputs)"
   fi

@@ -236,6 +236,49 @@ dm_test__config__should_only_display_file_level_hook_output_on_failure() {
 }
 
 #==============================================================================
+#   ____            _                      _    ___        _               _
+#  / ___|__ _ _ __ | |_ _   _ _ __ ___  __| |  / _ \ _   _| |_ _ __  _   _| |_
+# | |   / _` | '_ \| __| | | | '__/ _ \/ _` | | | | | | | | __| '_ \| | | | __|
+# | |__| (_| | |_) | |_| |_| | | |  __/ (_| | | |_| | |_| | |_| |_) | |_| | |_
+#  \____\__,_| .__/ \__|\__,_|_|  \___|\__,_|  \___/ \__,_|\__| .__/ \__,_|\__|
+#============|_|==============================================|_|==============
+# DISPLAY CAPTURED OUTPUT ON SUCCESS
+#==============================================================================
+# Display the captured output for every test case and hook function on success
+# too.
+# Options:
+#   0 - display only on failure
+#   1 - always display
+DM_TEST__CONFIG__OPTIONAL__DISPLAY_CAPTURED_OUTPUT_ON_SUCCESS=\
+"${DM_TEST__CONFIG__OPTIONAL__DISPLAY_CAPTURED_OUTPUT_ON_SUCCESS:=0}"
+
+#==============================================================================
+# Function that should be used in an if statement to determine if the captured
+# outputs of test case and hooks should be displayed on success or not.
+#------------------------------------------------------------------------------
+# Globals:
+#   DM_TEST__CONFIG__OPTIONAL__DISPLAY_CAPTURED_OUTPUT_ON_SUCCESS
+# Arguments:
+#   None
+# STDIN:
+#   None
+#------------------------------------------------------------------------------
+# Output variables:
+#   None
+# STDOUT:
+#   None
+# STDERR:
+#   None
+# Status:
+#   0 - captured outputs should be displayed on success too
+#   1 - captured outputs should only be displayed on failure
+#==============================================================================
+dm_test__config__should_display_captured_outputs_on_success() {
+  test \
+    "$DM_TEST__CONFIG__OPTIONAL__DISPLAY_CAPTURED_OUTPUT_ON_SUCCESS" -ne '0'
+}
+
+#==============================================================================
 #  ____             _     _            _
 # / ___|  ___  _ __| |_  | |_ ___  ___| |_    ___ __ _ ___  ___  ___
 # \___ \ / _ \| '__| __| | __/ _ \/ __| __|  / __/ _` / __|/ _ \/ __|
