@@ -1,15 +1,21 @@
+#!/bin/sh
 #==============================================================================
 # FILESYSTEM ASSERTIONS - Operates on the file system.
 #==============================================================================
 
 setup() {
+  # The three different level of test directories are injected into every test
+  # case function and into the hook functions as well as 3 parameters that you
+  # can use if you need them.
+  test_case_level_test_directory="$3"
+
   # Using the test case level temporary directory to create the dummy paths
   # in there. These paths will be different for each test case as we are using
   # the test case level test directory here. This won't create the file, just
   # saves the path to a variable.
-  dummy_file="${DM_TEST__TEST_DIR__TEST_CASE_LEVEL}/dummy_file.txt"
-  dummy_directory="${DM_TEST__TEST_DIR__TEST_CASE_LEVEL}/dummy_directory"
-  dummy_link="${DM_TEST__TEST_DIR__TEST_CASE_LEVEL}/dummy_link"
+  dummy_file="${test_case_level_test_directory}/dummy_file.txt"
+  dummy_directory="${test_case_level_test_directory}/dummy_directory"
+  dummy_link="${test_case_level_test_directory}/dummy_link"
 }
 
 #==============================================================================

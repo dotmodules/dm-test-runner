@@ -511,7 +511,13 @@ _dm_test__hooks__check_singular_flag() {
 # Executes the given hook function.
 #------------------------------------------------------------------------------
 # Globals:
-#   None
+#   DM_TEST__CACHE__RUNTIME__TEST_DIR__TEST_SUITE
+#   DM_TEST__CACHE__RUNTIME__TEST_DIR__TEST_FILE
+#   DM_TEST__CACHE__RUNTIME__TEST_DIR__TEST_CASE
+#   DM_TEST__HOOKS__CONFIG__FUNCTION_NAME__SETUP
+#   DM_TEST__HOOKS__CONFIG__FUNCTION_NAME__TEARDOWN
+#   DM_TEST__HOOKS__CONFIG__FUNCTION_NAME__SETUP_FILE
+#   DM_TEST__HOOKS__CONFIG__FUNCTION_NAME__TEARDOWN_FILE
 # Arguments:
 #   [1] hook_name - Name of the triggered hook function.
 # STDIN:
@@ -532,16 +538,26 @@ _dm_test__hooks__execute_hook() {
   dm_test__debug '_dm_test__hooks__execute_hook' \
     "executing hook function: '${___hook_name}'"
 
-  if $___hook_name
-  then
-    return 0
-  else
-    ___hook_status="$?"
-    >&2 dm_tools__printf '%s' "ERROR: Error during '${___hook_name}' "
-    >&2 dm_tools__echo "hook execution! Status: ${___hook_status}"
-    return "$___hook_status"
-  fi
+  ___dir_suite="$DM_TEST__CACHE__RUNTIME__TEST_DIR__TEST_SUITE"
+  ___dir_file="$DM_TEST__CACHE__RUNTIME__TEST_DIR__TEST_FILE"
+  ___dir_case="$DM_TEST__CACHE__RUNTIME__TEST_DIR__TEST_CASE"
 
-  dm_test__debug '_dm_test__hooks__execute_hook' \
-    "hook function '${___hook_name}' executed"
+  # We have to differentiate between file level and test case level hooks in
+  # terms of test directories. For file level hooks, we cannot interprete test
+  # case level hooks, as no test case is executing at that time. Hence, test
+  # case level test directories only injected into test case level hooks.
+  case "$___hook_name" in
+    "$DM_TEST__HOOKS__CONFIG__FUNCTION_NAME__SETUP")
+      "$___hook_name" "$___dir_suite" "$___dir_file" "$___dir_case"
+      ;;
+    "$DM_TEST__HOOKS__CONFIG__FUNCTION_NAME__TEARDOWN")
+      "$___hook_name" "$___dir_suite" "$___dir_file" "$___dir_case"
+      ;;
+    "$DM_TEST__HOOKS__CONFIG__FUNCTION_NAME__SETUP_FILE")
+      "$___hook_name" "$___dir_suite" "$___dir_file"
+      ;;
+    "$DM_TEST__HOOKS__CONFIG__FUNCTION_NAME__TEARDOWN_FILE")
+      "$___hook_name" "$___dir_suite" "$___dir_file"
+      ;;
+  esac
 }

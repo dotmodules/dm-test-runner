@@ -173,50 +173,50 @@ fi
 # SOURCING SUBMODULES
 #==============================================================================
 
-# shellcheck source=./src/config.sh
-. "${___path_prefix}/src/config.sh"
-# shellcheck source=./src/variables.sh
-. "${___path_prefix}/src/variables.sh"
-# shellcheck source=./src/utils.sh
-. "${___path_prefix}/src/utils.sh"
-# shellcheck source=./src/test_suite.sh
-. "${___path_prefix}/src/test_suite.sh"
-# shellcheck source=./src/test_case.sh
-. "${___path_prefix}/src/test_case.sh"
-# shellcheck source=./src/hooks.sh
-. "${___path_prefix}/src/hooks.sh"
-# shellcheck source=./src/capture.sh
-. "${___path_prefix}/src/capture.sh"
+# shellcheck source=./src/core/config.sh
+. "${___path_prefix}/src/core/config.sh"
+# shellcheck source=./src/core/variables.sh
+. "${___path_prefix}/src/core/variables.sh"
+# shellcheck source=./src/core/utils.sh
+. "${___path_prefix}/src/core/utils.sh"
+# shellcheck source=./src/core/test_suite.sh
+. "${___path_prefix}/src/core/test_suite.sh"
+# shellcheck source=./src/core/test_case.sh
+. "${___path_prefix}/src/core/test_case.sh"
+# shellcheck source=./src/core/hooks.sh
+. "${___path_prefix}/src/core/hooks.sh"
+# shellcheck source=./src/core/capture.sh
+. "${___path_prefix}/src/core/capture.sh"
 
-# shellcheck source=./src/cache/cache__base.sh
-. "${___path_prefix}/src/cache/cache__base.sh"
-# shellcheck source=./src/cache/cache__global_errors.sh
-. "${___path_prefix}/src/cache/cache__global_errors.sh"
-# shellcheck source=./src/cache/cache__test_result.sh
-. "${___path_prefix}/src/cache/cache__test_result.sh"
-# shellcheck source=./src/cache/cache__global_count.sh
-. "${___path_prefix}/src/cache/cache__global_count.sh"
-# shellcheck source=./src/cache/cache__global_failure.sh
-. "${___path_prefix}/src/cache/cache__global_failure.sh"
-# shellcheck source=./src/cache/cache__test_directory.sh
-. "${___path_prefix}/src/cache/cache__test_directory.sh"
+# shellcheck source=./src/core/cache/cache__base.sh
+. "${___path_prefix}/src/core/cache/cache__base.sh"
+# shellcheck source=./src/core/cache/cache__global_errors.sh
+. "${___path_prefix}/src/core/cache/cache__global_errors.sh"
+# shellcheck source=./src/core/cache/cache__test_result.sh
+. "${___path_prefix}/src/core/cache/cache__test_result.sh"
+# shellcheck source=./src/core/cache/cache__global_count.sh
+. "${___path_prefix}/src/core/cache/cache__global_count.sh"
+# shellcheck source=./src/core/cache/cache__global_failure.sh
+. "${___path_prefix}/src/core/cache/cache__global_failure.sh"
+# shellcheck source=./src/core/cache/cache__test_directory.sh
+. "${___path_prefix}/src/core/cache/cache__test_directory.sh"
 
-# shellcheck source=./src/assert/assert__common.sh
-. "${___path_prefix}/src/assert/assert__common.sh"
-# shellcheck source=./src/assert/assert__basic.sh
-. "${___path_prefix}/src/assert/assert__basic.sh"
-# shellcheck source=./src/assert/assert__file_system.sh
-. "${___path_prefix}/src/assert/assert__file_system.sh"
-# shellcheck source=./src/assert/assert__context_based.sh
-. "${___path_prefix}/src/assert/assert__context_based.sh"
+# shellcheck source=./src/api/assert/assert__common.sh
+. "${___path_prefix}/src/api/assert/assert__common.sh"
+# shellcheck source=./src/api/assert/assert__basic.sh
+. "${___path_prefix}/src/api/assert/assert__basic.sh"
+# shellcheck source=./src/api/assert/assert__file_system.sh
+. "${___path_prefix}/src/api/assert/assert__file_system.sh"
+# shellcheck source=./src/api/assert/assert__context_based.sh
+. "${___path_prefix}/src/api/assert/assert__context_based.sh"
 
-# shellcheck source=./src/store.sh
-. "${___path_prefix}/src/store.sh"
+# shellcheck source=./src/core/store.sh
+. "${___path_prefix}/src/core/store.sh"
 
-# shellcheck source=./src/debug.sh
-. "${___path_prefix}/src/debug.sh"
-# shellcheck source=./src/trap.sh
-. "${___path_prefix}/src/trap.sh"
+# shellcheck source=./src/core/debug.sh
+. "${___path_prefix}/src/core/debug.sh"
+# shellcheck source=./src/core/trap.sh
+. "${___path_prefix}/src/core/trap.sh"
 
 #==============================================================================
 #     _    ____ ___    __                  _   _
@@ -249,5 +249,12 @@ fi
 #   0 - Other status is not expected.
 #==============================================================================
 dm_test__run_suite() {
-  dm_test__debug__wrapper 'dm_test__test_suite__main'
+  if dm_test__config__debug_is_enabled
+  then
+    # Wrapping the main function of the test suite runner in order to initialize
+    # the debugger file descriptor.
+    dm_test__debug__wrapper 'dm_test__test_suite__main'
+  else
+    dm_test__test_suite__main
+  fi
 }

@@ -192,9 +192,15 @@ dm_test__capture__run_and_capture() {
   #    output through a fifo.
   if [ "$___execute_in_a_subshell" -ne '0' ]
   then
+    # NOTE: In the folowing two execution calls we will be using the "$@"
+    # instead of the "$___command" variable because if the injected test
+    # directory paths contain space then using the "$___command" would split up
+    # the path into the space delimited parts.. Word splitting is a hassle in
+    # shell..
+
     # Executing command in an additional subshell, to prevent the failed
     # assertion exit call effect this currently executing shell.
-    if ( $___command ) \
+    if ( "$@" ) \
         1>"$___fifo__fd1" \
         2>"$___fifo__fd2" \
         3>"$___fifo__fd3"
@@ -204,8 +210,9 @@ dm_test__capture__run_and_capture() {
       ___status="$?"
     fi
   else
+
     # Executing command in this shell to be able to affect the environment.
-    if $___command \
+    if "$@" \
         1>"$___fifo__fd1" \
         2>"$___fifo__fd2" \
         3>"$___fifo__fd3"

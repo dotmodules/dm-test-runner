@@ -327,7 +327,7 @@ _dm_test__test_suite__execute_test_file_in_a_subshell() {
 # Executes the setup file hook while capturing the outputs.
 #------------------------------------------------------------------------------
 # Globals:
-#   None
+#   DM_TEST__CAPTURE__CONSTANT__EXECUTE_COMMAND_DIRECTLY
 # Arguments:
 #   None
 # STDIN:
@@ -364,7 +364,10 @@ _dm_test__test_suite__run_and_capture_setup_file_hook() {
     ___status="$?"
   else
     ___status="$?"
+  fi
 
+  if [ "$___status" -ne '0' ] || dm_test__capture__was_standard_error_captured
+  then
     dm_test__capture__append_to_standard_error \
       "[!!] Setup file hook failed for test file '${___test_file_path}'."
     dm_test__capture__append_to_standard_error \
@@ -376,6 +379,10 @@ _dm_test__test_suite__run_and_capture_setup_file_hook() {
     then
       dm_test__capture__get_captured_outputs
     fi
+
+    # The existence of standard error output is enough to make the setup file
+    # hook to fail!
+    ___status='1'
   fi
 
   if dm_test__config__should_always_display_file_level_hook_output
@@ -392,7 +399,7 @@ _dm_test__test_suite__run_and_capture_setup_file_hook() {
 # Executes the teardown file hook while capturing the outputs.
 #------------------------------------------------------------------------------
 # Globals:
-#   None
+#   DM_TEST__CAPTURE__CONSTANT__EXECUTE_COMMAND_DIRECTLY
 # Arguments:
 #   None
 # STDIN:
@@ -504,6 +511,7 @@ _dm_test__test_suite__set_result_output_variables() {
 #   DM_TEST__CONFIG__OPTIONAL__EXIT_ON_FAILURE
 #   DM_TEST__CONFIG__OPTIONAL__EXIT_STATUS_ON_FAILURE
 #   DM_TEST__CONFIG__OPTIONAL__ALWAYS_DISPLAY_FILE_LEVEL_HOOK_OUTPUT
+#   DM_TEST__CONFIG__OPTIONAL__DISPLAY_CAPTURED_OUTPUT_ON_SUCCESS
 #   DM_TEST__CONFIG__OPTIONAL__DEBUG_ENABLED
 #   DIM
 #   RESET
@@ -572,6 +580,10 @@ dm_test__test_suite__print_header() {
   _dm_test__test_suite__print_header__print_config \
     'DM_TEST__CONFIG__OPTIONAL__ALWAYS_DISPLAY_FILE_LEVEL_HOOK_OUTPUT' \
     "$DM_TEST__CONFIG__OPTIONAL__ALWAYS_DISPLAY_FILE_LEVEL_HOOK_OUTPUT"
+
+  _dm_test__test_suite__print_header__print_config \
+    'DM_TEST__CONFIG__OPTIONAL__DISPLAY_CAPTURED_OUTPUT_ON_SUCCESS' \
+    "$DM_TEST__CONFIG__OPTIONAL__DISPLAY_CAPTURED_OUTPUT_ON_SUCCESS"
 
   _dm_test__test_suite__print_header__print_config \
     'DM_TEST__CONFIG__OPTIONAL__DEBUG_ENABLED' \

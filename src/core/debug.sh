@@ -72,7 +72,9 @@ dm_test__debug__printf() {
 #==============================================================================
 # Custom runner function to initialize file descriptor for the debug system.
 # This function has to wrap the main test suite call by passing the function
-# name to this function.
+# name to this function. Debugging is only active after this call. If debug mode
+# is on, and you try to emit a debug message, it would fail with a bad file
+# descriptor error and test suite will terminate.
 #------------------------------------------------------------------------------
 # Globals:
 #   None

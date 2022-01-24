@@ -344,7 +344,7 @@ _dm_test__run_test_case() {
   # Running in a subshell to be able to exit from the test case execution any
   # time. This is most probably will happen due to an error during the setup
   # hook execution.
-  if ( _dm_test__run_test_case_in_a_subshell "$___test_case" )
+  if ( _dm_test__run_test_case_in_a_subshell "${___test_case}" )
   then
     ___status="$?"
   else
@@ -540,6 +540,9 @@ _dm_test__execute_and_capture__setup_hook() {
 #------------------------------------------------------------------------------
 # Globals:
 #   DM_TEST__CAPTURE__CONSTANT__EXECUTE_COMMAND_IN_SUBSHELL
+#   DM_TEST__CACHE__RUNTIME__TEST_DIR__TEST_SUITE
+#   DM_TEST__CACHE__RUNTIME__TEST_DIR__TEST_FILE
+#   DM_TEST__CACHE__RUNTIME__TEST_DIR__TEST_CASE
 # Arguments:
 #   [1] test_case - Test case that needs to be run.
 # STDIN:
@@ -560,12 +563,18 @@ _dm_test__execute_and_capture__test_case() {
   dm_test__debug '_dm_test__execute_and_capture__test_case' \
     'running test case function in a separate subshell'
 
+  # Gathering the test directories that will be injected into the test case
+  # functions as positional parameters!
+  ___dir_suite="$DM_TEST__CACHE__RUNTIME__TEST_DIR__TEST_SUITE"
+  ___dir_file="$DM_TEST__CACHE__RUNTIME__TEST_DIR__TEST_FILE"
+  ___dir_case="$DM_TEST__CACHE__RUNTIME__TEST_DIR__TEST_CASE"
+
   # Running the test case function in an additional subshell to make the exit
   # call due to a failed assertion isolated from the currently executing shell
   # to be able to finish capturing all of the outputs.
   if dm_test__capture__run_and_capture \
     "$DM_TEST__CAPTURE__CONSTANT__EXECUTE_COMMAND_IN_SUBSHELL" \
-    "$___test_case"
+    "$___test_case" "${___dir_suite}" "${___dir_file}" "${___dir_case}"
   then
     ___status__test_case="$?"
   else
