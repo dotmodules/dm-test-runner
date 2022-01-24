@@ -318,7 +318,8 @@ dm_test__capture__was_standard_error_captured() {
 # processable by the sorting and merging function.
 #------------------------------------------------------------------------------
 # Globals:
-#   RED RESET
+#   RED
+#   RESET
 #   DM_TEST__CAPTURE__RUNTIME__TEMP_FILE__FD2
 # Arguments:
 #   [1] message - Formatted message that needs to be appended to the standard
@@ -429,6 +430,7 @@ _dm_test__capture__create_temp_fifo() {
 #------------------------------------------------------------------------------
 # Globals:
 #   RESET
+#   DM_TEST__CAPTURE__CONSTANT__CAPTURED_LINE_EXCERPT_LIMIT
 # Arguments:
 #   [1] domain - Domain name the processing is happening in.
 #   [2] color - The color the line should be colored with.

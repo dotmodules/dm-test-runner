@@ -312,9 +312,7 @@ _dm_test__execute_test_case() {
 # test case a unique sandboxing environment.
 #------------------------------------------------------------------------------
 # Globals:
-#   BLUE
-#   RED
-#   DIM
+#   None
 # Arguments:
 #   [1] test_case - Name of the executable test case that is already sourced to
 #       the environment ready to be called.
@@ -491,7 +489,7 @@ _dm_test__run_test_case_in_a_subshell() {
 # status is returned in an output variable.
 #------------------------------------------------------------------------------
 # Globals:
-#   None
+#   DM_TEST__CAPTURE__CONSTANT__EXECUTE_COMMAND_DIRECTLY
 # Arguments:
 #   None
 # STDIN:
@@ -590,7 +588,7 @@ _dm_test__execute_and_capture__test_case() {
 # system. The status is returned in an output variable.
 #------------------------------------------------------------------------------
 # Globals:
-#   None
+#   DM_TEST__CAPTURE__CONSTANT__EXECUTE_COMMAND_DIRECTLY
 # Arguments:
 #   None
 # STDIN:

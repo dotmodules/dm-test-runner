@@ -48,12 +48,12 @@
 #   0 - Other status is not expected.
 #==============================================================================
 dm_test__arm_trap_system() {
-  dm_test__debug '_dm_test__init_trap' \
+  dm_test__debug 'dm_test__arm_trap_system' \
     'arming trap system..'
 
   trap '_dm_test__exit_trap__wrapper' EXIT INT HUP TERM
 
-  dm_test__debug '_dm_test__init_trap' \
+  dm_test__debug 'dm_test__arm_trap_system' \
     'trap system armed'
 }
 

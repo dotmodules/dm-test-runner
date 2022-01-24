@@ -118,8 +118,7 @@ dm_test__debug__wrapper() {
 #   BLUE
 #   RESET
 # Arguments:
-#   [1] domain - Debug message's domain, i.e. the function's name it is emitted
-#                from.
+#   [1] domain - Debug message's domain, i.e. the function it is emitted from.
 #   [2] message - Content of the debug message.
 # STDIN:
 #   None

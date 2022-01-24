@@ -47,7 +47,9 @@ DM_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD2='__INVALID__'
 # variables of this function.
 #------------------------------------------------------------------------------
 # Globals:
-#   None
+#   DM_TEST__ASSERT__RUNTIME__LAST_STATUS
+#   DM_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD1
+#   DM_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD2
 # Arguments:
 #   [..] command - Commands and parameters that needs to be executed.
 # STDIN:
@@ -249,8 +251,8 @@ assert_output_line_count() {
 #   DM_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD1
 # Arguments:
 #   [1] line_index - One-based line index.
-#   [2] expected - Expected content of the given line without the new line
-#       character.
+#   [2] expected_content - Expected content of the given line without the new
+#       line character.
 # STDIN:
 #   None
 #------------------------------------------------------------------------------
@@ -286,8 +288,8 @@ assert_output_line_at_index() {
 #   DM_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD1
 # Arguments:
 #   [1] line_index - One-based line index.
-#   [2] expected - Expected content of the given line without the new line
-#       character.
+#   [2] expected_content - Expected content of the given line without the new
+#       line character.
 # STDIN:
 #   None
 #------------------------------------------------------------------------------
@@ -452,8 +454,8 @@ assert_error_line_count() {
 #   DM_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD2
 # Arguments:
 #   [1] line_index - One-based line index.
-#   [2] expected - Expected content of the given line without the new line
-#       character.
+#   [2] expected_content - Expected content of the given line without the new
+#       line character.
 # STDIN:
 #   None
 #------------------------------------------------------------------------------
@@ -489,8 +491,8 @@ assert_error_line_at_index() {
 #   DM_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD2
 # Arguments:
 #   [1] line_index - One-based line index.
-#   [2] expected - Expected content of the given line without the new line
-#       character.
+#   [2] expected_content - Expected content of the given line without the new
+#       line character.
 # STDIN:
 #   None
 #------------------------------------------------------------------------------
@@ -644,8 +646,8 @@ _dm_test__assert__assert_line_count() {
 #   None
 # Arguments:
 #   [1] line_index - One-based line index.
-#   [2] expected - Expected content of the given line without the new line
-#       character.
+#   [2] expected_content - Expected content of the given line without the new
+#       line character.
 #   [3] target_buffer - Target buffer that should be used.
 #   [4] assertion_name - Name of the original assertion.
 # STDIN:
@@ -715,8 +717,8 @@ _dm_test__assert__assert_line_at_index() {
 #   None
 # Arguments:
 #   [1] line_index - One-based line index.
-#   [2] expected - Expected content of the given line without the new line
-#       character.
+#   [2] expected_content - Expected content of the given line without the new
+#       line character.
 #   [3] target_buffer - Target buffer that should be used.
 #   [4] assertion_name - Name of the original assertion.
 # STDIN:
