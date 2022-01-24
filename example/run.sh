@@ -62,8 +62,6 @@ fi
 
 run_shellcheck() {
   log_task 'running shellcheck..'
-  # Specifying shell type here to be able to omit the shebangs from the
-  # modules. More info: https://github.com/koalaman/shellcheck/wiki/SC2148
   shellcheck --shell=sh -x \
     ../src/api/assert/*.sh \
     ../src/core/*.sh \
