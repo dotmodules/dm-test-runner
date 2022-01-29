@@ -177,7 +177,17 @@ assert_equal() {
     dm_test__debug 'assert_equal' '=> assertion failed'
 
     ___subject='Assertion failed'
-    ___reason="'${___string_a}' not equal to '${___string_b}'"
+    ___reason="$( \
+      dm_tools__echo 'The two passed strings are no equal!';
+      dm_tools__echo 'string_a:';
+      dm_tools__echo "${___string_a}" | \
+        dm_tools__sed --expression 's/$/\|/' | \
+        dm_tools__sed --expression 's/^/\|/'; \
+      dm_tools__echo 'string_b:';
+      dm_tools__echo "${___string_b}" | \
+        dm_tools__sed --expression 's/$/\|/' | \
+        dm_tools__sed --expression 's/^/\|/'; \
+    )"
     ___assertion='assert_equal'
     _dm_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
   fi
