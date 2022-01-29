@@ -178,7 +178,7 @@ assert_equal() {
 
     ___subject='Assertion failed'
     ___reason="$( \
-      dm_tools__echo 'The two passed strings are no equal!';
+      dm_tools__echo 'The two passed strings are not equal!';
       dm_tools__echo 'string_a:';
       dm_tools__echo "${___string_a}" | \
         dm_tools__sed --expression 's/$/\|/' | \
