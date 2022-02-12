@@ -50,6 +50,14 @@ test__assert_output__no_parameter() {
   assert_output
 }
 
+test__assert_output__no_parameter__no_newline() {
+  dummy_function() {
+    dm_tools__printf 'no newline after this line!'
+  }
+  run dummy_function
+  assert_output
+}
+
 should_fail__assert_output__no_parameter__empty_output() {
   dm_tools__echo 'Expected [assert_output] failure.'
   dummy_function() {
@@ -83,6 +91,15 @@ should_fail__assert_no_output() {
   assert_no_output
 }
 
+should_fail__assert_no_output__no_newline() {
+  dm_tools__echo 'Expected [assert_no_output] failure.'
+  dummy_function() {
+    dm_tools__printf 'no newline after this line!'
+  }
+  run dummy_function
+  assert_no_output
+}
+
 #==============================================================================
 # ASSERT_OUTPUT WITH A PARAMETER
 #------------------------------------------------------------------------------
@@ -96,6 +113,14 @@ test__assert_output() {
   }
   run dummy_function
   assert_output 'hello'
+}
+
+test__assert_output__no_newline() {
+  dummy_function() {
+    dm_tools__printf 'no newline after this line!'
+  }
+  run dummy_function
+  assert_output 'no newline after this line!'
 }
 
 should_fail__assert_output__empty_output() {
@@ -151,6 +176,30 @@ test__assert_output_line_count__empty_count_should_be_handled() {
   assert_output_line_count 0
 }
 
+test__assert_output_line_count__empty_string() {
+  dummy_function() {
+    dm_tools__printf ''
+  }
+  run dummy_function
+  assert_output_line_count 0
+}
+
+test__assert_output_line_count__only_newline() {
+  dummy_function() {
+    dm_tools__echo ''
+  }
+  run dummy_function
+  assert_output_line_count 1
+}
+
+test__assert_output_line_count__no_newline_should_be_handled() {
+  dummy_function() {
+    dm_tools__printf 'no newline after this line!'
+  }
+  run dummy_function
+  assert_output_line_count 1
+}
+
 should_fail__assert_output_line_count() {
   dm_tools__echo 'Expected [assert_output_line_count] failure.'
   dummy_function() {
@@ -175,6 +224,14 @@ test__assert_output_line_at_index() {
   }
   run dummy_function
   assert_output_line_at_index 2 'hello 2'
+}
+
+test__assert_output_line_at_index__single_line_without_newline() {
+  dummy_function() {
+    dm_tools__printf 'no newline after this line!'
+  }
+  run dummy_function
+  assert_output_line_at_index 1 'no newline after this line!'
 }
 
 should_fail__assert_output_line_at_index__empty_output() {
@@ -265,6 +322,14 @@ test__assert_output_line_partially_at_index() {
   assert_output_line_partially_at_index 2 'hello'
 }
 
+test__assert_output_line_partially_at_index__no_newline_handling() {
+  dummy_function() {
+    dm_tools__printf 'no newline after this line!'
+  }
+  run dummy_function
+  assert_output_line_partially_at_index 1 'newline after'
+}
+
 should_fail__assert_output_line_partially_at_index__empty_output() {
   dm_tools__echo 'Expected [assert_output_line_partially_at_index] failure.'
   dummy_function() {
@@ -350,6 +415,14 @@ test__assert_error__without_parameter() {
   assert_error
 }
 
+test__assert_error__without_parameter__no_newline() {
+  dummy_function() {
+    dm_tools__printf 'no newline after this line!' >&2
+  }
+  run dummy_function
+  assert_error
+}
+
 should_fail__assert_error__without_parameter() {
   dm_tools__echo 'Expected [assert_error] failure.'
   dummy_function() {
@@ -372,6 +445,14 @@ test__assert_error() {
   }
   run dummy_function
   assert_error 'hello'
+}
+
+test__assert_error__no_newline() {
+  dummy_function() {
+    dm_tools__printf 'no newline after this line!' >&2
+  }
+  run dummy_function
+  assert_error 'no newline after this line!'
 }
 
 should_fail__assert_error__empty_output() {
@@ -418,9 +499,19 @@ test__assert_no_error() {
 }
 
 should_fail__assert_no_error() {
+  dm_tools__echo 'Expected [assert_no_error] failure.'
   dummy_function() {
     dm_tools__echo 'error line 1' >&2
     dm_tools__echo 'error line 2' >&2
+  }
+  run dummy_function
+  assert_no_error
+}
+
+should_fail__assert_no_error__no_newline() {
+  dm_tools__echo 'Expected [assert_no_error] failure.'
+  dummy_function() {
+    dm_tools__printf 'no newline after this line!' >&2
   }
   run dummy_function
   assert_no_error
@@ -451,6 +542,30 @@ test__assert_error_line_count__empty_output_should_be_handled() {
   assert_error_line_count 0
 }
 
+test__assert_error_line_count__empty_string() {
+  dummy_function() {
+    dm_tools__printf '' >&2
+  }
+  run dummy_function
+  assert_error_line_count 0
+}
+
+test__assert_error_line_count__newline_only() {
+  dummy_function() {
+    dm_tools__echo '' >&2
+  }
+  run dummy_function
+  assert_error_line_count 1
+}
+
+test__assert_error_line_count__no_newline_should_be_handled() {
+  dummy_function() {
+    dm_tools__printf 'no newline after this line!' >&2
+  }
+  run dummy_function
+  assert_error_line_count 1
+}
+
 should_fail__assert_error_line_count() {
   dm_tools__echo 'Expected [assert_error_line_count] failure.'
   dummy_function() {
@@ -476,6 +591,15 @@ test__assert_error_line_at_index() {
   run dummy_function
   assert_error_line_count 3
   assert_error_line_at_index 2 'hello 2'
+}
+
+test__assert_error_line_at_index__no_newline() {
+  dummy_function() {
+    dm_tools__printf 'no newline after this line!' >&2
+  }
+  run dummy_function
+  assert_error_line_count 1
+  assert_error_line_at_index 1 'no newline after this line!'
 }
 
 should_fail__assert_error_line_at_index__empty_output() {
@@ -537,6 +661,7 @@ should_fail__assert_error_line_at_index__no_match() {
 }
 
 test__assert_output_line_line_at_index__empty_line_can_be_validated() {
+  dm_tools__echo 'Expected [assert_error_line_at_index] failure.'
   dummy_function() {
     dm_tools__echo '' >&2
   }
@@ -546,6 +671,7 @@ test__assert_output_line_line_at_index__empty_line_can_be_validated() {
 }
 
 should_fail__assert_error_line_at_index__empty_line_wont_get_ignored() {
+  dm_tools__echo 'Expected [assert_error_line_at_index] failure.'
   dummy_function() {
     dm_tools__echo '' >&2
   }
@@ -570,6 +696,15 @@ test__assert_error_line_partially_at_index() {
   run dummy_function
   assert_error_line_count 3
   assert_error_line_partially_at_index 2 'hello'
+}
+
+test__assert_error_line_partially_at_index__no_newline() {
+  dummy_function() {
+    dm_tools__printf 'no newline after this line!' >&2
+  }
+  run dummy_function
+  assert_error_line_count 1
+  assert_error_line_partially_at_index 1 'newline after'
 }
 
 should_fail__assert_error_line_partially_at_index__empty_output() {
@@ -630,6 +765,7 @@ should_fail__assert_error_line_partially_at_index__no_match() {
 }
 
 test__assert_error_line_partially_at_index__empty_line_can_be_validated() {
+  dm_tools__echo 'Expected [assert_error_line_partially_at_index] failure.'
   dummy_function() {
     dm_tools__echo '' >&2
   }
@@ -646,6 +782,33 @@ should_fail__assert_error_line_partially_at_index__empty_line_wont_get_ignored()
   run dummy_function
   assert_error_line_count 1
   assert_error_line_partially_at_index 1 'not empty line'
+}
+
+#==============================================================================
+# MIXED CASES
+#------------------------------------------------------------------------------
+# Standard output and standard error output assertions can be used together.
+#==============================================================================
+
+test__mixed_case() {
+  dummy_function() {
+    dm_tools__echo 'output line 1'
+    dm_tools__echo 'output line 2'
+    dm_tools__echo 'error line 1' >&2
+    dm_tools__echo 'output line 3'
+    dm_tools__echo 'error line 2' >&2
+    dm_tools__echo 'error line 3' >&2
+    dm_tools__echo 'error line 4' >&2
+  }
+  run dummy_function
+  assert_output
+  assert_error
+  assert_output_line_count 3
+  assert_error_line_count 4
+  assert_output_line_at_index 2 'output line 2'
+  assert_error_line_at_index 4 'error line 4'
+  assert_output_line_partially_at_index 3 'line 3'
+  assert_error_line_partially_at_index 1 'line 1'
 }
 
 #==============================================================================

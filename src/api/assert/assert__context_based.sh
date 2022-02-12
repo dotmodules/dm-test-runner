@@ -631,9 +631,10 @@ _dm_test__assert__assert_has_output() {
   ___assertion_name="$2"
 
   ___result="$(dm_tools__cat "$___target_buffer")"
-  ___count="$(dm_tools__wc --lines < "$___target_buffer")"
+  ___line_count="$(dm_tools__wc --lines < "$___target_buffer")"
+  ___char_count="$(dm_tools__wc --chars < "$___target_buffer")"
 
-  if [ "$___count" -eq '0' ]
+  if [ "$___line_count" -eq '0' ] && [ "$___char_count" -eq '0' ]
   then
     dm_test__debug '_dm_test__assert__assert_has_output' \
       '=> target buffer has no content'
@@ -674,9 +675,10 @@ _dm_test__assert__assert_output() {
   ___assertion_name="$3"
 
   ___result="$(dm_tools__cat "$___target_buffer")"
-  ___count="$(dm_tools__wc --lines < "$___target_buffer")"
+  ___line_count="$(dm_tools__wc --lines < "$___target_buffer")"
+  ___char_count="$(dm_tools__wc --chars < "$___target_buffer")"
 
-  if [ "$___count" -eq '0' ]
+  if [ "$___line_count" -eq '0' ] && [ "$___char_count" -eq '0' ]
   then
     dm_test__debug '_dm_test__assert__assert_output' \
       '=> nothing to compare to = assertion failed'
@@ -687,8 +689,10 @@ _dm_test__assert__assert_output() {
     _dm_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
   fi
 
-  if [ "$___count" -gt '1' ]
+  if [ "$___line_count" -gt '1' ]
   then
+    # If there are more than one lines present in the buffer, this assertion
+    # method cannot be used! Returning 2 to signal this case.
     return 2
   fi
 
@@ -741,7 +745,17 @@ _dm_test__assert__assert_line_count() {
   ___target_buffer="$2"
   ___assertion_name="$3"
 
-  ___result="$(dm_tools__wc --lines < "$___target_buffer")"
+  ___line_count="$(dm_tools__wc --lines < "$___target_buffer")"
+  ___char_count="$(dm_tools__wc --chars < "$___target_buffer")"
+
+  if [ "$___line_count" -eq '0' ] && [ "$___char_count" -gt '0' ]
+  then
+    # If there are new newline character in the buffer (line count == 0) but
+    # there are characters captured, we can say that we have a line captured.
+    ___result='1'
+  else
+    ___result="$___line_count"
+  fi
 
   dm_test__debug '_dm_test__assert__assert_line_count' \
     'asserting output line count:'

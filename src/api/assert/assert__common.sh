@@ -52,8 +52,9 @@ dm_test__get_line_from_output_buffer_by_index() {
     "$(dm_tools__cat "$___buffer")"
 
   ___line_count="$(dm_tools__wc --lines < "$___buffer")"
+  ___char_count="$(dm_tools__wc --chars < "$___buffer")"
 
-  if [ "$___line_count" -eq '0' ]
+  if [ "$___line_count" -eq '0' ] && [ "$___char_count" -eq '0' ]
   then
     dm_test__debug 'dm_test__get_line_from_buffer_output_by_index' \
       'no output was captured in the target buffer!'
@@ -62,6 +63,13 @@ dm_test__get_line_from_output_buffer_by_index() {
     ___reason='No output was captured in the target buffer, nothing to compare!'
     ___assertion='utils__get_line_from_output_by_index'
     _dm_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
+  fi
+
+  if [ "$___line_count" -eq '0' ] && [ "$___char_count" -gt '0' ]
+  then
+    dm_test__debug 'dm_test__get_line_from_buffer_output_by_index' \
+      'correcting line count to 1 as no newline character is present in buffer'
+    ___line_count='1'
   fi
 
   if [ "$___line_index" -gt "$___line_count" ] || [ "$___line_index" -lt '1' ]
