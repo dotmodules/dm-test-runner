@@ -8,7 +8,7 @@
 # setting up test fixtures. You can run arbitrary code in them, but you should
 # use the provided temporary directories for storing the fixtures.
 #
-# An error during the [teardown] hook would make the test case failed.
+# An error during the [teardown] hook would make the test case fail.
 #
 # 1. [setup file] hook will be executed
 # 2. [setup] hook will be executed
@@ -20,6 +20,7 @@
 #==============================================================================
 
 setup_file() {
+  dm_tools__echo ''
   dm_tools__echo '--- ERROR DURING TEARDOWN HOOK --------------------------------------------------'
   dm_tools__echo 'echo during [setup file] hook'
 }

@@ -88,5 +88,5 @@ dm_tools__echo "${RESET}"
 
 dm_test__run_suite
 
-assert_test_case_count 35
+assert_test_case_count 41
 assert_failure_count 0

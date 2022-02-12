@@ -165,12 +165,14 @@ assert_status() {
 
 #==============================================================================
 # Context based assertion function that will compare the standard output of the
-# tested function with the given value.
+# tested function with the given value. If there is no argument passed to this
+# function, it will only check the presence of the output.
 #------------------------------------------------------------------------------
 # Globals:
 #   DM_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD1
 # Arguments:
-#   [1] expected_output - Expected output of the previously run function.
+#   [1] expected_output <optional> - Expected output of the previously run
+#       function.
 # STDIN:
 #   None
 #------------------------------------------------------------------------------
@@ -185,6 +187,21 @@ assert_status() {
 #   1 - Assertion failed.
 #==============================================================================
 assert_output() {
+  # Handling the special case then there is no passed parameter.
+  if [ "$#" -eq '0' ]
+  then
+    ___target_buffer="$DM_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD1"
+    ___assertion_name="assert_output"
+
+    _dm_test__assert__assert_has_output \
+      "$___target_buffer" \
+      "$___assertion_name"
+
+    # If the previous assertion hasn't exited the execution, we have to
+    # explicitly abort with success.
+    return 0
+  fi
+
   ___expected="$1"
   ___target_buffer="$DM_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD1"
   ___assertion_name="assert_output"
@@ -207,6 +224,47 @@ assert_output() {
       dm_tools__echo "'assert_output_line_partially_at_index'." \
     )"
     ___assertion='assert_output'
+    _dm_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
+  fi
+}
+
+#==============================================================================
+# Context based assertion function that will check if there is no standard
+# output captured during the last 'run' command execution.
+#------------------------------------------------------------------------------
+# Globals:
+#   DM_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD1
+# Arguments:
+#   None
+# STDIN:
+#   None
+#------------------------------------------------------------------------------
+# Output variables:
+# - None
+# STDOUT:
+#   None
+# STDERR:
+#   None
+# Status:
+#   0 - Assertion succeeded.
+#   1 - Assertion failed.
+#==============================================================================
+assert_no_output() {
+  ___target_buffer="$DM_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD1"
+
+  if [ -s "$___target_buffer" ]
+  then
+    dm_test__debug 'assert_no_output' '=> assertion failed'
+
+    ___subject='Standard output was captured.'
+    ___reason="$( \
+      dm_tools__printf '%s' 'The tested functionality should not have '; \
+      dm_tools__echo 'emitted content on the standard output: '; \
+      dm_tools__cat "$___target_buffer" | \
+        dm_tools__sed --expression 's/$/\|/' | \
+        dm_tools__sed --expression 's/^/\|/'; \
+    )"
+    ___assertion='assert_no_output'
     _dm_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
   fi
 }
@@ -354,26 +412,29 @@ assert_no_error() {
   then
     dm_test__debug 'assert_no_error' '=> assertion failed'
 
-    ___subject='Standard output was captured.'
+    ___subject='Standard error output was captured.'
     ___reason="$( \
       dm_tools__printf '%s' 'The tested functionality should not have '; \
-      dm_tools__echo 'emitted content to the standard error output: '; \
-      dm_tools__echo '"""'; \
-      dm_tools__cat "$___target_buffer"; \
-      dm_tools__echo '"""'; \
+      dm_tools__echo 'emitted content on the standard error output: '; \
+      dm_tools__cat "$___target_buffer" | \
+        dm_tools__sed --expression 's/$/\|/' | \
+        dm_tools__sed --expression 's/^/\|/'; \
     )"
     ___assertion='assert_no_error'
     _dm_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
   fi
 }
+
 #==============================================================================
 # Context based assertion function that will compare the standard error output
-# of the tested function with the given value.
+# of the tested function with the given value. If there is no argument passed to
+# this function, it will only check the presence of the error output.
 #------------------------------------------------------------------------------
 # Globals:
 #   DM_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD2
 # Arguments:
-#   [1] expected_output - Expected output of the previously run function.
+#   [1] expected_output <optional> - Expected output of the previously run
+#       function.
 # STDIN:
 #   None
 #------------------------------------------------------------------------------
@@ -388,6 +449,21 @@ assert_no_error() {
 #   1 - Assertion failed.
 #==============================================================================
 assert_error() {
+  # Handling the special case then there is no passed parameter.
+  if [ "$#" -eq '0' ]
+  then
+    ___target_buffer="$DM_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD2"
+    ___assertion_name="assert_error"
+
+    _dm_test__assert__assert_has_output \
+      "$___target_buffer" \
+      "$___assertion_name"
+
+    # If the previous assertion hasn't exited the execution, we have to
+    # explicitly abort with success.
+    return 0
+  fi
+
   ___expected="$1"
   ___target_buffer="$DM_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD2"
   ___assertion_name="assert_error"
@@ -530,6 +606,46 @@ assert_error_line_partially_at_index() {
 #==============================================================================
 
 #==============================================================================
+# Common function to check if the given buffer contains anything.
+#------------------------------------------------------------------------------
+# Globals:
+#   None
+# Arguments:
+#   [1] target_buffer - Target buffer that should be used.
+#   [2] assertion_name - Name of the original assertion.
+# STDIN:
+#   None
+#------------------------------------------------------------------------------
+# Output variables:
+# - None
+# STDOUT:
+#   None
+# STDERR:
+#   None
+# Status:
+#   0 - Target buffer contains something.
+#   1 - Target buffer has nothing inside.
+#==============================================================================
+_dm_test__assert__assert_has_output() {
+  ___target_buffer="$1"
+  ___assertion_name="$2"
+
+  ___result="$(dm_tools__cat "$___target_buffer")"
+  ___count="$(dm_tools__wc --lines < "$___target_buffer")"
+
+  if [ "$___count" -eq '0' ]
+  then
+    dm_test__debug '_dm_test__assert__assert_has_output' \
+      '=> target buffer has no content'
+
+    ___subject='No output was captured'
+    ___reason='No output was captured in the target buffer!'
+    ___assertion="$___assertion_name"
+    _dm_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
+  fi
+}
+
+#==============================================================================
 # Common function to compare context based outputs.
 #------------------------------------------------------------------------------
 # Globals:
@@ -559,6 +675,17 @@ _dm_test__assert__assert_output() {
 
   ___result="$(dm_tools__cat "$___target_buffer")"
   ___count="$(dm_tools__wc --lines < "$___target_buffer")"
+
+  if [ "$___count" -eq '0' ]
+  then
+    dm_test__debug '_dm_test__assert__assert_output' \
+      '=> nothing to compare to = assertion failed'
+
+    ___subject='Cannot compare to empty ouput'
+    ___reason='No output was captured in the target buffer, nothing to compare!'
+    ___assertion="$___assertion_name"
+    _dm_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
+  fi
 
   if [ "$___count" -gt '1' ]
   then
@@ -682,7 +809,7 @@ _dm_test__assert__assert_line_at_index() {
     # As the line extraction function returned a nonzero status, the line
     # extraction failed, and the error was already reported. Since it is
     # happened in a subshell to obtain the output from it, the execution won't
-    # stopped here, so we should simply return from here.
+    # stop here, so we should simply return from here.
     return
   fi
 

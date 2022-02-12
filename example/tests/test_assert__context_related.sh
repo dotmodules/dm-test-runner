@@ -18,6 +18,14 @@ test__assert_status() {
   assert_status 3
 }
 
+test__assert_status__implicit_zero_status() {
+  dummy_function() {
+    :
+  }
+  run dummy_function
+  assert_status 0
+}
+
 should_fail__assert_status() {
   dm_tools__echo 'Expected [assert_status] failure.'
   dummy_function() {
@@ -28,7 +36,55 @@ should_fail__assert_status() {
 }
 
 #==============================================================================
-# ASSERT_OUTPUT
+# ASSERT_OUTPUT WITHOUT A PARAMETER
+#------------------------------------------------------------------------------
+# Asserts if something has been captured during the last 'run' command
+# execution.
+#==============================================================================
+
+test__assert_output__no_parameter() {
+  dummy_function() {
+    dm_tools__echo 'hello'
+  }
+  run dummy_function
+  assert_output
+}
+
+should_fail__assert_output__no_parameter__empty_output() {
+  dm_tools__echo 'Expected [assert_output] failure.'
+  dummy_function() {
+    :
+  }
+  run dummy_function
+  assert_output
+}
+
+#==============================================================================
+# ASSERT_NO_OUTPUT
+#------------------------------------------------------------------------------
+# Asserts if nothing has been captured during the last 'run' command execution.
+#==============================================================================
+
+test__assert_no_output() {
+  dummy_function() {
+    :
+  }
+  run dummy_function
+  assert_no_output
+}
+
+should_fail__assert_no_output() {
+  dm_tools__echo 'Expected [assert_no_output] failure.'
+  dummy_function() {
+    dm_tools__echo 'Definitely not an empty'
+    dm_tools__echo 'output!'
+  }
+  run dummy_function
+  assert_no_output
+}
+
+#==============================================================================
+# ASSERT_OUTPUT WITH A PARAMETER
 #------------------------------------------------------------------------------
 # Asserts the whole captured output of the last function or command runned by
 # the 'run' command.
@@ -40,6 +96,15 @@ test__assert_output() {
   }
   run dummy_function
   assert_output 'hello'
+}
+
+should_fail__assert_output__empty_output() {
+  dm_tools__echo 'Expected [assert_output] failure.'
+  dummy_function() {
+    :
+  }
+  run dummy_function
+  assert_output 'bye'
 }
 
 should_fail__assert_output__mismatch() {
@@ -78,6 +143,14 @@ test__assert_output_line_count() {
   assert_output_line_count 3
 }
 
+test__assert_output_line_count__empty_count_should_be_handled() {
+  dummy_function() {
+    :
+  }
+  run dummy_function
+  assert_output_line_count 0
+}
+
 should_fail__assert_output_line_count() {
   dm_tools__echo 'Expected [assert_output_line_count] failure.'
   dummy_function() {
@@ -99,6 +172,15 @@ test__assert_output_line_at_index() {
     dm_tools__echo 'hello 1'
     dm_tools__echo 'hello 2'
     dm_tools__echo 'hello 3'
+  }
+  run dummy_function
+  assert_output_line_at_index 2 'hello 2'
+}
+
+should_fail__assert_output_line_at_index__empty_output() {
+  dm_tools__echo 'Expected [assert_output_line_at_index] failure.'
+  dummy_function() {
+    :
   }
   run dummy_function
   assert_output_line_at_index 2 'hello 2'
@@ -158,6 +240,7 @@ test__assert_output_line_line_at_index__empty_line_can_be_validated() {
 }
 
 should_fail__assert_output_line_at_index__empty_line_wont_get_ignored() {
+  dm_tools__echo 'Expected [assert_output_line_at_index] failure.'
   dummy_function() {
     dm_tools__echo ''
   }
@@ -180,6 +263,15 @@ test__assert_output_line_partially_at_index() {
   }
   run dummy_function
   assert_output_line_partially_at_index 2 'hello'
+}
+
+should_fail__assert_output_line_partially_at_index__empty_output() {
+  dm_tools__echo 'Expected [assert_output_line_partially_at_index] failure.'
+  dummy_function() {
+    :
+  }
+  run dummy_function
+  assert_output_line_partially_at_index 2 'hello 2'
 }
 
 should_fail__assert_output_line_partially_at_index__invalid_index__case_1() {
@@ -235,6 +327,7 @@ test__assert_output_line_partially_at_index__empty_line_can_be_validated() {
 }
 
 should_fail__assert_output_line_partially_at_index__empty_line_wont_get_ignored() {
+  dm_tools__echo 'Expected [assert_output_line_partially_at_index] failure.'
   dummy_function() {
     dm_tools__echo ''
   }
@@ -243,7 +336,31 @@ should_fail__assert_output_line_partially_at_index__empty_line_wont_get_ignored(
 }
 
 #==============================================================================
-# ASSERT_ERROR
+# ASSERT_ERROR WITHOUT A PARAMETER
+#------------------------------------------------------------------------------
+# Asserts if something has been captured on the error output of the last
+# function or command runned by the 'run' command.
+#==============================================================================
+
+test__assert_error__without_parameter() {
+  dummy_function() {
+    dm_tools__echo 'hello' >&2
+  }
+  run dummy_function
+  assert_error
+}
+
+should_fail__assert_error__without_parameter() {
+  dm_tools__echo 'Expected [assert_error] failure.'
+  dummy_function() {
+    :
+  }
+  run dummy_function
+  assert_error
+}
+
+#==============================================================================
+# ASSERT_ERROR WITH A PARAMETER
 #------------------------------------------------------------------------------
 # Asserts the whole captured error output of the last function or command
 # runned by the 'run' command.
@@ -252,6 +369,15 @@ should_fail__assert_output_line_partially_at_index__empty_line_wont_get_ignored(
 test__assert_error() {
   dummy_function() {
     dm_tools__echo 'hello' >&2
+  }
+  run dummy_function
+  assert_error 'hello'
+}
+
+should_fail__assert_error__empty_output() {
+  dm_tools__echo 'Expected [assert_error] failure.'
+  dummy_function() {
+    :
   }
   run dummy_function
   assert_error 'hello'
@@ -317,6 +443,14 @@ test__assert_error_line_count() {
   assert_error_line_count 3
 }
 
+test__assert_error_line_count__empty_output_should_be_handled() {
+  dummy_function() {
+    :
+  }
+  run dummy_function
+  assert_error_line_count 0
+}
+
 should_fail__assert_error_line_count() {
   dm_tools__echo 'Expected [assert_error_line_count] failure.'
   dummy_function() {
@@ -342,6 +476,15 @@ test__assert_error_line_at_index() {
   run dummy_function
   assert_error_line_count 3
   assert_error_line_at_index 2 'hello 2'
+}
+
+should_fail__assert_error_line_at_index__empty_output() {
+  dm_tools__echo 'Expected [assert_error_line_at_index] failure.'
+  dummy_function() {
+    :
+  }
+  run dummy_function
+  assert_error_line_at_index 42 'invalid index'
 }
 
 should_fail__assert_error_line_at_index__invalid_index__case_1() {
@@ -429,6 +572,15 @@ test__assert_error_line_partially_at_index() {
   assert_error_line_partially_at_index 2 'hello'
 }
 
+should_fail__assert_error_line_partially_at_index__empty_output() {
+  dm_tools__echo 'Expected [assert_error_line_partially_at_index] failure.'
+  dummy_function() {
+    :
+  }
+  run dummy_function
+  assert_error_line_partially_at_index 42 'hello'
+}
+
 should_fail__assert_error_line_partially_at_index__invalid_index__case_1() {
   dm_tools__echo 'Expected [assert_error_line_partially_at_index] failure.'
   dummy_function() {
@@ -487,6 +639,7 @@ test__assert_error_line_partially_at_index__empty_line_can_be_validated() {
 }
 
 should_fail__assert_error_line_partially_at_index__empty_line_wont_get_ignored() {
+  dm_tools__echo 'Expected [assert_error_line_partially_at_index] failure.'
   dummy_function() {
     dm_tools__echo '' >&2
   }

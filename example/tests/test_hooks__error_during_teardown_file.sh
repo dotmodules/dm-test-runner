@@ -20,6 +20,7 @@
 #==============================================================================
 
 setup_file() {
+  dm_tools__echo ''
   dm_tools__echo '--- ERROR DURING TEARDOWN FILE HOOK ---------------------------------------------'
   dm_tools__echo 'echo during [setup file] hook'
 }

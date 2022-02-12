@@ -15,6 +15,7 @@
 #==============================================================================
 
 setup_file() {
+  dm_tools__echo ''
   dm_tools__echo '--- MULTIPLE HOOK FUNCTIONS -----------------------------------------------------'
   dm_tools__echo 'echo during [setup file] hook'
 }

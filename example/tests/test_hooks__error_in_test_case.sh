@@ -24,6 +24,7 @@
 #==============================================================================
 
 setup_file() {
+  dm_tools__echo ''
   dm_tools__echo '--- ERROR DURING TEST CASE ------------------------------------------------------'
   dm_tools__echo 'echo during [setup file] hook'
 }
