@@ -45,5 +45,5 @@ fi
 # GLOBAL CONSTANTS
 #==============================================================================
 
-DM_TEST__CONSTANT__TEST_RESULT__SUCCESS='0'
-DM_TEST__CONSTANT__TEST_RESULT__FAILURE='1'
+POSIX_TEST__CONSTANT__TEST_RESULT__SUCCESS='0'
+POSIX_TEST__CONSTANT__TEST_RESULT__FAILURE='1'

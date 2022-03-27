@@ -19,20 +19,20 @@
 #==============================================================================
 
 # Variable thar holds the runtime path of the global error file.
-DM_TEST__CACHE__RUNTIME__ERRORS='__INVALID__'
+POSIX_TEST__CACHE__RUNTIME__ERRORS='__INVALID__'
 
 #==============================================================================
 # Inner function to create and initialize the error cache file.
 #------------------------------------------------------------------------------
 # Globals:
-#   DM_TEST__CACHE__RUNTIME__ERRORS
+#   POSIX_TEST__CACHE__RUNTIME__ERRORS
 # Arguments:
 #   None
 # STDIN:
 #   None
 #------------------------------------------------------------------------------
 # Output variables:
-#   DM_TEST__CACHE__RUNTIME__ERRORS
+#   POSIX_TEST__CACHE__RUNTIME__ERRORS
 # STDOUT:
 #   None
 # STDERR:
@@ -40,18 +40,18 @@ DM_TEST__CACHE__RUNTIME__ERRORS='__INVALID__'
 # Status:
 #   0 - Other status is not expected.
 #==============================================================================
-_dm_test__cache__global_errors__init() {
-  DM_TEST__CACHE__RUNTIME__ERRORS="$(dm_test__cache__create_temp_file)"
+_posix_test__cache__global_errors__init() {
+  POSIX_TEST__CACHE__RUNTIME__ERRORS="$(posix_test__cache__create_temp_file)"
 
-  dm_test__debug '_dm_test__cache__global_errors__init' \
-    "global errors file created: '${DM_TEST__CACHE__RUNTIME__ERRORS}'"
+  posix_test__debug '_posix_test__cache__global_errors__init' \
+    "global errors file created: '${POSIX_TEST__CACHE__RUNTIME__ERRORS}'"
 }
 
 #==============================================================================
 # API function to check if errors are present in the global cache file.
 #------------------------------------------------------------------------------
 # Globals:
-#   DM_TEST__CACHE__RUNTIME__ERRORS
+#   POSIX_TEST__CACHE__RUNTIME__ERRORS
 # Arguments:
 #   None
 # STDIN:
@@ -67,18 +67,18 @@ _dm_test__cache__global_errors__init() {
 #    0 - There are errors present in the global test cache file.
 #    1 - No errors in the global test cache file.
 #==============================================================================
-dm_test__cache__global_errors__has_errors() {
-  dm_test__debug 'dm_test__cache__global_errors__has_errors' \
+posix_test__cache__global_errors__has_errors() {
+  posix_test__debug 'posix_test__cache__global_errors__has_errors' \
     'checking if there are errors..'
 
-  test -s "$DM_TEST__CACHE__RUNTIME__ERRORS"
+  test -s "$POSIX_TEST__CACHE__RUNTIME__ERRORS"
 }
 
 #==============================================================================
 # API function to print the errors from the global error cache file.
 #------------------------------------------------------------------------------
 # Globals:
-#   DM_TEST__CACHE__RUNTIME__ERRORS
+#   POSIX_TEST__CACHE__RUNTIME__ERRORS
 # Arguments:
 #   None
 # STDIN:
@@ -93,10 +93,10 @@ dm_test__cache__global_errors__has_errors() {
 # Status:
 #   0 - Other status is not expected.
 #==============================================================================
-dm_test__cache__global_errors__print_errors() {
-  posix_adapter__cat "$DM_TEST__CACHE__RUNTIME__ERRORS"
+posix_test__cache__global_errors__print_errors() {
+  posix_adapter__cat "$POSIX_TEST__CACHE__RUNTIME__ERRORS"
 
-  dm_test__debug 'dm_test__cache__global_errors__print_errors' \
+  posix_test__debug 'posix_test__cache__global_errors__print_errors' \
     'global errors printed'
 }
 
@@ -105,7 +105,7 @@ dm_test__cache__global_errors__print_errors() {
 # standard input to the global error cache file.
 #------------------------------------------------------------------------------
 # Globals:
-#   DM_TEST__CACHE__RUNTIME__ERRORS
+#   POSIX_TEST__CACHE__RUNTIME__ERRORS
 # Arguments:
 #   None
 # STDIN:
@@ -120,9 +120,9 @@ dm_test__cache__global_errors__print_errors() {
 # Status:
 #   0 - Other status is not expected.
 #==============================================================================
-dm_test__cache__global_errors__write_errors() {
-  posix_adapter__cat - >> "$DM_TEST__CACHE__RUNTIME__ERRORS"
+posix_test__cache__global_errors__write_errors() {
+  posix_adapter__cat - >> "$POSIX_TEST__CACHE__RUNTIME__ERRORS"
 
-  dm_test__debug 'dm_test__cache__global_errors__write_errors' \
+  posix_test__debug 'posix_test__cache__global_errors__write_errors' \
     'error saved to the global errors file'
 }

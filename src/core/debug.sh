@@ -62,7 +62,7 @@
 # Status:
 #   0 - Other status is not expected.
 #==============================================================================
-dm_test__debug__printf() {
+posix_test__debug__printf() {
   # This function behaves like a proxy thus having parameters in the first
   # argument of printf is okay in this case.
   # shellcheck disable=SC2059
@@ -94,7 +94,7 @@ dm_test__debug__printf() {
 # Status:
 #   Status of the given command.
 #==============================================================================
-dm_test__debug__wrapper() {
+posix_test__debug__wrapper() {
   "$@" 4>&1
 }
 
@@ -132,13 +132,13 @@ dm_test__debug__wrapper() {
 # Status:
 #   0 - Other status is not expected.
 #==============================================================================
-dm_test__debug() {
-  if dm_test__config__debug_is_enabled
+posix_test__debug() {
+  if posix_test__config__debug_is_enabled
   then
     ___debug_domain="$1"
     ___debug_message="$2"
 
-    dm_test__debug__printf "${DIM}${BLUE}DEBUG | %56s | %s\n${RESET}" \
+    posix_test__debug__printf "${DIM}${BLUE}DEBUG | %56s | %s\n${RESET}" \
       "$___debug_domain" \
       "$___debug_message"
   fi
@@ -166,18 +166,18 @@ dm_test__debug() {
 # Status:
 #   0 - Other status is not expected.
 #==============================================================================
-dm_test__debug_list() {
-  if dm_test__config__debug_is_enabled
+posix_test__debug_list() {
+  if posix_test__config__debug_is_enabled
   then
     ___debug_domain="$1"
     ___debug_message="$2"
     ___debug_list="$3"
 
-    dm_test__debug "$___debug_domain" "$___debug_message"
+    posix_test__debug "$___debug_domain" "$___debug_message"
 
     posix_adapter__echo "$___debug_list" | while IFS= read -r ___debug_list_item
     do
-      dm_test__debug "$___debug_domain" "- '${___debug_list_item}'"
+      posix_test__debug "$___debug_domain" "- '${___debug_list_item}'"
     done
   fi
 }

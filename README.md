@@ -1,5 +1,5 @@
-[![linux](https://github.com/dotmodules/dm-test/actions/workflows/linux.yml/badge.svg)](https://github.com/dotmodules/dm-test/actions/workflows/linux.yml)
-[![macos](https://github.com/dotmodules/dm-test/actions/workflows/macos.yml/badge.svg)](https://github.com/dotmodules/dm-test/actions/workflows/macos.yml)
+[![linux](https://github.com/posixtools/posix-test/actions/workflows/linux.yml/badge.svg)](https://github.com/posixtools/posix-test/actions/workflows/linux.yml)
+[![macos](https://github.com/posixtools/posix-test/actions/workflows/macos.yml/badge.svg)](https://github.com/posixtools/posix-test/actions/workflows/macos.yml)
 
 # POSIX compliant shell test runner
 
@@ -18,8 +18,8 @@ for test_file in test_cases_root:
 
 ## Detailed internal workings
 
-![Detailed internal workings](./docs/dm-test-internals-dark.png#gh-dark-mode-only)
-![Detailed internal workings](./docs/dm-test-internals-light.png#gh-light-mode-only)
+![Detailed internal workings](./docs/posix-test-internals-dark.png#gh-dark-mode-only)
+![Detailed internal workings](./docs/posix-test-internals-light.png#gh-light-mode-only)
 
 ## Subshell structure
 

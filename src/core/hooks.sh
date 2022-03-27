@@ -26,31 +26,31 @@
 #==============================================================================
 
 # Valid function names for the hook functions.
-DM_TEST__HOOKS__CONFIG__FUNCTION_NAME__SETUP='setup'
-DM_TEST__HOOKS__CONFIG__FUNCTION_NAME__TEARDOWN='teardown'
-DM_TEST__HOOKS__CONFIG__FUNCTION_NAME__SETUP_FILE='setup_file'
-DM_TEST__HOOKS__CONFIG__FUNCTION_NAME__TEARDOWN_FILE='teardown_file'
+POSIX_TEST__HOOKS__CONFIG__FUNCTION_NAME__SETUP='setup'
+POSIX_TEST__HOOKS__CONFIG__FUNCTION_NAME__TEARDOWN='teardown'
+POSIX_TEST__HOOKS__CONFIG__FUNCTION_NAME__SETUP_FILE='setup_file'
+POSIX_TEST__HOOKS__CONFIG__FUNCTION_NAME__TEARDOWN_FILE='teardown_file'
 
 # Patterns that will be used to register a hook.
-DM_TEST__HOOKS__CONFIG__PATTERN__SETUP=\
-"^${DM_TEST__HOOKS__CONFIG__FUNCTION_NAME__SETUP}()"
+POSIX_TEST__HOOKS__CONFIG__PATTERN__SETUP=\
+"^${POSIX_TEST__HOOKS__CONFIG__FUNCTION_NAME__SETUP}()"
 
-DM_TEST__HOOKS__CONFIG__PATTERN__TEARDOWN=\
-"^${DM_TEST__HOOKS__CONFIG__FUNCTION_NAME__TEARDOWN}()"
+POSIX_TEST__HOOKS__CONFIG__PATTERN__TEARDOWN=\
+"^${POSIX_TEST__HOOKS__CONFIG__FUNCTION_NAME__TEARDOWN}()"
 
-DM_TEST__HOOKS__CONFIG__PATTERN__SETUP_FILE=\
-"^${DM_TEST__HOOKS__CONFIG__FUNCTION_NAME__SETUP_FILE}()"
+POSIX_TEST__HOOKS__CONFIG__PATTERN__SETUP_FILE=\
+"^${POSIX_TEST__HOOKS__CONFIG__FUNCTION_NAME__SETUP_FILE}()"
 
-DM_TEST__HOOKS__CONFIG__PATTERN__TEARDOWN_FILE=\
-"^${DM_TEST__HOOKS__CONFIG__FUNCTION_NAME__TEARDOWN_FILE}()"
+POSIX_TEST__HOOKS__CONFIG__PATTERN__TEARDOWN_FILE=\
+"^${POSIX_TEST__HOOKS__CONFIG__FUNCTION_NAME__TEARDOWN_FILE}()"
 
 # Hook flags assigned during runtime that determine if a test file has a
 # particular hook defined. They contain a single integer value that should
 # indicate the matched hook function in the given test file.
-DM_TEST__HOOKS__RUNTIME__FLAG__SETUP='__INVALID__'
-DM_TEST__HOOKS__RUNTIME__FLAG__TEARDOWN='__INVALID__'
-DM_TEST__HOOKS__RUNTIME__FLAG__SETUP_FILE='__INVALID__'
-DM_TEST__HOOKS__RUNTIME__FLAG__TEARDOWN_FILE='__INVALID__'
+POSIX_TEST__HOOKS__RUNTIME__FLAG__SETUP='__INVALID__'
+POSIX_TEST__HOOKS__RUNTIME__FLAG__TEARDOWN='__INVALID__'
+POSIX_TEST__HOOKS__RUNTIME__FLAG__SETUP_FILE='__INVALID__'
+POSIX_TEST__HOOKS__RUNTIME__FLAG__TEARDOWN_FILE='__INVALID__'
 
 #==============================================================================
 #     _    ____ ___    __                  _   _
@@ -66,14 +66,14 @@ DM_TEST__HOOKS__RUNTIME__FLAG__TEARDOWN_FILE='__INVALID__'
 # Initializes the hook flags for the given test file.
 #------------------------------------------------------------------------------
 # Globals:
-#   DM_TEST__HOOKS__CONFIG__PATTERN__SETUP
-#   DM_TEST__HOOKS__CONFIG__PATTERN__TEARDOWN
-#   DM_TEST__HOOKS__CONFIG__PATTERN__SETUP_FILE
-#   DM_TEST__HOOKS__CONFIG__PATTERN__TEARDOWN_FILE
-#   DM_TEST__HOOKS__RUNTIME__FLAG__SETUP
-#   DM_TEST__HOOKS__RUNTIME__FLAG__TEARDOWN
-#   DM_TEST__HOOKS__RUNTIME__FLAG__SETUP_FILE
-#   DM_TEST__HOOKS__RUNTIME__FLAG__TEARDOWN_FILE
+#   POSIX_TEST__HOOKS__CONFIG__PATTERN__SETUP
+#   POSIX_TEST__HOOKS__CONFIG__PATTERN__TEARDOWN
+#   POSIX_TEST__HOOKS__CONFIG__PATTERN__SETUP_FILE
+#   POSIX_TEST__HOOKS__CONFIG__PATTERN__TEARDOWN_FILE
+#   POSIX_TEST__HOOKS__RUNTIME__FLAG__SETUP
+#   POSIX_TEST__HOOKS__RUNTIME__FLAG__TEARDOWN
+#   POSIX_TEST__HOOKS__RUNTIME__FLAG__SETUP_FILE
+#   POSIX_TEST__HOOKS__RUNTIME__FLAG__TEARDOWN_FILE
 # Arguments:
 #   [1] test_file_path - Path of the given test file the hook should be
 #       searched in.
@@ -81,10 +81,10 @@ DM_TEST__HOOKS__RUNTIME__FLAG__TEARDOWN_FILE='__INVALID__'
 #   None
 #------------------------------------------------------------------------------
 # Output variables:
-#   DM_TEST__HOOKS__RUNTIME__FLAG__SETUP
-#   DM_TEST__HOOKS__RUNTIME__FLAG__TEARDOWN
-#   DM_TEST__HOOKS__RUNTIME__FLAG__SETUP_FILE
-#   DM_TEST__HOOKS__RUNTIME__FLAG__TEARDOWN_FILE
+#   POSIX_TEST__HOOKS__RUNTIME__FLAG__SETUP
+#   POSIX_TEST__HOOKS__RUNTIME__FLAG__TEARDOWN
+#   POSIX_TEST__HOOKS__RUNTIME__FLAG__SETUP_FILE
+#   POSIX_TEST__HOOKS__RUNTIME__FLAG__TEARDOWN_FILE
 # STDOUT:
 #   Match count for the given pattern.
 # STDERR:
@@ -92,55 +92,55 @@ DM_TEST__HOOKS__RUNTIME__FLAG__TEARDOWN_FILE='__INVALID__'
 # Status:
 #   0 - Other status is not expected.
 #==============================================================================
-dm_test__hooks__init_hooks_for_test_file() {
+posix_test__hooks__init_hooks_for_test_file() {
   ___test_file_path="$1"
 
-  dm_test__debug 'dm_test__hooks__init_hooks_for_test_file' \
+  posix_test__debug 'posix_test__hooks__init_hooks_for_test_file' \
     "initializing hook flags for test file '${___test_file_path}'"
 
-  DM_TEST__HOOKS__RUNTIME__FLAG__SETUP="$( \
-    _dm_test__hooks__get_hook_flag \
-      "$DM_TEST__HOOKS__CONFIG__PATTERN__SETUP" \
+  POSIX_TEST__HOOKS__RUNTIME__FLAG__SETUP="$( \
+    _posix_test__hooks__get_hook_flag \
+      "$POSIX_TEST__HOOKS__CONFIG__PATTERN__SETUP" \
       "$___test_file_path"
   )"
 
-  DM_TEST__HOOKS__RUNTIME__FLAG__TEARDOWN="$( \
-    _dm_test__hooks__get_hook_flag \
-      "$DM_TEST__HOOKS__CONFIG__PATTERN__TEARDOWN" \
+  POSIX_TEST__HOOKS__RUNTIME__FLAG__TEARDOWN="$( \
+    _posix_test__hooks__get_hook_flag \
+      "$POSIX_TEST__HOOKS__CONFIG__PATTERN__TEARDOWN" \
       "$___test_file_path"
   )"
 
-  DM_TEST__HOOKS__RUNTIME__FLAG__SETUP_FILE="$( \
-    _dm_test__hooks__get_hook_flag \
-      "$DM_TEST__HOOKS__CONFIG__PATTERN__SETUP_FILE" \
+  POSIX_TEST__HOOKS__RUNTIME__FLAG__SETUP_FILE="$( \
+    _posix_test__hooks__get_hook_flag \
+      "$POSIX_TEST__HOOKS__CONFIG__PATTERN__SETUP_FILE" \
       "$___test_file_path"
   )"
 
-  DM_TEST__HOOKS__RUNTIME__FLAG__TEARDOWN_FILE="$( \
-    _dm_test__hooks__get_hook_flag \
-      "$DM_TEST__HOOKS__CONFIG__PATTERN__TEARDOWN_FILE" \
+  POSIX_TEST__HOOKS__RUNTIME__FLAG__TEARDOWN_FILE="$( \
+    _posix_test__hooks__get_hook_flag \
+      "$POSIX_TEST__HOOKS__CONFIG__PATTERN__TEARDOWN_FILE" \
       "$___test_file_path"
   )"
 
-  dm_test__debug 'dm_test__hooks__init_hooks_for_test_file' \
+  posix_test__debug 'posix_test__hooks__init_hooks_for_test_file' \
     'hook flags initialized:'
 
-  dm_test__debug 'dm_test__hooks__init_hooks_for_test_file' \
-    "  setup: ${DM_TEST__HOOKS__RUNTIME__FLAG__SETUP}"
-  dm_test__debug 'dm_test__hooks__init_hooks_for_test_file' \
-    "  teardown: ${DM_TEST__HOOKS__RUNTIME__FLAG__TEARDOWN}"
-  dm_test__debug 'dm_test__hooks__init_hooks_for_test_file' \
-    "  setup_file: ${DM_TEST__HOOKS__RUNTIME__FLAG__SETUP_FILE}"
-  dm_test__debug 'dm_test__hooks__init_hooks_for_test_file' \
-    "  teardown_file: ${DM_TEST__HOOKS__RUNTIME__FLAG__TEARDOWN_FILE}"
+  posix_test__debug 'posix_test__hooks__init_hooks_for_test_file' \
+    "  setup: ${POSIX_TEST__HOOKS__RUNTIME__FLAG__SETUP}"
+  posix_test__debug 'posix_test__hooks__init_hooks_for_test_file' \
+    "  teardown: ${POSIX_TEST__HOOKS__RUNTIME__FLAG__TEARDOWN}"
+  posix_test__debug 'posix_test__hooks__init_hooks_for_test_file' \
+    "  setup_file: ${POSIX_TEST__HOOKS__RUNTIME__FLAG__SETUP_FILE}"
+  posix_test__debug 'posix_test__hooks__init_hooks_for_test_file' \
+    "  teardown_file: ${POSIX_TEST__HOOKS__RUNTIME__FLAG__TEARDOWN_FILE}"
 }
 
 #==============================================================================
 # Triggers the [setup] hook.
 #------------------------------------------------------------------------------
 # Globals:
-#   DM_TEST__HOOKS__CONFIG__FUNCTION_NAME__SETUP
-#   DM_TEST__HOOKS__RUNTIME__FLAG__SETUP
+#   POSIX_TEST__HOOKS__CONFIG__FUNCTION_NAME__SETUP
+#   POSIX_TEST__HOOKS__RUNTIME__FLAG__SETUP
 # Arguments:
 #   None
 # STDIN:
@@ -155,18 +155,18 @@ dm_test__hooks__init_hooks_for_test_file() {
 # Status:
 #   Returns the given hook's status.
 #==============================================================================
-dm_test__hooks__trigger_hook__setup() {
-  _dm_test__hooks__trigger_hook \
-    "$DM_TEST__HOOKS__CONFIG__FUNCTION_NAME__SETUP" \
-    "$DM_TEST__HOOKS__RUNTIME__FLAG__SETUP"
+posix_test__hooks__trigger_hook__setup() {
+  _posix_test__hooks__trigger_hook \
+    "$POSIX_TEST__HOOKS__CONFIG__FUNCTION_NAME__SETUP" \
+    "$POSIX_TEST__HOOKS__RUNTIME__FLAG__SETUP"
 }
 
 #==============================================================================
 # Triggers the [teardown] hook.
 #------------------------------------------------------------------------------
 # Globals:
-#   DM_TEST__HOOKS__CONFIG__FUNCTION_NAME__TEARDOWN
-#   DM_TEST__HOOKS__RUNTIME__FLAG__TEARDOWN
+#   POSIX_TEST__HOOKS__CONFIG__FUNCTION_NAME__TEARDOWN
+#   POSIX_TEST__HOOKS__RUNTIME__FLAG__TEARDOWN
 # Arguments:
 #   None
 # STDIN:
@@ -181,18 +181,18 @@ dm_test__hooks__trigger_hook__setup() {
 # Status:
 #   Returns the given hook's status.
 #==============================================================================
-dm_test__hooks__trigger_hook__teardown() {
-  _dm_test__hooks__trigger_hook \
-    "$DM_TEST__HOOKS__CONFIG__FUNCTION_NAME__TEARDOWN" \
-    "$DM_TEST__HOOKS__RUNTIME__FLAG__TEARDOWN"
+posix_test__hooks__trigger_hook__teardown() {
+  _posix_test__hooks__trigger_hook \
+    "$POSIX_TEST__HOOKS__CONFIG__FUNCTION_NAME__TEARDOWN" \
+    "$POSIX_TEST__HOOKS__RUNTIME__FLAG__TEARDOWN"
 }
 
 #==============================================================================
 # Triggers the [setup file] hook.
 #------------------------------------------------------------------------------
 # Globals:
-#   DM_TEST__HOOKS__CONFIG__FUNCTION_NAME__SETUP_FILE
-#   DM_TEST__HOOKS__RUNTIME__FLAG__SETUP_FILE
+#   POSIX_TEST__HOOKS__CONFIG__FUNCTION_NAME__SETUP_FILE
+#   POSIX_TEST__HOOKS__RUNTIME__FLAG__SETUP_FILE
 # Arguments:
 #   None
 # STDIN:
@@ -207,18 +207,18 @@ dm_test__hooks__trigger_hook__teardown() {
 # Status:
 #   Returns the given hook's status.
 #==============================================================================
-dm_test__hooks__trigger_hook__setup_file() {
-  _dm_test__hooks__trigger_hook \
-    "$DM_TEST__HOOKS__CONFIG__FUNCTION_NAME__SETUP_FILE" \
-    "$DM_TEST__HOOKS__RUNTIME__FLAG__SETUP_FILE"
+posix_test__hooks__trigger_hook__setup_file() {
+  _posix_test__hooks__trigger_hook \
+    "$POSIX_TEST__HOOKS__CONFIG__FUNCTION_NAME__SETUP_FILE" \
+    "$POSIX_TEST__HOOKS__RUNTIME__FLAG__SETUP_FILE"
 }
 
 #==============================================================================
 # Triggers the [teardown file] hook.
 #------------------------------------------------------------------------------
 # Globals:
-#   DM_TEST__HOOKS__CONFIG__FUNCTION_NAME__TEARDOWN_FILE
-#   DM_TEST__HOOKS__RUNTIME__FLAG__TEARDOWN_FILE
+#   POSIX_TEST__HOOKS__CONFIG__FUNCTION_NAME__TEARDOWN_FILE
+#   POSIX_TEST__HOOKS__RUNTIME__FLAG__TEARDOWN_FILE
 # Arguments:
 #   None
 # STDIN:
@@ -233,18 +233,18 @@ dm_test__hooks__trigger_hook__setup_file() {
 # Status:
 #   Returns the given hook's status.
 #==============================================================================
-dm_test__hooks__trigger_hook__teardown_file() {
-  _dm_test__hooks__trigger_hook \
-    "$DM_TEST__HOOKS__CONFIG__FUNCTION_NAME__TEARDOWN_FILE" \
-    "$DM_TEST__HOOKS__RUNTIME__FLAG__TEARDOWN_FILE"
+posix_test__hooks__trigger_hook__teardown_file() {
+  _posix_test__hooks__trigger_hook \
+    "$POSIX_TEST__HOOKS__CONFIG__FUNCTION_NAME__TEARDOWN_FILE" \
+    "$POSIX_TEST__HOOKS__RUNTIME__FLAG__TEARDOWN_FILE"
 }
 
 #==============================================================================
 # Returns zero if the [setup] hook is available.
 #------------------------------------------------------------------------------
 # Globals:
-#   DM_TEST__HOOKS__CONFIG__FUNCTION_NAME__SETUP
-#   DM_TEST__HOOKS__RUNTIME__FLAG__SETUP
+#   POSIX_TEST__HOOKS__CONFIG__FUNCTION_NAME__SETUP
+#   POSIX_TEST__HOOKS__RUNTIME__FLAG__SETUP
 # Arguments:
 #   None
 # STDIN:
@@ -260,18 +260,18 @@ dm_test__hooks__trigger_hook__teardown_file() {
 #   0 - Given hook is available.
 #   1 - Given hook is not available.
 #==============================================================================
-dm_test__hooks__is_hook_available__setup() {
-  _dm_test__hooks__is_hook_available \
-    "$DM_TEST__HOOKS__CONFIG__FUNCTION_NAME__SETUP" \
-    "$DM_TEST__HOOKS__RUNTIME__FLAG__SETUP"
+posix_test__hooks__is_hook_available__setup() {
+  _posix_test__hooks__is_hook_available \
+    "$POSIX_TEST__HOOKS__CONFIG__FUNCTION_NAME__SETUP" \
+    "$POSIX_TEST__HOOKS__RUNTIME__FLAG__SETUP"
 }
 
 #==============================================================================
 # Returns zero if the [teardown] hook is available.
 #------------------------------------------------------------------------------
 # Globals:
-#   DM_TEST__HOOKS__CONFIG__FUNCTION_NAME__TEARDOWN
-#   DM_TEST__HOOKS__RUNTIME__FLAG__TEARDOWN
+#   POSIX_TEST__HOOKS__CONFIG__FUNCTION_NAME__TEARDOWN
+#   POSIX_TEST__HOOKS__RUNTIME__FLAG__TEARDOWN
 # Arguments:
 #   None
 # STDIN:
@@ -287,18 +287,18 @@ dm_test__hooks__is_hook_available__setup() {
 #   0 - Given hook is available.
 #   1 - Given hook is not available.
 #==============================================================================
-dm_test__hooks__is_hook_available__teardown() {
-  _dm_test__hooks__is_hook_available \
-    "$DM_TEST__HOOKS__CONFIG__FUNCTION_NAME__TEARDOWN" \
-    "$DM_TEST__HOOKS__RUNTIME__FLAG__TEARDOWN"
+posix_test__hooks__is_hook_available__teardown() {
+  _posix_test__hooks__is_hook_available \
+    "$POSIX_TEST__HOOKS__CONFIG__FUNCTION_NAME__TEARDOWN" \
+    "$POSIX_TEST__HOOKS__RUNTIME__FLAG__TEARDOWN"
 }
 
 #==============================================================================
 # Returns zero if the [setup file] hook is available.
 #------------------------------------------------------------------------------
 # Globals:
-#   DM_TEST__HOOKS__CONFIG__FUNCTION_NAME__SETUP_FILE
-#   DM_TEST__HOOKS__RUNTIME__FLAG__SETUP_FILE
+#   POSIX_TEST__HOOKS__CONFIG__FUNCTION_NAME__SETUP_FILE
+#   POSIX_TEST__HOOKS__RUNTIME__FLAG__SETUP_FILE
 # Arguments:
 #   None
 # STDIN:
@@ -314,18 +314,18 @@ dm_test__hooks__is_hook_available__teardown() {
 #   0 - Given hook is available.
 #   1 - Given hook is not available.
 #==============================================================================
-dm_test__hooks__is_hook_available__setup_file() {
-  _dm_test__hooks__is_hook_available \
-    "$DM_TEST__HOOKS__CONFIG__FUNCTION_NAME__SETUP_FILE" \
-    "$DM_TEST__HOOKS__RUNTIME__FLAG__SETUP_FILE"
+posix_test__hooks__is_hook_available__setup_file() {
+  _posix_test__hooks__is_hook_available \
+    "$POSIX_TEST__HOOKS__CONFIG__FUNCTION_NAME__SETUP_FILE" \
+    "$POSIX_TEST__HOOKS__RUNTIME__FLAG__SETUP_FILE"
 }
 
 #==============================================================================
 # Returns zero if the [teardown file] hook is available.
 #------------------------------------------------------------------------------
 # Globals:
-#   DM_TEST__HOOKS__CONFIG__FUNCTION_NAME__TEARDOWN_FILE
-#   DM_TEST__HOOKS__RUNTIME__FLAG__TEARDOWN_FILE
+#   POSIX_TEST__HOOKS__CONFIG__FUNCTION_NAME__TEARDOWN_FILE
+#   POSIX_TEST__HOOKS__RUNTIME__FLAG__TEARDOWN_FILE
 # Arguments:
 #   None
 # STDIN:
@@ -341,10 +341,10 @@ dm_test__hooks__is_hook_available__setup_file() {
 #   0 - Given hook is available.
 #   1 - Given hook is not available.
 #==============================================================================
-dm_test__hooks__is_hook_available__teardown_file() {
-  _dm_test__hooks__is_hook_available \
-    "$DM_TEST__HOOKS__CONFIG__FUNCTION_NAME__TEARDOWN_FILE" \
-    "$DM_TEST__HOOKS__RUNTIME__FLAG__TEARDOWN_FILE"
+posix_test__hooks__is_hook_available__teardown_file() {
+  _posix_test__hooks__is_hook_available \
+    "$POSIX_TEST__HOOKS__CONFIG__FUNCTION_NAME__TEARDOWN_FILE" \
+    "$POSIX_TEST__HOOKS__RUNTIME__FLAG__TEARDOWN_FILE"
 }
 
 #==============================================================================
@@ -381,18 +381,18 @@ dm_test__hooks__is_hook_available__teardown_file() {
 # Status:
 #   0 - Other status is not expected.
 #==============================================================================
-_dm_test__hooks__get_hook_flag() {
+_posix_test__hooks__get_hook_flag() {
   ___pattern="$1"
   ___test_file_path="$2"
 
-  dm_test__debug '_dm_test__hooks__get_hook_flag' \
+  posix_test__debug '_posix_test__hooks__get_hook_flag' \
     "checking hook pattern '${___pattern}' in test file '${___test_file_path}'"
 
   ___result="$( \
     posix_adapter__grep --count "$___pattern" "$___test_file_path" || true \
   )"
 
-  dm_test__debug '_dm_test__hooks__get_hook_flag' \
+  posix_test__debug '_posix_test__hooks__get_hook_flag' \
     "${___result} match was found"
 
   posix_adapter__echo "$___result"
@@ -419,19 +419,19 @@ _dm_test__hooks__get_hook_flag() {
 # Status:
 #   Returns the given hook's status.
 #==============================================================================
-_dm_test__hooks__trigger_hook() {
+_posix_test__hooks__trigger_hook() {
   ___hook_name="$1"
   ___hook_flag="$2"
 
-  dm_test__debug '_dm_test__hooks__trigger_hook' \
+  posix_test__debug '_posix_test__hooks__trigger_hook' \
     "hook function has triggered: '${___hook_name}'"
 
   if [ "$___hook_flag" -ne '0' ]
   then
-    _dm_test__hooks__check_singular_flag "$___hook_flag"
-    _dm_test__hooks__execute_hook "$___hook_name"
+    _posix_test__hooks__check_singular_flag "$___hook_flag"
+    _posix_test__hooks__execute_hook "$___hook_name"
   else
-    dm_test__debug '_dm_test__hooks__trigger_hook' \
+    posix_test__debug '_posix_test__hooks__trigger_hook' \
       "ignoring trigger for hook function: '${___hook_name}'"
   fi
 }
@@ -457,20 +457,20 @@ _dm_test__hooks__trigger_hook() {
 #   0 - Given hook is available.
 #   1 - Given hook is not available.
 #==============================================================================
-_dm_test__hooks__is_hook_available() {
+_posix_test__hooks__is_hook_available() {
   ___hook_name="$1"
   ___hook_flag="$2"
 
-  dm_test__debug '_dm_test__hooks__is_hook_available' \
+  posix_test__debug '_posix_test__hooks__is_hook_available' \
     "checking if hook '${___hook_name}' is available.."
 
   if [ "$___hook_flag" -ne '0' ]
   then
-    dm_test__debug '_dm_test__hooks__is_hook_available' \
+    posix_test__debug '_posix_test__hooks__is_hook_available' \
       "hook '${___hook_name}' is available"
     return 0
   else
-    dm_test__debug '_dm_test__hooks__is_hook_available' \
+    posix_test__debug '_posix_test__hooks__is_hook_available' \
       "hook '${___hook_name}' is NOT available"
     return 1
   fi
@@ -496,7 +496,7 @@ _dm_test__hooks__is_hook_available() {
 # Status:
 #   0 - Other status is not expected.
 #==============================================================================
-_dm_test__hooks__check_singular_flag() {
+_posix_test__hooks__check_singular_flag() {
   ___hook_flag="$1"
 
   if [ "$___hook_flag" -gt '1' ]
@@ -511,13 +511,13 @@ _dm_test__hooks__check_singular_flag() {
 # Executes the given hook function.
 #------------------------------------------------------------------------------
 # Globals:
-#   DM_TEST__CACHE__RUNTIME__TEST_DIR__TEST_SUITE
-#   DM_TEST__CACHE__RUNTIME__TEST_DIR__TEST_FILE
-#   DM_TEST__CACHE__RUNTIME__TEST_DIR__TEST_CASE
-#   DM_TEST__HOOKS__CONFIG__FUNCTION_NAME__SETUP
-#   DM_TEST__HOOKS__CONFIG__FUNCTION_NAME__TEARDOWN
-#   DM_TEST__HOOKS__CONFIG__FUNCTION_NAME__SETUP_FILE
-#   DM_TEST__HOOKS__CONFIG__FUNCTION_NAME__TEARDOWN_FILE
+#   POSIX_TEST__CACHE__RUNTIME__TEST_DIR__TEST_SUITE
+#   POSIX_TEST__CACHE__RUNTIME__TEST_DIR__TEST_FILE
+#   POSIX_TEST__CACHE__RUNTIME__TEST_DIR__TEST_CASE
+#   POSIX_TEST__HOOKS__CONFIG__FUNCTION_NAME__SETUP
+#   POSIX_TEST__HOOKS__CONFIG__FUNCTION_NAME__TEARDOWN
+#   POSIX_TEST__HOOKS__CONFIG__FUNCTION_NAME__SETUP_FILE
+#   POSIX_TEST__HOOKS__CONFIG__FUNCTION_NAME__TEARDOWN_FILE
 # Arguments:
 #   [1] hook_name - Name of the triggered hook function.
 # STDIN:
@@ -532,31 +532,31 @@ _dm_test__hooks__check_singular_flag() {
 # Status:
 #   Returns the given hook's status.
 #==============================================================================
-_dm_test__hooks__execute_hook() {
+_posix_test__hooks__execute_hook() {
   ___hook_name="$1"
 
-  dm_test__debug '_dm_test__hooks__execute_hook' \
+  posix_test__debug '_posix_test__hooks__execute_hook' \
     "executing hook function: '${___hook_name}'"
 
-  ___dir_suite="$DM_TEST__CACHE__RUNTIME__TEST_DIR__TEST_SUITE"
-  ___dir_file="$DM_TEST__CACHE__RUNTIME__TEST_DIR__TEST_FILE"
-  ___dir_case="$DM_TEST__CACHE__RUNTIME__TEST_DIR__TEST_CASE"
+  ___dir_suite="$POSIX_TEST__CACHE__RUNTIME__TEST_DIR__TEST_SUITE"
+  ___dir_file="$POSIX_TEST__CACHE__RUNTIME__TEST_DIR__TEST_FILE"
+  ___dir_case="$POSIX_TEST__CACHE__RUNTIME__TEST_DIR__TEST_CASE"
 
   # We have to differentiate between file level and test case level hooks in
   # terms of test directories. For file level hooks, we cannot interprete test
   # case level hooks, as no test case is executing at that time. Hence, test
   # case level test directories only injected into test case level hooks.
   case "$___hook_name" in
-    "$DM_TEST__HOOKS__CONFIG__FUNCTION_NAME__SETUP")
+    "$POSIX_TEST__HOOKS__CONFIG__FUNCTION_NAME__SETUP")
       "$___hook_name" "$___dir_suite" "$___dir_file" "$___dir_case"
       ;;
-    "$DM_TEST__HOOKS__CONFIG__FUNCTION_NAME__TEARDOWN")
+    "$POSIX_TEST__HOOKS__CONFIG__FUNCTION_NAME__TEARDOWN")
       "$___hook_name" "$___dir_suite" "$___dir_file" "$___dir_case"
       ;;
-    "$DM_TEST__HOOKS__CONFIG__FUNCTION_NAME__SETUP_FILE")
+    "$POSIX_TEST__HOOKS__CONFIG__FUNCTION_NAME__SETUP_FILE")
       "$___hook_name" "$___dir_suite" "$___dir_file"
       ;;
-    "$DM_TEST__HOOKS__CONFIG__FUNCTION_NAME__TEARDOWN_FILE")
+    "$POSIX_TEST__HOOKS__CONFIG__FUNCTION_NAME__TEARDOWN_FILE")
       "$___hook_name" "$___dir_suite" "$___dir_file"
       ;;
   esac

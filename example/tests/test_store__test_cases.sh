@@ -13,8 +13,8 @@ test__store__single_words_can_be_stored_and_retrieved() {
   key="key"
   value="value"
 
-  dm_test__store__set "$key" "$value"
-  result="$(dm_test__store__get "$key")"
+  posix_test__store__set "$key" "$value"
+  result="$(posix_test__store__get "$key")"
 
   assert_equal "$value" "$result"
 }
@@ -23,8 +23,8 @@ test__store__multi_word_keys_and_values_can_be_used() {
   key="my key"
   value="my value"
 
-  dm_test__store__set "$key" "$value"
-  result="$(dm_test__store__get "$key")"
+  posix_test__store__set "$key" "$value"
+  result="$(posix_test__store__get "$key")"
 
   assert_equal "$value" "$result"
 }
@@ -34,9 +34,9 @@ test__store__setting_the_key_again_overrides_old_value() {
   old_value="old value"
   new_value="new value"
 
-  dm_test__store__set "$key" "$old_value"
-  dm_test__store__set "$key" "$new_value"
-  result="$(dm_test__store__get "$key")"
+  posix_test__store__set "$key" "$old_value"
+  posix_test__store__set "$key" "$new_value"
+  result="$(posix_test__store__get "$key")"
 
   assert_equal "$new_value" "$result"
 }
@@ -45,20 +45,20 @@ test__store__setting_the_key_multiple_times_wont_create_new_entry() {
   key="my key"
 
   # Initializing a new storage file to start clean.
-  dm_test__store__init
+  posix_test__store__init
 
-  dm_test__store__set "$key" "one"
-  dm_test__store__set "$key" "two"
-  dm_test__store__set "$key" "three"
-  dm_test__store__set "$key" "four"
-  dm_test__store__set "$key" "five"
-  dm_test__store__set "$key" "six"
-  dm_test__store__set "$key" "seven"
-  dm_test__store__set "$key" "eight"
-  dm_test__store__set "$key" "nine"
-  dm_test__store__set "$key" "ten"
+  posix_test__store__set "$key" "one"
+  posix_test__store__set "$key" "two"
+  posix_test__store__set "$key" "three"
+  posix_test__store__set "$key" "four"
+  posix_test__store__set "$key" "five"
+  posix_test__store__set "$key" "six"
+  posix_test__store__set "$key" "seven"
+  posix_test__store__set "$key" "eight"
+  posix_test__store__set "$key" "nine"
+  posix_test__store__set "$key" "ten"
 
-  line_count="$(posix_adapter__wc --lines < "$DM_TEST__STORE__RUNTIME__STORAGE_FILE")"
+  line_count="$(posix_adapter__wc --lines < "$POSIX_TEST__STORE__RUNTIME__STORAGE_FILE")"
 
   assert_equal '1' "$line_count"
 }
@@ -71,10 +71,10 @@ test__store__multiline_values_can_be_stored() {
   )"
 
   dummy_test_function() {
-    dm_test__store__get "$key"
+    posix_test__store__get "$key"
   }
 
-  dm_test__store__set "$key" "$value"
+  posix_test__store__set "$key" "$value"
 
   run dummy_test_function
 
@@ -94,10 +94,10 @@ test__store__even_multiline_keys_can_be_used() {
   )"
 
   dummy_test_function() {
-    dm_test__store__get "$key"
+    posix_test__store__get "$key"
   }
 
-  dm_test__store__set "$key" "$value"
+  posix_test__store__set "$key" "$value"
 
   run dummy_test_function
 

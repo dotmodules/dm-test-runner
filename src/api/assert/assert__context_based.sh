@@ -24,9 +24,9 @@
 
 # Global variables that hold the last execution results of the tested function
 # or command.
-DM_TEST__ASSERT__RUNTIME__LAST_STATUS='__INVALID__'
-DM_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD1='__INVALID__'
-DM_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD2='__INVALID__'
+POSIX_TEST__ASSERT__RUNTIME__LAST_STATUS='__INVALID__'
+POSIX_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD1='__INVALID__'
+POSIX_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD2='__INVALID__'
 
 #==============================================================================
 #  ____
@@ -47,18 +47,18 @@ DM_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD2='__INVALID__'
 # variables of this function.
 #------------------------------------------------------------------------------
 # Globals:
-#   DM_TEST__ASSERT__RUNTIME__LAST_STATUS
-#   DM_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD1
-#   DM_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD2
+#   POSIX_TEST__ASSERT__RUNTIME__LAST_STATUS
+#   POSIX_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD1
+#   POSIX_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD2
 # Arguments:
 #   [..] command - Commands and parameters that needs to be executed.
 # STDIN:
 #   None
 #------------------------------------------------------------------------------
 # Output variables:
-#   DM_TEST__ASSERT__RUNTIME__LAST_STATUS
-#   DM_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD1
-#   DM_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD2
+#   POSIX_TEST__ASSERT__RUNTIME__LAST_STATUS
+#   POSIX_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD1
+#   POSIX_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD2
 # STDOUT:
 #   None
 # STDERR:
@@ -68,36 +68,36 @@ DM_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD2='__INVALID__'
 #       captured.
 #==============================================================================
 run() {
-  dm_test__debug 'run' "running command: '$*'"
+  posix_test__debug 'run' "running command: '$*'"
 
   # Creating temporary files to store the standard output and standard error
   # contents of the executed function.
-  DM_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD1="$( \
-    dm_test__cache__create_temp_path \
+  POSIX_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD1="$( \
+    posix_test__cache__create_temp_path \
   )"
-  DM_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD2="$( \
-    dm_test__cache__create_temp_path \
+  POSIX_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD2="$( \
+    posix_test__cache__create_temp_path \
   )"
 
   # Storing the passed command as a variable is not an option here, because it
   # would be re-splitted on execution.
   if "$@" \
-    1>"$DM_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD1" \
-    2>"$DM_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD2"
+    1>"$POSIX_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD1" \
+    2>"$POSIX_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD2"
   then
-    DM_TEST__ASSERT__RUNTIME__LAST_STATUS="$?"
+    POSIX_TEST__ASSERT__RUNTIME__LAST_STATUS="$?"
   else
-    DM_TEST__ASSERT__RUNTIME__LAST_STATUS="$?"
+    POSIX_TEST__ASSERT__RUNTIME__LAST_STATUS="$?"
   fi
 
-  dm_test__debug_list 'run' 'captured standard output:' \
-    "$(posix_adapter__cat "$DM_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD1")"
-  dm_test__debug_list 'run' 'captured standard error:' \
-    "$(posix_adapter__cat "$DM_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD2")"
+  posix_test__debug_list 'run' 'captured standard output:' \
+    "$(posix_adapter__cat "$POSIX_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD1")"
+  posix_test__debug_list 'run' 'captured standard error:' \
+    "$(posix_adapter__cat "$POSIX_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD2")"
 
-  dm_test__debug 'run' "$( \
+  posix_test__debug 'run' "$( \
     posix_adapter__printf '%s' 'captured status: '; \
-    posix_adapter__echo "'${DM_TEST__ASSERT__RUNTIME__LAST_STATUS}'" \
+    posix_adapter__echo "'${POSIX_TEST__ASSERT__RUNTIME__LAST_STATUS}'" \
   )"
 }
 
@@ -116,7 +116,7 @@ run() {
 # 'status' variable by the 'run' function.
 #------------------------------------------------------------------------------
 # Globals:
-#   DM_TEST__ASSERT__RUNTIME__LAST_STATUS
+#   POSIX_TEST__ASSERT__RUNTIME__LAST_STATUS
 # Arguments:
 #   [1] expected_status - Expected status of the previously run function.
 # STDIN:
@@ -134,22 +134,22 @@ run() {
 #==============================================================================
 assert_status() {
   ___expected="$1"
-  ___result="$DM_TEST__ASSERT__RUNTIME__LAST_STATUS"
+  ___result="$POSIX_TEST__ASSERT__RUNTIME__LAST_STATUS"
 
-  dm_test__debug 'assert_status' 'asserting status:'
-  dm_test__debug 'assert_status' "- expected: '${___expected}'"
-  dm_test__debug 'assert_status' "- result:   '${___result}'"
+  posix_test__debug 'assert_status' 'asserting status:'
+  posix_test__debug 'assert_status' "- expected: '${___expected}'"
+  posix_test__debug 'assert_status' "- result:   '${___result}'"
 
   if [ "$___result" = "$___expected" ]
   then
-    dm_test__debug 'assert_status' '=> assertion succeeded'
+    posix_test__debug 'assert_status' '=> assertion succeeded'
   else
-    dm_test__debug 'assert_status' '=> assertion failed'
+    posix_test__debug 'assert_status' '=> assertion failed'
 
     ___subject='Status comparison failed'
     ___reason="expected: ${___expected}\n  actual: ${___result}"
     ___assertion='assert_status'
-    _dm_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
+    _posix_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
   fi
 }
 
@@ -169,7 +169,7 @@ assert_status() {
 # function, it will only check the presence of the output.
 #------------------------------------------------------------------------------
 # Globals:
-#   DM_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD1
+#   POSIX_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD1
 # Arguments:
 #   [1] expected_output <optional> - Expected output of the previously run
 #       function.
@@ -190,10 +190,10 @@ assert_output() {
   # Handling the special case then there is no passed parameter.
   if [ "$#" -eq '0' ]
   then
-    ___target_buffer="$DM_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD1"
+    ___target_buffer="$POSIX_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD1"
     ___assertion_name="assert_output"
 
-    _dm_test__assert__assert_has_output \
+    _posix_test__assert__assert_has_output \
       "$___target_buffer" \
       "$___assertion_name"
 
@@ -203,10 +203,10 @@ assert_output() {
   fi
 
   ___expected="$1"
-  ___target_buffer="$DM_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD1"
+  ___target_buffer="$POSIX_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD1"
   ___assertion_name="assert_output"
 
-  _dm_test__assert__assert_output \
+  _posix_test__assert__assert_output \
     "$___expected" \
     "$___target_buffer" \
     "$___assertion_name"
@@ -215,7 +215,7 @@ assert_output() {
 
   if [ "$___result" -eq '2' ]
   then
-    dm_test__debug 'assert_output' '=> assertion failed'
+    posix_test__debug 'assert_output' '=> assertion failed'
 
     ___subject='Inappropriate assertion function'
     ___reason="$( \
@@ -224,7 +224,7 @@ assert_output() {
       posix_adapter__echo "'assert_output_line_partially_at_index'." \
     )"
     ___assertion='assert_output'
-    _dm_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
+    _posix_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
   fi
 }
 
@@ -233,7 +233,7 @@ assert_output() {
 # output captured during the last 'run' command execution.
 #------------------------------------------------------------------------------
 # Globals:
-#   DM_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD1
+#   POSIX_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD1
 # Arguments:
 #   None
 # STDIN:
@@ -250,11 +250,11 @@ assert_output() {
 #   1 - Assertion failed.
 #==============================================================================
 assert_no_output() {
-  ___target_buffer="$DM_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD1"
+  ___target_buffer="$POSIX_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD1"
 
   if [ -s "$___target_buffer" ]
   then
-    dm_test__debug 'assert_no_output' '=> assertion failed'
+    posix_test__debug 'assert_no_output' '=> assertion failed'
 
     ___subject='Standard output was captured.'
     ___reason="$( \
@@ -265,7 +265,7 @@ assert_no_output() {
         posix_adapter__sed --expression 's/^/\|/'; \
     )"
     ___assertion='assert_no_output'
-    _dm_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
+    _posix_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
   fi
 }
 
@@ -274,7 +274,7 @@ assert_no_output() {
 # output executed with the 'run' function.
 #------------------------------------------------------------------------------
 # Globals:
-#   DM_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD1
+#   POSIX_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD1
 # Arguments:
 #   [1] expected_line_count - Expected output line count.
 # STDIN:
@@ -292,10 +292,10 @@ assert_no_output() {
 #==============================================================================
 assert_output_line_count() {
   ___expected="$1"
-  ___target_buffer="$DM_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD1"
+  ___target_buffer="$POSIX_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD1"
   ___assertion_name="assert_output_line_count"
 
-  _dm_test__assert__assert_line_count \
+  _posix_test__assert__assert_line_count \
     "$___expected" \
     "$___target_buffer" \
     "$___assertion_name"
@@ -306,7 +306,7 @@ assert_output_line_count() {
 # index parameter with the expected parameter.
 #------------------------------------------------------------------------------
 # Globals:
-#   DM_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD1
+#   POSIX_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD1
 # Arguments:
 #   [1] line_index - One-based line index.
 #   [2] expected_content - Expected content of the given line without the new
@@ -327,10 +327,10 @@ assert_output_line_count() {
 assert_output_line_at_index() {
   ___line_index="$1"
   ___expected="$2"
-  ___target_buffer="$DM_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD1"
+  ___target_buffer="$POSIX_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD1"
   ___assertion_name="assert_output_line_at_index"
 
-  _dm_test__assert__assert_line_at_index \
+  _posix_test__assert__assert_line_at_index \
     "$___line_index" \
     "$___expected" \
     "$___target_buffer" \
@@ -343,7 +343,7 @@ assert_output_line_at_index() {
 # only, should be a part of the whole output line.
 #------------------------------------------------------------------------------
 # Globals:
-#   DM_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD1
+#   POSIX_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD1
 # Arguments:
 #   [1] line_index - One-based line index.
 #   [2] expected_content - Expected content of the given line without the new
@@ -364,10 +364,10 @@ assert_output_line_at_index() {
 assert_output_line_partially_at_index() {
   ___line_index="$1"
   ___expected="$2"
-  ___target_buffer="$DM_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD1"
+  ___target_buffer="$POSIX_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD1"
   ___assertion_name="assert_output_line_partially_at_index"
 
-  _dm_test__assert__assert_line_partially_at_index \
+  _posix_test__assert__assert_line_partially_at_index \
     "$___line_index" \
     "$___expected" \
     "$___target_buffer" \
@@ -389,7 +389,7 @@ assert_output_line_partially_at_index() {
 # error captured output.
 #------------------------------------------------------------------------------
 # Globals:
-#   DM_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD2
+#   POSIX_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD2
 # Arguments:
 #   None
 # STDIN:
@@ -406,11 +406,11 @@ assert_output_line_partially_at_index() {
 #   1 - Assertion failed.
 #==============================================================================
 assert_no_error() {
-  ___target_buffer="$DM_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD2"
+  ___target_buffer="$POSIX_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD2"
 
   if [ -s "$___target_buffer" ]
   then
-    dm_test__debug 'assert_no_error' '=> assertion failed'
+    posix_test__debug 'assert_no_error' '=> assertion failed'
 
     ___subject='Standard error output was captured.'
     ___reason="$( \
@@ -421,7 +421,7 @@ assert_no_error() {
         posix_adapter__sed --expression 's/^/\|/'; \
     )"
     ___assertion='assert_no_error'
-    _dm_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
+    _posix_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
   fi
 }
 
@@ -431,7 +431,7 @@ assert_no_error() {
 # this function, it will only check the presence of the error output.
 #------------------------------------------------------------------------------
 # Globals:
-#   DM_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD2
+#   POSIX_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD2
 # Arguments:
 #   [1] expected_output <optional> - Expected output of the previously run
 #       function.
@@ -452,10 +452,10 @@ assert_error() {
   # Handling the special case then there is no passed parameter.
   if [ "$#" -eq '0' ]
   then
-    ___target_buffer="$DM_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD2"
+    ___target_buffer="$POSIX_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD2"
     ___assertion_name="assert_error"
 
-    _dm_test__assert__assert_has_output \
+    _posix_test__assert__assert_has_output \
       "$___target_buffer" \
       "$___assertion_name"
 
@@ -465,10 +465,10 @@ assert_error() {
   fi
 
   ___expected="$1"
-  ___target_buffer="$DM_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD2"
+  ___target_buffer="$POSIX_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD2"
   ___assertion_name="assert_error"
 
-  _dm_test__assert__assert_output \
+  _posix_test__assert__assert_output \
     "$___expected" \
     "$___target_buffer" \
     "$___assertion_name"
@@ -477,7 +477,7 @@ assert_error() {
 
   if [ "$___result" -eq '2' ]
   then
-    dm_test__debug 'assert_error' '=> assertion failed'
+    posix_test__debug 'assert_error' '=> assertion failed'
 
     ___subject='Inappropriate assertion function'
     ___reason="$( \
@@ -486,7 +486,7 @@ assert_error() {
       posix_adapter__echo "'assert_error_line_partially_at_index'." \
     )"
     ___assertion='assert_error'
-    _dm_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
+    _posix_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
   fi
 }
 
@@ -495,7 +495,7 @@ assert_error() {
 # error output executed with the 'run' function.
 #------------------------------------------------------------------------------
 # Globals:
-#   DM_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD2
+#   POSIX_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD2
 # Arguments:
 #   [1] expected_line_count - Expected error output line count.
 # STDIN:
@@ -513,10 +513,10 @@ assert_error() {
 #==============================================================================
 assert_error_line_count() {
   ___expected="$1"
-  ___target_buffer="$DM_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD2"
+  ___target_buffer="$POSIX_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD2"
   ___assertion_name="assert_error_line_count"
 
-  _dm_test__assert__assert_line_count \
+  _posix_test__assert__assert_line_count \
     "$___expected" \
     "$___target_buffer" \
     "$___assertion_name"
@@ -527,7 +527,7 @@ assert_error_line_count() {
 # by the index parameter with the expected parameter.
 #------------------------------------------------------------------------------
 # Globals:
-#   DM_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD2
+#   POSIX_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD2
 # Arguments:
 #   [1] line_index - One-based line index.
 #   [2] expected_content - Expected content of the given line without the new
@@ -548,10 +548,10 @@ assert_error_line_count() {
 assert_error_line_at_index() {
   ___line_index="$1"
   ___expected="$2"
-  ___target_buffer="$DM_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD2"
+  ___target_buffer="$POSIX_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD2"
   ___assertion_name="assert_error_line_at_index"
 
-  _dm_test__assert__assert_line_at_index \
+  _posix_test__assert__assert_line_at_index \
     "$___line_index" \
     "$___expected" \
     "$___target_buffer" \
@@ -564,7 +564,7 @@ assert_error_line_at_index() {
 # match only, should be a part of the whole error output line.
 #------------------------------------------------------------------------------
 # Globals:
-#   DM_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD2
+#   POSIX_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD2
 # Arguments:
 #   [1] line_index - One-based line index.
 #   [2] expected_content - Expected content of the given line without the new
@@ -585,10 +585,10 @@ assert_error_line_at_index() {
 assert_error_line_partially_at_index() {
   ___line_index="$1"
   ___expected="$2"
-  ___target_buffer="$DM_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD2"
+  ___target_buffer="$POSIX_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD2"
   ___assertion_name="assert_error_line_partially_at_index"
 
-  _dm_test__assert__assert_line_partially_at_index \
+  _posix_test__assert__assert_line_partially_at_index \
     "$___line_index" \
     "$___expected" \
     "$___target_buffer" \
@@ -626,7 +626,7 @@ assert_error_line_partially_at_index() {
 #   0 - Target buffer contains something.
 #   1 - Target buffer has nothing inside.
 #==============================================================================
-_dm_test__assert__assert_has_output() {
+_posix_test__assert__assert_has_output() {
   ___target_buffer="$1"
   ___assertion_name="$2"
 
@@ -636,13 +636,13 @@ _dm_test__assert__assert_has_output() {
 
   if [ "$___line_count" -eq '0' ] && [ "$___char_count" -eq '0' ]
   then
-    dm_test__debug '_dm_test__assert__assert_has_output' \
+    posix_test__debug '_posix_test__assert__assert_has_output' \
       '=> target buffer has no content'
 
     ___subject='No output was captured'
     ___reason='No output was captured in the target buffer!'
     ___assertion="$___assertion_name"
-    _dm_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
+    _posix_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
   fi
 }
 
@@ -669,7 +669,7 @@ _dm_test__assert__assert_has_output() {
 #   1 - Assertion failed.
 #   2 - Inappropriate assertion function.
 #==============================================================================
-_dm_test__assert__assert_output() {
+_posix_test__assert__assert_output() {
   ___expected="$1"
   ___target_buffer="$2"
   ___assertion_name="$3"
@@ -680,13 +680,13 @@ _dm_test__assert__assert_output() {
 
   if [ "$___line_count" -eq '0' ] && [ "$___char_count" -eq '0' ]
   then
-    dm_test__debug '_dm_test__assert__assert_output' \
+    posix_test__debug '_posix_test__assert__assert_output' \
       '=> nothing to compare to = assertion failed'
 
     ___subject='Cannot compare to empty ouput'
     ___reason='No output was captured in the target buffer, nothing to compare!'
     ___assertion="$___assertion_name"
-    _dm_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
+    _posix_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
   fi
 
   if [ "$___line_count" -gt '1' ]
@@ -696,25 +696,25 @@ _dm_test__assert__assert_output() {
     return 2
   fi
 
-  dm_test__debug '_dm_test__assert__assert_output' \
+  posix_test__debug '_posix_test__assert__assert_output' \
     'asserting output:'
-  dm_test__debug '_dm_test__assert__assert_output' \
+  posix_test__debug '_posix_test__assert__assert_output' \
     "- expected: '${___expected}'"
-  dm_test__debug '_dm_test__assert__assert_output' \
+  posix_test__debug '_posix_test__assert__assert_output' \
     "- result:   '${___result}'"
 
   if [ "$___result" = "$___expected" ]
   then
-    dm_test__debug '_dm_test__assert__assert_output' \
+    posix_test__debug '_posix_test__assert__assert_output' \
       '=> assertion succeeded'
   else
-    dm_test__debug '_dm_test__assert__assert_output' \
+    posix_test__debug '_posix_test__assert__assert_output' \
       '=> assertion failed'
 
     ___subject='Output comparison failed'
     ___reason="expected: '${___expected}'\n  actual: '${___result}'"
     ___assertion="$___assertion_name"
-    _dm_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
+    _posix_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
   fi
 }
 
@@ -740,7 +740,7 @@ _dm_test__assert__assert_output() {
 #   0 - Assertion succeeded.
 #   1 - Assertion failed.
 #==============================================================================
-_dm_test__assert__assert_line_count() {
+_posix_test__assert__assert_line_count() {
   ___expected="$1"
   ___target_buffer="$2"
   ___assertion_name="$3"
@@ -757,25 +757,25 @@ _dm_test__assert__assert_line_count() {
     ___result="$___line_count"
   fi
 
-  dm_test__debug '_dm_test__assert__assert_line_count' \
+  posix_test__debug '_posix_test__assert__assert_line_count' \
     'asserting output line count:'
-  dm_test__debug '_dm_test__assert__assert_line_count' \
+  posix_test__debug '_posix_test__assert__assert_line_count' \
     "- expected: '${___expected}'"
-  dm_test__debug '_dm_test__assert__assert_line_count' \
+  posix_test__debug '_posix_test__assert__assert_line_count' \
     "- result:   '${___result}'"
 
   if [ "$___result" -eq "$___expected" ]
   then
-    dm_test__debug '_dm_test__assert__assert_line_count' \
+    posix_test__debug '_posix_test__assert__assert_line_count' \
       '=> assertion succeeded'
   else
-    dm_test__debug '_dm_test__assert__assert_line_count' \
+    posix_test__debug '_posix_test__assert__assert_line_count' \
       '=> assertion failed'
 
     ___subject='Output line count mismatch'
     ___reason="expected: '${___expected}'\n  actual: '${___result}'"
     ___assertion="$___assertion_name"
-    _dm_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
+    _posix_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
   fi
 }
 
@@ -804,14 +804,14 @@ _dm_test__assert__assert_line_count() {
 #   0 - Assertion succeeded.
 #   1 - Assertion failed.
 #==============================================================================
-_dm_test__assert__assert_line_at_index() {
+_posix_test__assert__assert_line_at_index() {
   ___index="$1"
   ___expected="$2"
   ___target_buffer="$3"
   ___assertion_name="$4"
 
   if ___result="$( \
-    dm_test__get_line_from_output_buffer_by_index \
+    posix_test__get_line_from_output_buffer_by_index \
       "$___index" \
       "$___target_buffer" \
   )"
@@ -827,25 +827,25 @@ _dm_test__assert__assert_line_at_index() {
     return
   fi
 
-  dm_test__debug '_dm_test__assert__assert_line_at_index' \
+  posix_test__debug '_posix_test__assert__assert_line_at_index' \
     'asserting output line at index:'
-  dm_test__debug '_dm_test__assert__assert_line_at_index' \
+  posix_test__debug '_posix_test__assert__assert_line_at_index' \
     "- expected: '${___expected}'"
-  dm_test__debug '_dm_test__assert__assert_line_at_index' \
+  posix_test__debug '_posix_test__assert__assert_line_at_index' \
     "- result:   '${___result}'"
 
   if [ "$___result" = "$___expected" ]
   then
-    dm_test__debug '_dm_test__assert__assert_line_at_index' \
+    posix_test__debug '_posix_test__assert__assert_line_at_index' \
       '=> assertion succeeded'
   else
-    dm_test__debug '_dm_test__assert__assert_line_at_index' \
+    posix_test__debug '_posix_test__assert__assert_line_at_index' \
       '=> assertion failed'
 
     ___subject="Line at index '${___index}' differs from expected"
     ___reason="expected: '${___expected}'\n  actual: '${___result}'"
     ___assertion="$___assertion_name"
-    _dm_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
+    _posix_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
   fi
 }
 
@@ -875,14 +875,14 @@ _dm_test__assert__assert_line_at_index() {
 #   0 - Assertion succeeded.
 #   1 - Assertion failed.
 #==============================================================================
-_dm_test__assert__assert_line_partially_at_index() {
+_posix_test__assert__assert_line_partially_at_index() {
   ___index="$1"
   ___expected="$2"
   ___target_buffer="$3"
   ___assertion_name="$4"
 
   if ___result="$( \
-    dm_test__get_line_from_output_buffer_by_index \
+    posix_test__get_line_from_output_buffer_by_index \
       "$___index" \
       "$___target_buffer" \
   )"
@@ -898,24 +898,24 @@ _dm_test__assert__assert_line_partially_at_index() {
     return
   fi
 
-  dm_test__debug '_dm_test__assert__assert_line_partially_at_index' \
+  posix_test__debug '_posix_test__assert__assert_line_partially_at_index' \
     'asserting output line at index partially:'
-  dm_test__debug '_dm_test__assert__assert_line_partially_at_index' \
+  posix_test__debug '_posix_test__assert__assert_line_partially_at_index' \
     "- pattern: '${___expected}'"
-  dm_test__debug '_dm_test__assert__assert_line_partially_at_index' \
+  posix_test__debug '_posix_test__assert__assert_line_partially_at_index' \
     "- target:   '${___result}'"
 
   if posix_adapter__echo "$___result" | posix_adapter__grep --silent "$___expected"
   then
-    dm_test__debug '_dm_test__assert__assert_line_partially_at_index' \
+    posix_test__debug '_posix_test__assert__assert_line_partially_at_index' \
       '=> assertion succeeded'
   else
-    dm_test__debug '_dm_test__assert__assert_line_partially_at_index' \
+    posix_test__debug '_posix_test__assert__assert_line_partially_at_index' \
       '=> assertion failed'
 
     ___subject="Line at index '${___index}' differs from expected'"
     ___reason="expected: '${___expected}'\n  actual: '${___result}'"
     ___assertion="$___assertion_name"
-    _dm_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
+    _posix_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
   fi
 }

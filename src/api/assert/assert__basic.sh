@@ -43,18 +43,18 @@
 assert() {
   ___command="$*"
 
-  dm_test__debug 'assert' "running assertion: '${___command}'"
+  posix_test__debug 'assert' "running assertion: '${___command}'"
 
   if $___command
   then
-    dm_test__debug 'assert' '=> assertion succeeded'
+    posix_test__debug 'assert' '=> assertion succeeded'
   else
-    dm_test__debug 'assert' '=> assertion failed'
+    posix_test__debug 'assert' '=> assertion failed'
 
     ___subject='Assertion failed'
     ___reason="Tested command that failed: '${___command}'."
     ___assertion='assert'
-    _dm_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
+    _posix_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
   fi
 }
 
@@ -87,18 +87,18 @@ assert() {
 assert_success() {
   ___command="$*"
 
-  dm_test__debug 'assert_success' "running assertion: '${___command}'"
+  posix_test__debug 'assert_success' "running assertion: '${___command}'"
 
   if $___command
   then
-    dm_test__debug 'assert_success' '=> assertion succeeded'
+    posix_test__debug 'assert_success' '=> assertion succeeded'
   else
-    dm_test__debug 'assert_success' '=> assertion failed'
+    posix_test__debug 'assert_success' '=> assertion failed'
 
     ___subject='Assertion failed'
     ___reason="Tested command that failed: '${___command}'."
     ___assertion='assert_success'
-    _dm_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
+    _posix_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
   fi
 }
 
@@ -126,18 +126,18 @@ assert_success() {
 assert_failure() {
   ___command="$*"
 
-  dm_test__debug 'assert_failure' "running assertion: '${___command}'"
+  posix_test__debug 'assert_failure' "running assertion: '${___command}'"
 
   if ! $___command
   then
-    dm_test__debug 'assert_failure' '=> assertion succeeded'
+    posix_test__debug 'assert_failure' '=> assertion succeeded'
   else
-    dm_test__debug 'assert_failure' '=> assertion failed'
+    posix_test__debug 'assert_failure' '=> assertion failed'
 
     ___subject='Inverse assertion failed, command succeeded'
     ___reason="Command succeeded but should have failed: '${___command}'."
     ___assertion='assert_failure'
-    _dm_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
+    _posix_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
   fi
 }
 
@@ -167,14 +167,14 @@ assert_equal() {
   ___string_a="$1"
   ___string_b="$2"
 
-  dm_test__debug 'assert_equal' \
+  posix_test__debug 'assert_equal' \
     "comparing '${___string_a}' to '${___string_b}'"
 
   if [ "$___string_a" = "$___string_b" ]
   then
-    dm_test__debug 'assert_equal' '=> assertion succeeded'
+    posix_test__debug 'assert_equal' '=> assertion succeeded'
   else
-    dm_test__debug 'assert_equal' '=> assertion failed'
+    posix_test__debug 'assert_equal' '=> assertion failed'
 
     ___subject='Assertion failed'
     ___reason="$( \
@@ -189,6 +189,6 @@ assert_equal() {
         posix_adapter__sed --expression 's/^/\|/'; \
     )"
     ___assertion='assert_equal'
-    _dm_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
+    _posix_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
   fi
 }

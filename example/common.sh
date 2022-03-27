@@ -75,7 +75,7 @@ log_failure() {
 
 assert_test_case_count() {
   ___expected_count="$1"
-  ___count="$DM_TEST__RESULT__TEST_CASE_COUNT"
+  ___count="$POSIX_TEST__RESULT__TEST_CASE_COUNT"
 
   log_task "expected test case count is ${BOLD}${___expected_count}${RESET}"
 
@@ -97,7 +97,7 @@ assert_test_case_count() {
 
 assert_failure_count() {
   ___expected_count="$1"
-  ___count="$DM_TEST__RESULT__FAILURE_COUNT"
+  ___count="$POSIX_TEST__RESULT__FAILURE_COUNT"
 
   log_task "expected failure count is ${BOLD}${___expected_count}${RESET}"
 

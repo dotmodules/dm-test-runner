@@ -43,11 +43,11 @@
 #   0 - Line extraction succeeded.
 #   1 - Line extraction failed.
 #==============================================================================
-dm_test__get_line_from_output_buffer_by_index() {
+posix_test__get_line_from_output_buffer_by_index() {
   ___line_index="$1"
   ___buffer="$2"
 
-  dm_test__debug_list 'dm_test__get_line_from_output_buffer_by_index' \
+  posix_test__debug_list 'posix_test__get_line_from_output_buffer_by_index' \
     "getting line for index '${___line_index}' from output:" \
     "$(posix_adapter__cat "$___buffer")"
 
@@ -56,25 +56,25 @@ dm_test__get_line_from_output_buffer_by_index() {
 
   if [ "$___line_count" -eq '0' ] && [ "$___char_count" -eq '0' ]
   then
-    dm_test__debug 'dm_test__get_line_from_buffer_output_by_index' \
+    posix_test__debug 'posix_test__get_line_from_buffer_output_by_index' \
       'no output was captured in the target buffer!'
 
     ___subject='No output to index'
     ___reason='No output was captured in the target buffer, nothing to compare!'
     ___assertion='utils__get_line_from_output_by_index'
-    _dm_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
+    _posix_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
   fi
 
   if [ "$___line_count" -eq '0' ] && [ "$___char_count" -gt '0' ]
   then
-    dm_test__debug 'dm_test__get_line_from_buffer_output_by_index' \
+    posix_test__debug 'posix_test__get_line_from_buffer_output_by_index' \
       'correcting line count to 1 as no newline character is present in buffer'
     ___line_count='1'
   fi
 
   if [ "$___line_index" -gt "$___line_count" ] || [ "$___line_index" -lt '1' ]
   then
-    dm_test__debug 'dm_test__get_line_from_buffer_output_by_index' \
+    posix_test__debug 'posix_test__get_line_from_buffer_output_by_index' \
       "invalid line index! should be inside the range of [1-${___line_count}]"
 
     ___subject='Line index is out of range'
@@ -83,13 +83,13 @@ dm_test__get_line_from_output_buffer_by_index() {
       posix_adapter__echo "given index: '${___line_index}'" \
     )"
     ___assertion='utils__get_line_from_output_by_index'
-    _dm_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
+    _posix_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
   fi
 
   # Getting the indexed line.
   ___line="$(posix_adapter__sed --expression "${___line_index}q;d" "$___buffer")"
 
-  dm_test__debug_list 'dm_test__get_line_from_output_buffer_by_index' \
+  posix_test__debug_list 'posix_test__get_line_from_output_buffer_by_index' \
     'line selected:' "$___line"
 
   posix_adapter__echo "$___line"
@@ -130,18 +130,18 @@ dm_test__get_line_from_output_buffer_by_index() {
 # Status:
 #   1 - This function will exit the caller process with status 1.
 #==============================================================================
-_dm_test__assert__report_failure() {
+_posix_test__assert__report_failure() {
   ___subject="$1"
   ___reason="$2"
   ___assertion="$3"
 
-  dm_test__debug '_dm_test__assert__report_failure' \
+  posix_test__debug '_posix_test__assert__report_failure' \
     'reporting failure and exiting from test case..'
 
-  dm_test__cache__test_result__mark_as_failed
+  posix_test__cache__test_result__mark_as_failed
 
   ___test_case_identifier="$( \
-    dm_test__test_case__get_current_test_case_identifier \
+    posix_test__test_case__get_current_test_case_identifier \
   )"
   # Appending the current error report to the error cache file.
   {
@@ -154,7 +154,7 @@ _dm_test__assert__report_failure() {
     posix_adapter__printf "${RED}${___reason}${RESET}\n" | \
       posix_adapter__sed --expression 's/^/    /';
     posix_adapter__echo "";
-  } | dm_test__cache__global_errors__write_errors
+  } | posix_test__cache__global_errors__write_errors
 
   # Report the concise error report to the standard error.
   >&2 posix_adapter__printf '%s' "${___assertion} | "

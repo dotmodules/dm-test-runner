@@ -16,9 +16,9 @@
 #==============================================================================
 
 # Currently executing test file name.
-DM_TEST__TEST_CASE__RUNTIME__FILE_UNDER_EXECUTION='__INVALID__'
+POSIX_TEST__TEST_CASE__RUNTIME__FILE_UNDER_EXECUTION='__INVALID__'
 # Currently executing test case name.
-DM_TEST__TEST_CASE__RUNTIME__TEST_UNDER_EXECUTION='__INVALID__'
+POSIX_TEST__TEST_CASE__RUNTIME__TEST_UNDER_EXECUTION='__INVALID__'
 
 #==============================================================================
 #     _    ____ ___    __                  _   _
@@ -35,7 +35,7 @@ DM_TEST__TEST_CASE__RUNTIME__TEST_UNDER_EXECUTION='__INVALID__'
 # predefined test case prefix configuration variable.
 #------------------------------------------------------------------------------
 # Globals:
-#   DM_TEST__CONFIG__MANDATORY__TEST_CASE_PREFIX
+#   POSIX_TEST__CONFIG__MANDATORY__TEST_CASE_PREFIX
 # Arguments:
 #   [1] test_file_path - Path of the given test file the test cases should be
 #       collected from.
@@ -51,12 +51,12 @@ DM_TEST__TEST_CASE__RUNTIME__TEST_UNDER_EXECUTION='__INVALID__'
 # Status:
 #   0 - Other status is not expected.
 #==============================================================================
-dm_test__test_case__get_test_cases_from_test_file() {
+posix_test__test_case__get_test_cases_from_test_file() {
   ___test_file_path="$1"
 
-  ___prefix="$DM_TEST__CONFIG__MANDATORY__TEST_CASE_PREFIX"
+  ___prefix="$POSIX_TEST__CONFIG__MANDATORY__TEST_CASE_PREFIX"
 
-  dm_test__debug 'dm_test__test_case__get_test_cases_from_test_file' \
+  posix_test__debug 'posix_test__test_case__get_test_cases_from_test_file' \
     "$( \
       posix_adapter__printf '%s' 'gathering test cases in test file '; \
       posix_adapter__echo "'${___test_file_path}' based on prefix '${___prefix}'" \
@@ -68,14 +68,14 @@ dm_test__test_case__get_test_cases_from_test_file() {
       "$___test_file_path" \
   )"
   then
-    dm_test__debug_list 'dm_test__test_case__get_test_cases_from_test_file' \
+    posix_test__debug_list 'posix_test__test_case__get_test_cases_from_test_file' \
       'test cases found:' \
       "$___test_cases"
 
-    if dm_test__config__should_sort_test_cases
+    if posix_test__config__should_sort_test_cases
     then
 
-      dm_test__debug 'dm_test__test_case__get_test_cases_from_test_file' \
+      posix_test__debug 'posix_test__test_case__get_test_cases_from_test_file' \
         'sorting test case list to be able to execute in alphabetical order'
 
       posix_adapter__echo "$___test_cases" | posix_adapter__sort --dictionary-order
@@ -83,7 +83,7 @@ dm_test__test_case__get_test_cases_from_test_file() {
       posix_adapter__echo "$___test_cases"
     fi
   else
-    dm_test__debug 'dm_test__test_case__get_test_cases_from_test_file' \
+    posix_test__debug 'posix_test__test_case__get_test_cases_from_test_file' \
       'no matching test cases were found'
   fi
 }
@@ -107,20 +107,20 @@ dm_test__test_case__get_test_cases_from_test_file() {
 # Status:
 #   0 - Other status is not expected.
 #==============================================================================
-dm_test__test_case__execute_test_cases() {
+posix_test__test_case__execute_test_cases() {
   ___test_cases="$1"
 
-  dm_test__debug_list 'dm_test__test_case__execute_test_cases' \
+  posix_test__debug_list 'posix_test__test_case__execute_test_cases' \
     'executing test cases' \
     "$___test_cases"
 
   for ___test_case in $___test_cases
   do
-    dm_test__cache__init_test_directory__test_case_level
-    _dm_test__execute_test_case "$___test_case"
+    posix_test__cache__init_test_directory__test_case_level
+    _posix_test__execute_test_case "$___test_case"
   done
 
-  dm_test__debug 'dm_test__test_case__execute_test_cases' \
+  posix_test__debug 'posix_test__test_case__execute_test_cases' \
     'test cases were executed'
 }
 
@@ -130,14 +130,14 @@ dm_test__test_case__execute_test_cases() {
 # runner script.
 #------------------------------------------------------------------------------
 # Globals:
-#   DM_TEST__TEST_CASE__RUNTIME__FILE_UNDER_EXECUTION
+#   POSIX_TEST__TEST_CASE__RUNTIME__FILE_UNDER_EXECUTION
 # Arguments:
 #   [1] test_file_path - Name of the currently executing test file.
 # STDIN:
 #   None
 #------------------------------------------------------------------------------
 # Output variables:
-#   DM_TEST__TEST_CASE__RUNTIME__FILE_UNDER_EXECUTION
+#   POSIX_TEST__TEST_CASE__RUNTIME__FILE_UNDER_EXECUTION
 # STDOUT:
 #   None
 # STDERR:
@@ -145,16 +145,16 @@ dm_test__test_case__execute_test_cases() {
 # Status:
 #   0 - Other status is not expected.
 #==============================================================================
-dm_test__test_case__set_current_test_file() {
+posix_test__test_case__set_current_test_file() {
   ___test_file_path="$1"
 
-  DM_TEST__TEST_CASE__RUNTIME__FILE_UNDER_EXECUTION="$( \
+  POSIX_TEST__TEST_CASE__RUNTIME__FILE_UNDER_EXECUTION="$( \
     posix_adapter__echo "$___test_file_path" | \
     posix_adapter__cut --delimiter '/' --fields '2-' \
   )"
 
-  dm_test__debug 'dm_test__test_case__set_current_test_file' \
-    "current test file: '${DM_TEST__TEST_CASE__RUNTIME__FILE_UNDER_EXECUTION}'"
+  posix_test__debug 'posix_test__test_case__set_current_test_file' \
+    "current test file: '${POSIX_TEST__TEST_CASE__RUNTIME__FILE_UNDER_EXECUTION}'"
 }
 
 #==============================================================================
@@ -162,14 +162,14 @@ dm_test__test_case__set_current_test_file() {
 # later on.
 #------------------------------------------------------------------------------
 # Globals:
-#   DM_TEST__TEST_CASE__RUNTIME__TEST_UNDER_EXECUTION
+#   POSIX_TEST__TEST_CASE__RUNTIME__TEST_UNDER_EXECUTION
 # Arguments:
 #   [1] test_case - Name of the test case function that should be executed.
 # STDIN:
 #   None
 #------------------------------------------------------------------------------
 # Output variables:
-#   DM_TEST__TEST_CASE__RUNTIME__TEST_UNDER_EXECUTION
+#   POSIX_TEST__TEST_CASE__RUNTIME__TEST_UNDER_EXECUTION
 # STDOUT:
 #   None
 # STDERR:
@@ -177,13 +177,13 @@ dm_test__test_case__set_current_test_file() {
 # Status:
 #   0 - Other status is not expected.
 #==============================================================================
-dm_test__test_case__set_current_test_case() {
+posix_test__test_case__set_current_test_case() {
   ___test_case="$1"
 
-  DM_TEST__TEST_CASE__RUNTIME__TEST_UNDER_EXECUTION="$___test_case"
+  POSIX_TEST__TEST_CASE__RUNTIME__TEST_UNDER_EXECUTION="$___test_case"
 
-  dm_test__debug 'dm_test__test_case__set_current_test_case' \
-    "current test case: '${DM_TEST__TEST_CASE__RUNTIME__TEST_UNDER_EXECUTION}'"
+  posix_test__debug 'posix_test__test_case__set_current_test_case' \
+    "current test case: '${POSIX_TEST__TEST_CASE__RUNTIME__TEST_UNDER_EXECUTION}'"
 }
 
 #==============================================================================
@@ -193,8 +193,8 @@ dm_test__test_case__set_current_test_case() {
 # it will be used during assertion error reporting.
 #------------------------------------------------------------------------------
 # Globals:
-#   DM_TEST__TEST_CASE__RUNTIME__FILE_UNDER_EXECUTION
-#   DM_TEST__TEST_CASE__RUNTIME__TEST_UNDER_EXECUTION
+#   POSIX_TEST__TEST_CASE__RUNTIME__FILE_UNDER_EXECUTION
+#   POSIX_TEST__TEST_CASE__RUNTIME__TEST_UNDER_EXECUTION
 # Arguments:
 #   None
 # STDIN:
@@ -209,18 +209,18 @@ dm_test__test_case__set_current_test_case() {
 # Status:
 #   0 - Other status is not expected.
 #==============================================================================
-dm_test__test_case__get_current_test_case_identifier() {
-  posix_adapter__printf '%s' "$DM_TEST__TEST_CASE__RUNTIME__FILE_UNDER_EXECUTION"
+posix_test__test_case__get_current_test_case_identifier() {
+  posix_adapter__printf '%s' "$POSIX_TEST__TEST_CASE__RUNTIME__FILE_UNDER_EXECUTION"
   posix_adapter__printf '%s' ' - '
-  posix_adapter__echo "$DM_TEST__TEST_CASE__RUNTIME__TEST_UNDER_EXECUTION"
+  posix_adapter__echo "$POSIX_TEST__TEST_CASE__RUNTIME__TEST_UNDER_EXECUTION"
 }
 
 #==============================================================================
 # Prints out the colorized test identifier.
 #------------------------------------------------------------------------------
 # Globals:
-#   DM_TEST__TEST_CASE__RUNTIME__FILE_UNDER_EXECUTION
-#   DM_TEST__TEST_CASE__RUNTIME__TEST_UNDER_EXECUTION
+#   POSIX_TEST__TEST_CASE__RUNTIME__FILE_UNDER_EXECUTION
+#   POSIX_TEST__TEST_CASE__RUNTIME__TEST_UNDER_EXECUTION
 #   BOLD
 #   RESET
 # Arguments:
@@ -237,12 +237,12 @@ dm_test__test_case__get_current_test_case_identifier() {
 # Status:
 #   0 - Other status is not expected.
 #==============================================================================
-dm_test__test_case__get_current_colorized_test_case_identifier() {
+posix_test__test_case__get_current_colorized_test_case_identifier() {
   posix_adapter__printf '%s' "${RESET}"
-  posix_adapter__printf '%s' "${DM_TEST__TEST_CASE__RUNTIME__FILE_UNDER_EXECUTION}"
+  posix_adapter__printf '%s' "${POSIX_TEST__TEST_CASE__RUNTIME__FILE_UNDER_EXECUTION}"
   posix_adapter__printf '%s' ' - '
   posix_adapter__printf '%s' "${BOLD}"
-  posix_adapter__echo "${DM_TEST__TEST_CASE__RUNTIME__TEST_UNDER_EXECUTION}${RESET}"
+  posix_adapter__echo "${POSIX_TEST__TEST_CASE__RUNTIME__TEST_UNDER_EXECUTION}${RESET}"
 }
 
 #==============================================================================
@@ -278,32 +278,32 @@ dm_test__test_case__get_current_colorized_test_case_identifier() {
 # Status:
 #   0 - Other status is not expected. Failing test case is handled.
 #==============================================================================
-_dm_test__execute_test_case() {
+_posix_test__execute_test_case() {
   ___test_case="$1"
 
-  dm_test__debug '_dm_test__execute_test_case' \
+  posix_test__debug '_posix_test__execute_test_case' \
     ">>> executing test case '${___test_case}'"
 
-  dm_test__test_case__set_current_test_case "$___test_case"
-  dm_test__cache__test_result__init
-  _dm_test__print_test_case_identifier
+  posix_test__test_case__set_current_test_case "$___test_case"
+  posix_test__cache__test_result__init
+  _posix_test__print_test_case_identifier
 
-  if _dm_test__run_test_case "$___test_case"
+  if _posix_test__run_test_case "$___test_case"
   then
-    if dm_test__config__should_display_captured_outputs_on_success
+    if posix_test__config__should_display_captured_outputs_on_success
     then
-      ___output="$(dm_test__capture__get_captured_outputs)"
+      ___output="$(posix_test__capture__get_captured_outputs)"
     else
       ___output=''
     fi
   else
-    ___output="$(dm_test__capture__get_captured_outputs)"
+    ___output="$(posix_test__capture__get_captured_outputs)"
   fi
 
-  _dm_test__print_test_case_result
-  _dm_test__update_global_counters
+  _posix_test__print_test_case_result
+  _posix_test__update_global_counters
 
-  dm_test__utils__print_output_if_has_content "$___output"
+  posix_test__utils__print_output_if_has_content "$___output"
 }
 
 #==============================================================================
@@ -328,37 +328,37 @@ _dm_test__execute_test_case() {
 # Status:
 #   0 - Other status is not expected.
 #==============================================================================
-_dm_test__run_test_case() {
+_posix_test__run_test_case() {
   ___test_case="$1"
 
-  dm_test__debug '_dm_test__run_test_case' \
+  posix_test__debug '_posix_test__run_test_case' \
     "preparing to run test case '${___test_case}'"
 
   # Capture system initialization has to be done in the subshell level where
   # the evaluation will be happen because of the global runtime variables it
   # uses internally would be lost if they were created in a subshell.
-  dm_test__capture__init
+  posix_test__capture__init
 
   # Running in a subshell to be able to exit from the test case execution any
   # time. This is most probably will happen due to an error during the setup
   # hook execution.
-  if ( _dm_test__run_test_case_in_a_subshell "${___test_case}" )
+  if ( _posix_test__run_test_case_in_a_subshell "${___test_case}" )
   then
     ___status="$?"
   else
     ___status="$?"
   fi
 
-  dm_test__debug '_dm_test__run_test_case' \
+  posix_test__debug '_posix_test__run_test_case' \
     "test case execution finished with status '${___status}'"
 
-  if _dm_test__evaluate_test_case_result "$___status"
+  if _posix_test__evaluate_test_case_result "$___status"
   then
-    dm_test__debug '_dm_test__run_test_case' \
+    posix_test__debug '_posix_test__run_test_case' \
       'test case succeeded'
 
   else
-    dm_test__cache__test_result__mark_as_failed
+    posix_test__cache__test_result__mark_as_failed
     return 1
   fi
 }
@@ -384,10 +384,10 @@ _dm_test__run_test_case() {
 # Status:
 #   0 - Other status is not expected.
 #==============================================================================
-_dm_test__evaluate_test_case_result() {
+_posix_test__evaluate_test_case_result() {
   ___status="$1"
 
-  dm_test__debug '_dm_test__evaluate_test_case_result' \
+  posix_test__debug '_posix_test__evaluate_test_case_result' \
     'evaluating test case result..'
 
   # If the status is nonzero or there is any standard error content, the
@@ -395,20 +395,20 @@ _dm_test__evaluate_test_case_result() {
 
   if [ "$___status" -ne '0' ]
   then
-    dm_test__debug '_dm_test__evaluate_test_case_result' \
+    posix_test__debug '_posix_test__evaluate_test_case_result' \
       '[!] status was nonzero => test case failed'
     ___result=1
 
-  elif dm_test__capture__was_standard_error_captured
+  elif posix_test__capture__was_standard_error_captured
   then
-    dm_test__debug '_dm_test__evaluate_test_case_result' \
+    posix_test__debug '_posix_test__evaluate_test_case_result' \
       '[!] there were standard error output => test case failed'
-    dm_test__capture__append_to_standard_error \
+    posix_test__capture__append_to_standard_error \
       'standard error output present => test case failed automatically'
     ___result=1
 
   else
-    dm_test__debug '_dm_test__evaluate_test_case_result' \
+    posix_test__debug '_posix_test__evaluate_test_case_result' \
       '[ok] zero status + no standard error output => test case succeeded'
     ___result=0
   fi
@@ -450,10 +450,10 @@ _dm_test__evaluate_test_case_result() {
 #   0 - Test case execution succeeded.
 #   1 - Test case execution failed.
 #==============================================================================
-_dm_test__run_test_case_in_a_subshell() {
+_posix_test__run_test_case_in_a_subshell() {
   ___test_case="$1"
 
-  dm_test__debug '_dm_test__run_test_case_in_a_subshell' \
+  posix_test__debug '_posix_test__run_test_case_in_a_subshell' \
     '-------------------< test case level subshell start >-------------------'
 
   # Statuses will be captured into output variables:
@@ -463,9 +463,9 @@ _dm_test__run_test_case_in_a_subshell() {
   # This has to be done in this way, because variables created in the setup
   # hook needs to be accessed from the test case, and the regular function
   # execution in a captured subshell would prevent it.
-  _dm_test__execute_and_capture__setup_hook
-  _dm_test__execute_and_capture__test_case "$___test_case"
-  _dm_test__execute_and_capture__teardown_hook
+  _posix_test__execute_and_capture__setup_hook
+  _posix_test__execute_and_capture__test_case "$___test_case"
+  _posix_test__execute_and_capture__teardown_hook
 
   # Result evaluation
   if [ "$___status__setup" -eq '0' ] \
@@ -477,7 +477,7 @@ _dm_test__run_test_case_in_a_subshell() {
     ___exit_status='1'
   fi
 
-  dm_test__debug '_dm_test__run_test_case_in_a_subshell' \
+  posix_test__debug '_posix_test__run_test_case_in_a_subshell' \
     '-------------------< test case level subshell stop >-------------------'
 
   exit "$___exit_status"
@@ -489,7 +489,7 @@ _dm_test__run_test_case_in_a_subshell() {
 # status is returned in an output variable.
 #------------------------------------------------------------------------------
 # Globals:
-#   DM_TEST__CAPTURE__CONSTANT__EXECUTE_COMMAND_DIRECTLY
+#   POSIX_TEST__CAPTURE__CONSTANT__EXECUTE_COMMAND_DIRECTLY
 # Arguments:
 #   None
 # STDIN:
@@ -504,23 +504,23 @@ _dm_test__run_test_case_in_a_subshell() {
 # Status:
 #   0 - Other status is not expected.
 #==============================================================================
-_dm_test__execute_and_capture__setup_hook() {
-  if dm_test__hooks__is_hook_available__setup
+_posix_test__execute_and_capture__setup_hook() {
+  if posix_test__hooks__is_hook_available__setup
   then
-    dm_test__debug '_dm_test__execute_and_capture__setup_hook' \
+    posix_test__debug '_posix_test__execute_and_capture__setup_hook' \
       'running setup hook'
 
     # Running the setup hook triggering directly in this shell to be able to
     # affect the environment.
-    if dm_test__capture__run_and_capture \
-      "$DM_TEST__CAPTURE__CONSTANT__EXECUTE_COMMAND_DIRECTLY" \
-      'dm_test__hooks__trigger_hook__setup'
+    if posix_test__capture__run_and_capture \
+      "$POSIX_TEST__CAPTURE__CONSTANT__EXECUTE_COMMAND_DIRECTLY" \
+      'posix_test__hooks__trigger_hook__setup'
     then
       ___status__setup="$?"
     else
       ___status__setup="$?"
 
-      dm_test__debug '_dm_test__execute_and_capture__setup_hook' \
+      posix_test__debug '_posix_test__execute_and_capture__setup_hook' \
         '[!] setup hook failed, no point to execute test case, exiting..'
 
       exit "$___status__setup"
@@ -529,7 +529,7 @@ _dm_test__execute_and_capture__setup_hook() {
     ___status__setup='0'
   fi
 
-  dm_test__debug '_dm_test__execute_and_capture__setup_hook' \
+  posix_test__debug '_posix_test__execute_and_capture__setup_hook' \
     "setup hook status: ${___status__setup}"
 }
 
@@ -537,10 +537,10 @@ _dm_test__execute_and_capture__setup_hook() {
 # Runs the given test case while capturing its outputs.
 #------------------------------------------------------------------------------
 # Globals:
-#   DM_TEST__CAPTURE__CONSTANT__EXECUTE_COMMAND_IN_SUBSHELL
-#   DM_TEST__CACHE__RUNTIME__TEST_DIR__TEST_SUITE
-#   DM_TEST__CACHE__RUNTIME__TEST_DIR__TEST_FILE
-#   DM_TEST__CACHE__RUNTIME__TEST_DIR__TEST_CASE
+#   POSIX_TEST__CAPTURE__CONSTANT__EXECUTE_COMMAND_IN_SUBSHELL
+#   POSIX_TEST__CACHE__RUNTIME__TEST_DIR__TEST_SUITE
+#   POSIX_TEST__CACHE__RUNTIME__TEST_DIR__TEST_FILE
+#   POSIX_TEST__CACHE__RUNTIME__TEST_DIR__TEST_CASE
 # Arguments:
 #   [1] test_case - Test case that needs to be run.
 # STDIN:
@@ -555,23 +555,23 @@ _dm_test__execute_and_capture__setup_hook() {
 # Status:
 #   0 - Other status is not expected.
 #==============================================================================
-_dm_test__execute_and_capture__test_case() {
+_posix_test__execute_and_capture__test_case() {
   ___test_case="$1"
 
-  dm_test__debug '_dm_test__execute_and_capture__test_case' \
+  posix_test__debug '_posix_test__execute_and_capture__test_case' \
     'running test case function in a separate subshell'
 
   # Gathering the test directories that will be injected into the test case
   # functions as positional parameters!
-  ___dir_suite="$DM_TEST__CACHE__RUNTIME__TEST_DIR__TEST_SUITE"
-  ___dir_file="$DM_TEST__CACHE__RUNTIME__TEST_DIR__TEST_FILE"
-  ___dir_case="$DM_TEST__CACHE__RUNTIME__TEST_DIR__TEST_CASE"
+  ___dir_suite="$POSIX_TEST__CACHE__RUNTIME__TEST_DIR__TEST_SUITE"
+  ___dir_file="$POSIX_TEST__CACHE__RUNTIME__TEST_DIR__TEST_FILE"
+  ___dir_case="$POSIX_TEST__CACHE__RUNTIME__TEST_DIR__TEST_CASE"
 
   # Running the test case function in an additional subshell to make the exit
   # call due to a failed assertion isolated from the currently executing shell
   # to be able to finish capturing all of the outputs.
-  if dm_test__capture__run_and_capture \
-    "$DM_TEST__CAPTURE__CONSTANT__EXECUTE_COMMAND_IN_SUBSHELL" \
+  if posix_test__capture__run_and_capture \
+    "$POSIX_TEST__CAPTURE__CONSTANT__EXECUTE_COMMAND_IN_SUBSHELL" \
     "$___test_case" "${___dir_suite}" "${___dir_file}" "${___dir_case}"
   then
     ___status__test_case="$?"
@@ -579,7 +579,7 @@ _dm_test__execute_and_capture__test_case() {
     ___status__test_case="$?"
   fi
 
-  dm_test__debug '_dm_test__execute_and_capture__test_case' \
+  posix_test__debug '_posix_test__execute_and_capture__test_case' \
     "test case status: ${___status__test_case}"
 }
 
@@ -588,7 +588,7 @@ _dm_test__execute_and_capture__test_case() {
 # system. The status is returned in an output variable.
 #------------------------------------------------------------------------------
 # Globals:
-#   DM_TEST__CAPTURE__CONSTANT__EXECUTE_COMMAND_DIRECTLY
+#   POSIX_TEST__CAPTURE__CONSTANT__EXECUTE_COMMAND_DIRECTLY
 # Arguments:
 #   None
 # STDIN:
@@ -603,17 +603,17 @@ _dm_test__execute_and_capture__test_case() {
 # Status:
 #   0 - Other status is not expected.
 #==============================================================================
-_dm_test__execute_and_capture__teardown_hook() {
-  if dm_test__hooks__is_hook_available__teardown
+_posix_test__execute_and_capture__teardown_hook() {
+  if posix_test__hooks__is_hook_available__teardown
   then
-    dm_test__debug '_dm_test__execute_and_capture__teardown_hook' \
+    posix_test__debug '_posix_test__execute_and_capture__teardown_hook' \
       'running teardown hook'
 
     # Running the teardown hook triggering directly in this shell to be able to
     # affect the environment.
-    if dm_test__capture__run_and_capture \
-      "$DM_TEST__CAPTURE__CONSTANT__EXECUTE_COMMAND_DIRECTLY" \
-      'dm_test__hooks__trigger_hook__teardown'
+    if posix_test__capture__run_and_capture \
+      "$POSIX_TEST__CAPTURE__CONSTANT__EXECUTE_COMMAND_DIRECTLY" \
+      'posix_test__hooks__trigger_hook__teardown'
     then
       ___status__teardown="$?"
     else
@@ -623,7 +623,7 @@ _dm_test__execute_and_capture__teardown_hook() {
     ___status__teardown='0'
   fi
 
-  dm_test__debug '_dm_test__execute_and_capture__teardown_hook' \
+  posix_test__debug '_posix_test__execute_and_capture__teardown_hook' \
     "teardown hook status: ${___status__teardown}"
 }
 
@@ -648,15 +648,15 @@ _dm_test__execute_and_capture__teardown_hook() {
 # Status:
 #   0 - Other status is not expected.
 #==============================================================================
-_dm_test__print_test_case_identifier() {
-  dm_test__debug '_dm_test__print_test_case_identifier' \
+_posix_test__print_test_case_identifier() {
+  posix_test__debug '_posix_test__print_test_case_identifier' \
     'displaying test case identifier..'
 
   ___identifier="$( \
-    dm_test__test_case__get_current_colorized_test_case_identifier \
+    posix_test__test_case__get_current_colorized_test_case_identifier \
   )"
 
-  if dm_test__config__debug_is_enabled
+  if posix_test__config__debug_is_enabled
   then
     posix_adapter__echo "$___identifier"
   else
@@ -686,11 +686,11 @@ _dm_test__print_test_case_identifier() {
 # Status:
 #   0 - Other status is not expected.
 #==============================================================================
-_dm_test__print_test_case_result() {
-  dm_test__debug '_dm_test__print_test_case_result' \
+_posix_test__print_test_case_result() {
+  posix_test__debug '_posix_test__print_test_case_result' \
     'printing test case result..'
 
-  if dm_test__cache__test_result__was_success
+  if posix_test__cache__test_result__was_success
   then
     posix_adapter__echo "  ${BOLD}${GREEN}ok${RESET}"
   else
@@ -717,16 +717,16 @@ _dm_test__print_test_case_result() {
 # Status:
 #   0 - Other status is not expected.
 #==============================================================================
-_dm_test__update_global_counters() {
-  dm_test__debug '_dm_test__update_global_counters' \
+_posix_test__update_global_counters() {
+  posix_test__debug '_posix_test__update_global_counters' \
     'updating global counters..'
 
-  dm_test__cache__global_count__increment
+  posix_test__cache__global_count__increment
 
-  dm_test__debug '_dm_test__update_global_counters' \
+  posix_test__debug '_posix_test__update_global_counters' \
     'incrementing global failure count if test case failed..'
-  if ! dm_test__cache__test_result__was_success
+  if ! posix_test__cache__test_result__was_success
   then
-    dm_test__cache__global_failure__increment
+    posix_test__cache__global_failure__increment
   fi
 }

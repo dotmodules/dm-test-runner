@@ -40,18 +40,18 @@
 assert_file() {
   ___file_path="$1"
 
-  dm_test__debug 'assert_file' "asserting file existence: '${___file_path}'"
+  posix_test__debug 'assert_file' "asserting file existence: '${___file_path}'"
 
   if [ -f "$___file_path" ]
   then
-    dm_test__debug 'assert_file' '=> assertion succeeded'
+    posix_test__debug 'assert_file' '=> assertion succeeded'
   else
-    dm_test__debug 'assert_file' '=> assertion failed'
+    posix_test__debug 'assert_file' '=> assertion failed'
 
     ___subject='Path does not name a file'
     ___reason="File does not exist at path: '${___file_path}'."
     ___assertion='assert_file'
-    _dm_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
+    _posix_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
   fi
 }
 
@@ -79,19 +79,19 @@ assert_file() {
 assert_no_file() {
   ___file_path="$1"
 
-  dm_test__debug 'assert_no_file' \
+  posix_test__debug 'assert_no_file' \
     "asserting file non existence: '${___file_path}'"
 
   if [ ! -f "$___file_path" ]
   then
-    dm_test__debug 'assert_no_file' '=> assertion succeeded'
+    posix_test__debug 'assert_no_file' '=> assertion succeeded'
   else
-    dm_test__debug 'assert_no_file' '=> assertion failed'
+    posix_test__debug 'assert_no_file' '=> assertion failed'
 
     ___subject='File exists on path'
     ___reason="File should not exists at: '${___file_path}'."
     ___assertion='assert_no_file'
-    _dm_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
+    _posix_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
   fi
 }
 
@@ -120,29 +120,29 @@ assert_no_file() {
 assert_file_has_content() {
   ___file_path="$1"
 
-  dm_test__debug 'assert_file_has_content' \
+  posix_test__debug 'assert_file_has_content' \
     "asserting file content: '${___file_path}'"
 
   if [ -f "$___file_path" ]
   then
     if [ -s "$___file_path" ]
     then
-      dm_test__debug 'assert_file_has_content' '=> assertion succeeded'
+      posix_test__debug 'assert_file_has_content' '=> assertion succeeded'
     else
-      dm_test__debug 'assert_file_has_content' '=> assertion failed'
+      posix_test__debug 'assert_file_has_content' '=> assertion failed'
 
       ___subject='File exists but it is empty'
       ___reason="File should not be empty: '${___file_path}'."
       ___assertion='assert_file_has_content'
-      _dm_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
+      _posix_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
     fi
   else
-    dm_test__debug 'assert_file_has_content' '=> assertion failed'
+    posix_test__debug 'assert_file_has_content' '=> assertion failed'
 
     ___subject='Path does not name a file'
     ___reason="File does not exist at path: '${___file_path}'."
     ___assertion='assert_file_has_content'
-    _dm_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
+    _posix_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
   fi
 }
 
@@ -170,29 +170,29 @@ assert_file_has_content() {
 assert_file_has_no_content() {
   ___file_path="$1"
 
-  dm_test__debug 'assert_file_has_no_content' \
+  posix_test__debug 'assert_file_has_no_content' \
     "asserting file empty: '${___file_path}'"
 
   if [ -f "$___file_path" ]
   then
     if [ ! -s "$___file_path" ]
     then
-      dm_test__debug 'assert_file_has_no_content' '=> assertion succeeded'
+      posix_test__debug 'assert_file_has_no_content' '=> assertion succeeded'
     else
-      dm_test__debug 'assert_file_has_no_content' '=> assertion failed'
+      posix_test__debug 'assert_file_has_no_content' '=> assertion failed'
 
       ___subject='File exists but it is not empty'
       ___reason="File should be empty: '${___file_path}'."
       ___assertion='assert_file_has_no_content'
-      _dm_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
+      _posix_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
     fi
   else
-    dm_test__debug 'assert_file_has_no_content' '=> assertion failed'
+    posix_test__debug 'assert_file_has_no_content' '=> assertion failed'
 
     ___subject='Path does not name a file'
     ___reason="File does not exist at path: '${___file_path}'."
     ___assertion='assert_file_has_no_content'
-    _dm_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
+    _posix_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
   fi
 }
 
@@ -220,19 +220,19 @@ assert_file_has_no_content() {
 assert_directory() {
   ___directory_path="$1"
 
-  dm_test__debug 'assert_directory' \
+  posix_test__debug 'assert_directory' \
     "asserting directory existence: '${___directory_path}'"
 
   if [ -d "$___directory_path" ]
   then
-    dm_test__debug 'assert_directory' '=> assertion succeeded'
+    posix_test__debug 'assert_directory' '=> assertion succeeded'
   else
-    dm_test__debug 'assert_directory' '=> assertion failed'
+    posix_test__debug 'assert_directory' '=> assertion failed'
 
     ___subject='Path does not name a directory'
     ___reason="Directory does not exist at path: '${___directory_path}'."
     ___assertion='assert_directory'
-    _dm_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
+    _posix_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
   fi
 }
 
@@ -260,19 +260,19 @@ assert_directory() {
 assert_no_directory() {
   ___directory_path="$1"
 
-  dm_test__debug 'assert_no_directory' \
+  posix_test__debug 'assert_no_directory' \
     "asserting lack of directory: '${___directory_path}'"
 
   if [ ! -d "$___directory_path" ]
   then
-    dm_test__debug 'assert_no_directory' '=> assertion succeeded'
+    posix_test__debug 'assert_no_directory' '=> assertion succeeded'
   else
-    dm_test__debug 'assert_no_directory' '=> assertion failed'
+    posix_test__debug 'assert_no_directory' '=> assertion failed'
 
     ___subject='Path should not name a directory'
     ___reason="Directory should not exist at path: '${___directory_path}'."
     ___assertion='assert_no_directory'
-    _dm_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
+    _posix_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
   fi
 }
 
@@ -301,29 +301,29 @@ assert_no_directory() {
 assert_directory_empty() {
   ___directory_path="$1"
 
-  dm_test__debug 'assert_directory_empty' \
+  posix_test__debug 'assert_directory_empty' \
     "asserting directory is empty: '${___directory_path}'"
 
   if [ -d "$___directory_path" ]
   then
     if [ -z "$(posix_adapter__ls --almost-all "$___directory_path")" ]
     then
-      dm_test__debug 'assert_directory_empty' '=> assertion succeeded'
+      posix_test__debug 'assert_directory_empty' '=> assertion succeeded'
     else
-      dm_test__debug 'assert_directory_empty' '=> assertion failed'
+      posix_test__debug 'assert_directory_empty' '=> assertion failed'
 
       ___subject='Directory is not empty'
       ___reason="Directory should be empty: '${___directory_path}'."
       ___assertion='assert_directory_empty'
-      _dm_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
+      _posix_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
     fi
   else
-    dm_test__debug 'assert_directory_empty' '=> assertion failed'
+    posix_test__debug 'assert_directory_empty' '=> assertion failed'
 
     ___subject='Path does not name a directory'
     ___reason="Directory does not exist at path: '${___directory_path}'."
     ___assertion='assert_directory_empty'
-    _dm_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
+    _posix_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
   fi
 }
 
@@ -352,29 +352,29 @@ assert_directory_empty() {
 assert_directory_not_empty() {
   ___directory_path="$1"
 
-  dm_test__debug 'assert_directory_not_empty' \
+  posix_test__debug 'assert_directory_not_empty' \
     "asserting directory is not empty: '${___directory_path}'"
 
   if [ -d "$___directory_path" ]
   then
     if [ -n "$(posix_adapter__ls --almost-all "$___directory_path")" ]
     then
-      dm_test__debug 'assert_directory_not_empty' '=> assertion succeeded'
+      posix_test__debug 'assert_directory_not_empty' '=> assertion succeeded'
     else
-      dm_test__debug 'assert_directory_not_empty' '=> assertion failed'
+      posix_test__debug 'assert_directory_not_empty' '=> assertion failed'
 
       ___subject='Directory is empty'
       ___reason="Directory should not be empty: '${___directory_path}'."
       ___assertion='assert_directory_not_empty'
-      _dm_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
+      _posix_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
     fi
   else
-    dm_test__debug 'assert_directory_not_empty' '=> assertion failed'
+    posix_test__debug 'assert_directory_not_empty' '=> assertion failed'
 
     ___subject='Path does not name a directory'
     ___reason="Directory does not exist at path: '${___directory_path}'."
     ___assertion='assert_directory_not_empty'
-    _dm_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
+    _posix_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
   fi
 }
 
@@ -402,19 +402,19 @@ assert_directory_not_empty() {
 assert_symlink() {
   ___link_path="$1"
 
-  dm_test__debug 'assert_symlink' \
+  posix_test__debug 'assert_symlink' \
     "asserting symlink existence: '${___link_path}'"
 
   if [ -L "$___link_path" ]
   then
-    dm_test__debug 'assert_symlink' '=> assertion succeeded'
+    posix_test__debug 'assert_symlink' '=> assertion succeeded'
   else
-    dm_test__debug 'assert_symlink' '=> assertion failed'
+    posix_test__debug 'assert_symlink' '=> assertion failed'
 
     ___subject='Path does not name a symbolic link'
     ___reason="Symbolic link does not exist at path: '${___link_path}'."
     ___assertion='assert_symlink'
-    _dm_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
+    _posix_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
   fi
 }
 
@@ -442,19 +442,19 @@ assert_symlink() {
 assert_no_symlink() {
   ___link_path="$1"
 
-  dm_test__debug 'assert_no_symlink' \
+  posix_test__debug 'assert_no_symlink' \
     "asserting symlink non existence: '${___link_path}'"
 
   if [ ! -L "$___link_path" ]
   then
-    dm_test__debug 'assert_no_symlink' '=> assertion succeeded'
+    posix_test__debug 'assert_no_symlink' '=> assertion succeeded'
   else
-    dm_test__debug 'assert_no_symlink' '=> assertion failed'
+    posix_test__debug 'assert_no_symlink' '=> assertion failed'
 
     ___subject='Path should not name a symbolic link'
     ___reason="Symbolic link should not exist at path: '${___link_path}'."
     ___assertion='assert_no_symlink'
-    _dm_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
+    _posix_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
   fi
 }
 
@@ -484,7 +484,7 @@ assert_symlink_target() {
   ___link_path="$1"
   ___target_path="$2"
 
-  dm_test__debug 'assert_symlink_target' \
+  posix_test__debug 'assert_symlink_target' \
     "asserting symlink '${___link_path}' target '${___target_path}'"
 
   if [ -L "$___link_path" ]
@@ -492,9 +492,9 @@ assert_symlink_target() {
     ___actual_target="$(posix_adapter__readlink "$___link_path")"
     if [ "$___target_path" = "$___actual_target" ]
     then
-      dm_test__debug 'assert_symlink_target' '=> assertion succeeded'
+      posix_test__debug 'assert_symlink_target' '=> assertion succeeded'
     else
-      dm_test__debug 'assert_symlink_target' '=> assertion failed'
+      posix_test__debug 'assert_symlink_target' '=> assertion failed'
 
       ___subject='Symbolic link target does not match'
       ___reason="$( \
@@ -502,14 +502,14 @@ assert_symlink_target() {
         echo "actual target: '${___actual_target}'." \
       )"
       ___assertion='assert_symlink_target'
-      _dm_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
+      _posix_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
     fi
   else
-    dm_test__debug 'assert_symlink_target' '=> assertion failed'
+    posix_test__debug 'assert_symlink_target' '=> assertion failed'
 
     ___subject='Path does not name a symbolic link'
     ___reason="Symbolic link does not exist at path: '${___link_path}'."
     ___assertion='assert_symlink_target'
-    _dm_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
+    _posix_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
   fi
 }

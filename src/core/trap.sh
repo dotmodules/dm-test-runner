@@ -47,13 +47,13 @@
 # Status:
 #   0 - Other status is not expected.
 #==============================================================================
-dm_test__arm_trap_system() {
-  dm_test__debug 'dm_test__arm_trap_system' \
+posix_test__arm_trap_system() {
+  posix_test__debug 'posix_test__arm_trap_system' \
     'arming trap system..'
 
-  trap '_dm_test__exit_trap__wrapper' EXIT INT HUP TERM
+  trap '_posix_test__exit_trap__wrapper' EXIT INT HUP TERM
 
-  dm_test__debug 'dm_test__arm_trap_system' \
+  posix_test__debug 'posix_test__arm_trap_system' \
     'trap system armed'
 }
 
@@ -89,16 +89,16 @@ dm_test__arm_trap_system() {
 # Status:
 #   Original exit code replayed from the called level.
 #==============================================================================
-_dm_test__exit_trap() {
+_posix_test__exit_trap() {
   ___original_exit_code="$1"
 
-  dm_test__debug '_dm_test__exit_trap' \
+  posix_test__debug '_posix_test__exit_trap' \
     "handling exit trap, original status code '${___original_exit_code}' saved"
 
-  dm_test__cache__cleanup
+  posix_test__cache__cleanup
   trap - EXIT
 
-  dm_test__debug '_dm_test__exit_trap' \
+  posix_test__debug '_posix_test__exit_trap' \
     "exit trap finished, exiting with status code '${___original_exit_code}'"
 
   exit "$___original_exit_code"
@@ -126,7 +126,7 @@ _dm_test__exit_trap() {
 # Status:
 #   None
 #==============================================================================
-_dm_test__exit_trap__wrapper() {
+_posix_test__exit_trap__wrapper() {
   ___original_exit_code="$?"
-  dm_test__debug__wrapper '_dm_test__exit_trap' "$___original_exit_code"
+  posix_test__debug__wrapper '_posix_test__exit_trap' "$___original_exit_code"
 }

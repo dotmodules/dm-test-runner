@@ -2,7 +2,7 @@
 # MAKE SETTINGS
 
 .DEFAULT_GOAL := help
-NAME := dm.test
+NAME := posix_test
 
 
 #=======================================================================================

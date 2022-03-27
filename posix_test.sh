@@ -10,12 +10,12 @@
 #==============================================================================
 
 #==============================================================================
-# Welcome to the dm-test source code! As a side-project during implementing the
-# dotmodules configuration manager system, dm-test was born in a need to have a
-# simple yet powerful pure bash testing library, that suit my needs: fast
-# execution, detailed debugging, modern test-suite features (hooks, mocking
-# possibilities, isolated testing). I found the existing test runners for pure
-# shell/bash projects are lacking of these.
+# Welcome to the posix-test source code! As a side-project during implementing
+# the dotmodules configuration manager system, posix-test was born in a need to
+# have a simple yet powerful pure bash testing library, that suit my needs:
+# fast execution, detailed debugging, modern test-suite features (hooks,
+# mocking possibilities, isolated testing). I found the existing test runners
+# for pure shell/bash projects are lacking of these.
 #==============================================================================
 
 #==============================================================================
@@ -30,15 +30,15 @@
 #==============================================================================
 
 #==============================================================================
-# Since dm-test is intended to be used inside other codebase, and pure shell
+# Since posix-test is intended to be used inside other codebase, and pure shell
 # doesn't have scoping for variables, everything will be in a global namespace.
-# Because of that, the dm-test project uses long function names with the
-# 'dm_test__' prefix, and for every variable it will use the '___' prefix to
+# Because of that, the posix-test project uses long function names with the
+# 'posix_test__' prefix, and for every variable it will use the '___' prefix to
 # (hopefully) not to clash with any other variables in the tested code base.
 #==============================================================================
 
 #==============================================================================
-# To be able to be fully platform independent out-of-the-box, dm-test is
+# To be able to be fully platform independent out-of-the-box, posix-test is
 # relying on another side-side-project (already down three levels in the rabbit
 # hole..) called posix-adapter. Every command line tool call in this project is
 # executed through the posix-adapter interface after it is loaded (that means
@@ -83,7 +83,7 @@ set -u  # prevent unset variable expansion
 # Status:
 #   1 - System will exit at the end of this function.
 #==============================================================================
-dm_test__report_error_and_exit() {
+posix_test__report_error_and_exit() {
   ___message="$1"
   ___details="$2"
   ___reason="$3"
@@ -116,23 +116,23 @@ dm_test__report_error_and_exit() {
 #==============================================================================
 
 #==============================================================================
-# For better readability dm.test.sh is composed out of smaller scripts that are
-# sourced dynamically. As dm.test.sh is imported to the user code base by
+# For better readability posix_test.sh is composed out of smaller scripts that are
+# sourced dynamically. As posix_test.sh is imported to the user code base by
 # sourcing, the conventional path determination cannot be used. The '$0'
-# variable contains the host script's path the dm.test.sh file is sourced from.
-# The relative path to the root of the dm-test-runner subrepo has to be defined
+# variable contains the host script's path the posix_test.sh file is sourced from.
+# The relative path to the root of the posix-test-runner subrepo has to be defined
 # explicitly to the internal sourcing could be executed.
 #==============================================================================
 
-if [ -z ${DM_TEST__CONFIG__MANDATORY__SUBMODULE_PATH_PREFIX+x} ]
+if [ -z ${POSIX_TEST__CONFIG__MANDATORY__SUBMODULE_PATH_PREFIX+x} ]
 then
-  dm_test__report_error_and_exit \
+  posix_test__report_error_and_exit \
     'Initialization failed!' \
     'Mandatory path prefix variable is missing!' \
-    'DM_TEST__CONFIG__MANDATORY__SUBMODULE_PATH_PREFIX'
+    'POSIX_TEST__CONFIG__MANDATORY__SUBMODULE_PATH_PREFIX'
 fi
 
-___path_prefix="${DM_TEST__CONFIG__MANDATORY__SUBMODULE_PATH_PREFIX}"
+___path_prefix="${POSIX_TEST__CONFIG__MANDATORY__SUBMODULE_PATH_PREFIX}"
 
 #==============================================================================
 # POSIX_ADAPTER INTEGRATION
@@ -156,7 +156,7 @@ then
     # shellcheck source=./dependencies/posix-adapter/posix_adapter.sh
     . "${POSIX_ADAPTER__CONFIG__MANDATORY__SUBMODULE_PATH_PREFIX}/posix_adapter.sh"
   else
-    dm_test__report_error_and_exit \
+    posix_test__report_error_and_exit \
       'Initialization failed!' \
       'posix_adapter needs to be initialized but its git submodule is missing!' \
       'You need to source it or init its submodule here: git submodule init'
@@ -229,8 +229,8 @@ fi
 #==============================================================================
 
 #==============================================================================
-# Only API function for the dm.test test runner. It looks for the test files in
-# the predefined test root directory and executes the test cases one by one.
+# Only API function for the posix_test test runner. It looks for the test files
+# in the predefined test root directory and executes the test cases one by one.
 #------------------------------------------------------------------------------
 # Globals:
 #   None
@@ -248,13 +248,13 @@ fi
 # Status:
 #   0 - Other status is not expected.
 #==============================================================================
-dm_test__run_suite() {
-  if dm_test__config__debug_is_enabled
+posix_test__run_suite() {
+  if posix_test__config__debug_is_enabled
   then
     # Wrapping the main function of the test suite runner in order to initialize
     # the debugger file descriptor.
-    dm_test__debug__wrapper 'dm_test__test_suite__main'
+    posix_test__debug__wrapper 'posix_test__test_suite__main'
   else
-    dm_test__test_suite__main
+    posix_test__test_suite__main
   fi
 }

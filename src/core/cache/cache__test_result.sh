@@ -21,20 +21,20 @@
 #==============================================================================
 
 # Variable thar holds the runtime path of the test result cache file.
-DM_TEST__CACHE__RUNTIME__TEST_RESULTS='__INVALID__'
+POSIX_TEST__CACHE__RUNTIME__TEST_RESULTS='__INVALID__'
 
 #==============================================================================
 # Inner function to create and initialize the test result file.
 #------------------------------------------------------------------------------
 # Globals:
-#   DM_TEST__CACHE__RUNTIME__TEST_RESULTS
+#   POSIX_TEST__CACHE__RUNTIME__TEST_RESULTS
 # Arguments:
 #   None
 # STDIN:
 #   None
 #------------------------------------------------------------------------------
 # Output variables:
-#   DM_TEST__CACHE__RUNTIME__TEST_RESULTS
+#   POSIX_TEST__CACHE__RUNTIME__TEST_RESULTS
 # STDOUT:
 #   None
 # STDERR:
@@ -42,11 +42,11 @@ DM_TEST__CACHE__RUNTIME__TEST_RESULTS='__INVALID__'
 # Status:
 #   0 - Other status is not expected.
 #==============================================================================
-_dm_test__cache__test_result__init() {
-  DM_TEST__CACHE__RUNTIME__TEST_RESULTS="$(dm_test__cache__create_temp_file)"
+_posix_test__cache__test_result__init() {
+  POSIX_TEST__CACHE__RUNTIME__TEST_RESULTS="$(posix_test__cache__create_temp_file)"
 
-  dm_test__debug '_dm_test__cache__test_result__init' \
-    "test result temp file created: '${DM_TEST__CACHE__RUNTIME__TEST_RESULTS}'"
+  posix_test__debug '_posix_test__cache__test_result__init' \
+    "test result temp file created: '${POSIX_TEST__CACHE__RUNTIME__TEST_RESULTS}'"
 }
 
 #==============================================================================
@@ -55,8 +55,8 @@ _dm_test__cache__test_result__init() {
 # case assertions.
 #------------------------------------------------------------------------------
 # Globals:
-#   DM_TEST__CACHE__RUNTIME__TEST_RESULTS
-#   DM_TEST__CONSTANT__TEST_RESULT__SUCCESS
+#   POSIX_TEST__CACHE__RUNTIME__TEST_RESULTS
+#   POSIX_TEST__CONSTANT__TEST_RESULT__SUCCESS
 # Arguments:
 #   None
 # STDIN:
@@ -71,11 +71,11 @@ _dm_test__cache__test_result__init() {
 # Status:
 #   0 - Other status is not expected.
 #==============================================================================
-dm_test__cache__test_result__init() {
-  posix_adapter__echo "$DM_TEST__CONSTANT__TEST_RESULT__SUCCESS" > \
-    "$DM_TEST__CACHE__RUNTIME__TEST_RESULTS"
+posix_test__cache__test_result__init() {
+  posix_adapter__echo "$POSIX_TEST__CONSTANT__TEST_RESULT__SUCCESS" > \
+    "$POSIX_TEST__CACHE__RUNTIME__TEST_RESULTS"
 
-  dm_test__debug 'dm_test__cache__test_result__init' \
+  posix_test__debug 'posix_test__cache__test_result__init' \
     'test case initialized to SUCCESS'
 }
 
@@ -83,8 +83,8 @@ dm_test__cache__test_result__init() {
 # Function that sets the currently executing test case result to failure.
 #------------------------------------------------------------------------------
 # Globals:
-#   DM_TEST__CACHE__RUNTIME__TEST_RESULTS
-#   DM_TEST__CONSTANT__TEST_RESULT__FAILURE
+#   POSIX_TEST__CACHE__RUNTIME__TEST_RESULTS
+#   POSIX_TEST__CONSTANT__TEST_RESULT__FAILURE
 # Arguments:
 #   None
 # STDIN:
@@ -99,11 +99,11 @@ dm_test__cache__test_result__init() {
 # Status:
 #   0 - Other status is not expected.
 #==============================================================================
-dm_test__cache__test_result__mark_as_failed() {
-  posix_adapter__echo "$DM_TEST__CONSTANT__TEST_RESULT__FAILURE" > \
-    "$DM_TEST__CACHE__RUNTIME__TEST_RESULTS"
+posix_test__cache__test_result__mark_as_failed() {
+  posix_adapter__echo "$POSIX_TEST__CONSTANT__TEST_RESULT__FAILURE" > \
+    "$POSIX_TEST__CACHE__RUNTIME__TEST_RESULTS"
 
-  dm_test__debug 'dm_test__cache__test_result__mark_as_failed' \
+  posix_test__debug 'posix_test__cache__test_result__mark_as_failed' \
     'test case marked as FAILED'
 }
 
@@ -111,8 +111,8 @@ dm_test__cache__test_result__mark_as_failed() {
 # Function that evaluates the test case result cache file content.
 #------------------------------------------------------------------------------
 # Globals:
-#   DM_TEST__CACHE__RUNTIME__TEST_RESULTS
-#   DM_TEST__CONSTANT__TEST_RESULT__SUCCESS
+#   POSIX_TEST__CACHE__RUNTIME__TEST_RESULTS
+#   POSIX_TEST__CONSTANT__TEST_RESULT__SUCCESS
 # Arguments:
 #   None
 # STDIN:
@@ -128,16 +128,16 @@ dm_test__cache__test_result__mark_as_failed() {
 #   0 - Test case was succeeded.
 #   1 - Test case was failed.
 #==============================================================================
-dm_test__cache__test_result__was_success() {
+posix_test__cache__test_result__was_success() {
   if posix_adapter__grep --silent \
-    "$DM_TEST__CONSTANT__TEST_RESULT__SUCCESS" \
-    "$DM_TEST__CACHE__RUNTIME__TEST_RESULTS"
+    "$POSIX_TEST__CONSTANT__TEST_RESULT__SUCCESS" \
+    "$POSIX_TEST__CACHE__RUNTIME__TEST_RESULTS"
   then
-    dm_test__debug 'dm_test__cache__test_result__was_success' \
+    posix_test__debug 'posix_test__cache__test_result__was_success' \
       'test result cache file content: SUCCESS'
     return 0
   else
-    dm_test__debug 'dm_test__cache__test_result__was_success' \
+    posix_test__debug 'posix_test__cache__test_result__was_success' \
       'test result cache file content: FAILURE'
     return 1
   fi

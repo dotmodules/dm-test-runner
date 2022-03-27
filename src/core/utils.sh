@@ -31,11 +31,11 @@
 # Status:
 #   0 - Other status is not expected.
 #==============================================================================
-dm_test__utils__print_output_if_has_content() {
+posix_test__utils__print_output_if_has_content() {
   ___content="$1"
   if [ -n "$___content" ]
   then
-    dm_test__debug 'dm_test__utils__print_output_if_has_content' \
+    posix_test__debug 'posix_test__utils__print_output_if_has_content' \
       'displaying captured output..'
 
     posix_adapter__echo "$___content"
@@ -62,10 +62,10 @@ dm_test__utils__print_output_if_has_content() {
 # Status:
 #   0 - Other status is not expected.
 #==============================================================================
-_dm_test__utils__increment_file_content() {
+_posix_test__utils__increment_file_content() {
   ___file_path="$1"
 
-  dm_test__debug '_dm_test__utils__increment_file_content' \
+  posix_test__debug '_posix_test__utils__increment_file_content' \
     "incrementing content of file '${___file_path}'"
 
   if [ -s "$___file_path" ]
@@ -96,10 +96,10 @@ _dm_test__utils__increment_file_content() {
 # Status:
 #   0 - Other status is not expected.
 #==============================================================================
-_dm_test__utils__decrement_file_content() {
+_posix_test__utils__decrement_file_content() {
   ___file_path="$1"
 
-  dm_test__debug '_dm_test__utils__decrement_file_content' \
+  posix_test__debug '_posix_test__utils__decrement_file_content' \
     "decrementing content of file '${___file_path}'"
 
   if [ -s "$___file_path" ]
@@ -129,13 +129,13 @@ _dm_test__utils__decrement_file_content() {
 # Status:
 #   0 - Other status is not expected.
 #==============================================================================
-_dm_test__utils__strip_colors() {
+_posix_test__utils__strip_colors() {
   # Solution derived from https://superuser.com/a/380778
   # The output of the 'tput sgr0' reset character could be '033 ( B' so the
   # replace pattern has to be extended.
   ___pattern='s/\x1b[\[\(][0-9;]*[mB]//g'
 
-  dm_test__debug '_dm_test__utils__strip_colors' \
+  posix_test__debug '_posix_test__utils__strip_colors' \
     'stripping colors from input stream..'
 
   # Making sure that the running system supports the necessary escape

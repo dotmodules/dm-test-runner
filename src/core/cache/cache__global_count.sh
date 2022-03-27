@@ -16,7 +16,7 @@
 #==============================================================================
 
 # Variable thar holds the runtime path of the global test case count file.
-DM_TEST__CACHE__RUNTIME__GLOBAL_COUNT='__INVALID__'
+POSIX_TEST__CACHE__RUNTIME__GLOBAL_COUNT='__INVALID__'
 
 #==============================================================================
 # Inner function to create and initialize the global count file. Writing an
@@ -24,14 +24,14 @@ DM_TEST__CACHE__RUNTIME__GLOBAL_COUNT='__INVALID__'
 # execution.
 #------------------------------------------------------------------------------
 # Globals:
-#   DM_TEST__CACHE__RUNTIME__GLOBAL_COUNT
+#   POSIX_TEST__CACHE__RUNTIME__GLOBAL_COUNT
 # Arguments:
 #   None
 # STDIN:
 #   None
 #------------------------------------------------------------------------------
 # Output variables:
-#   DM_TEST__CACHE__RUNTIME__GLOBAL_COUNT
+#   POSIX_TEST__CACHE__RUNTIME__GLOBAL_COUNT
 # STDOUT:
 #   None
 # STDERR:
@@ -39,19 +39,19 @@ DM_TEST__CACHE__RUNTIME__GLOBAL_COUNT='__INVALID__'
 # Status:
 #   0 - Other status is not expected.
 #==============================================================================
-_dm_test__cache__global_count__init() {
-  DM_TEST__CACHE__RUNTIME__GLOBAL_COUNT="$(dm_test__cache__create_temp_file)"
-  posix_adapter__echo '0' > "$DM_TEST__CACHE__RUNTIME__GLOBAL_COUNT"
+_posix_test__cache__global_count__init() {
+  POSIX_TEST__CACHE__RUNTIME__GLOBAL_COUNT="$(posix_test__cache__create_temp_file)"
+  posix_adapter__echo '0' > "$POSIX_TEST__CACHE__RUNTIME__GLOBAL_COUNT"
 
-  dm_test__debug '_dm_test__cache__global_count__init' \
-    "global count file initialized: '${DM_TEST__CACHE__RUNTIME__GLOBAL_COUNT}'"
+  posix_test__debug '_posix_test__cache__global_count__init' \
+    "global count file initialized: '${POSIX_TEST__CACHE__RUNTIME__GLOBAL_COUNT}'"
 }
 
 #==============================================================================
 # Function to increase the global count cache file's content.
 #------------------------------------------------------------------------------
 # Globals:
-#   DM_TEST__CACHE__RUNTIME__GLOBAL_COUNT
+#   POSIX_TEST__CACHE__RUNTIME__GLOBAL_COUNT
 # Arguments:
 #   None
 # STDIN:
@@ -66,11 +66,11 @@ _dm_test__cache__global_count__init() {
 # Status:
 #   0 - Other status is not expected.
 #==============================================================================
-dm_test__cache__global_count__increment() {
-  _dm_test__utils__increment_file_content \
-    "$DM_TEST__CACHE__RUNTIME__GLOBAL_COUNT"
+posix_test__cache__global_count__increment() {
+  _posix_test__utils__increment_file_content \
+    "$POSIX_TEST__CACHE__RUNTIME__GLOBAL_COUNT"
 
-  dm_test__debug 'dm_test__cache__global_count__increment' \
+  posix_test__debug 'posix_test__cache__global_count__increment' \
     'global count file incremented'
 }
 
@@ -78,7 +78,7 @@ dm_test__cache__global_count__increment() {
 # Function to get the global count cache file's content.
 #------------------------------------------------------------------------------
 # Globals:
-#   DM_TEST__CACHE__RUNTIME__GLOBAL_COUNT
+#   POSIX_TEST__CACHE__RUNTIME__GLOBAL_COUNT
 # Arguments:
 #   None
 # STDIN:
@@ -93,10 +93,10 @@ dm_test__cache__global_count__increment() {
 # Status:
 #   0 - Other status is not expected.
 #==============================================================================
-dm_test__cache__global_count__get() {
-  ___count="$(posix_adapter__cat "$DM_TEST__CACHE__RUNTIME__GLOBAL_COUNT")"
+posix_test__cache__global_count__get() {
+  ___count="$(posix_adapter__cat "$POSIX_TEST__CACHE__RUNTIME__GLOBAL_COUNT")"
   posix_adapter__echo "$___count"
 
-  dm_test__debug 'dm_test__cache__global_count__get' \
+  posix_test__debug 'posix_test__cache__global_count__get' \
     "global count value returned: '${___count}'"
 }

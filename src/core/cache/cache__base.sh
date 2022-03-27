@@ -47,33 +47,33 @@
 # Status:
 #   0 - Other status is not expected.
 #==============================================================================
-dm_test__cache__init() {
-  dm_test__debug 'dm_test__cache__init' 'initializing cache system..'
+posix_test__cache__init() {
+  posix_test__debug 'posix_test__cache__init' 'initializing cache system..'
 
   # Initializing and normalizing the cache parent directory.
-  _dm_test__cache__normalize_cache_parent_directory
+  _posix_test__cache__normalize_cache_parent_directory
 
   # At this point the cache parent directory has been finalized, we can try to
   # clean up all the leftover cache directories.
-  dm_test__cache__cleanup
+  posix_test__cache__cleanup
 
   # Creating the new cache directory..
-  _dm_test__cache__create_base_cache_directory
+  _posix_test__cache__create_base_cache_directory
   # At this point the current cache directory has been created, so arming the
   # trap system to clean it up on exit or interrupt signals.
-  dm_test__arm_trap_system
+  posix_test__arm_trap_system
 
   # Initializing the internal cache structure..
-  _dm_test__cache__init__temp_files_base_directory
-  _dm_test__cache__init__temp_directories_base_directory
+  _posix_test__cache__init__temp_files_base_directory
+  _posix_test__cache__init__temp_directories_base_directory
 
   # Sub-cache system initialization.
-  _dm_test__cache__global_count__init
-  _dm_test__cache__global_errors__init
-  _dm_test__cache__global_failures__init
-  _dm_test__cache__test_result__init
+  _posix_test__cache__global_count__init
+  _posix_test__cache__global_errors__init
+  _posix_test__cache__global_failures__init
+  _posix_test__cache__test_result__init
 
-  dm_test__debug 'dm_test__cache__init' 'cache system initialized'
+  posix_test__debug 'posix_test__cache__init' 'cache system initialized'
 }
 
 #==============================================================================
@@ -96,36 +96,36 @@ dm_test__cache__init() {
 # Prefix that every cache directory will have. This uniform prefix would make
 # it easy to recover from an unexpected event when the cache cleanup couldn't
 # be executed, by deleting all temporary directories with this prefix.
-DM_TEST__CACHE__CONFIG__DIRECTORY_PREFIX='dm_test_cache'
+POSIX_TEST__CACHE__CONFIG__DIRECTORY_PREFIX='posix_test_cache'
 
 # Cache directory prefix extended with the necessary `mktemp` compatible
 # template. This variable will be used to create a unique cache directory each
 # time.
-DM_TEST__CACHE__CONFIG__MKTEMP_TEMPLATE=\
-"${DM_TEST__CACHE__CONFIG__DIRECTORY_PREFIX}.XXXXXXXXXX"
+POSIX_TEST__CACHE__CONFIG__MKTEMP_TEMPLATE=\
+"${POSIX_TEST__CACHE__CONFIG__DIRECTORY_PREFIX}.XXXXXXXXXX"
 
 # Global variable that hold the normalized cache parent directory. Normalizing
 # the cache parent directory should be the first step during cache system
 # initialization.
-DM_TEST__CACHE__RUNTIME__NORMALIZED_CACHE_PARENT_DIRECTORY='__INVALID__'
+POSIX_TEST__CACHE__RUNTIME__NORMALIZED_CACHE_PARENT_DIRECTORY='__INVALID__'
 
 # Global variable that holds the path to the currently operational cache
 # directory.
-DM_TEST__CACHE__RUNTIME__CACHE_PATH='__INVALID__'
+POSIX_TEST__CACHE__RUNTIME__CACHE_PATH='__INVALID__'
 
 #==============================================================================
 # Function that will normalize and validate the cache parent directory received
 # from the configuration.
 #------------------------------------------------------------------------------
 # Globals:
-#   DM_TEST__CONFIG__OPTIONAL__CACHE_PARENT_DIRECTORY
+#   POSIX_TEST__CONFIG__OPTIONAL__CACHE_PARENT_DIRECTORY
 # Arguments:
 #   None
 # STDIN:
 #   None
 #------------------------------------------------------------------------------
 # Output variables:
-#   DM_TEST__CACHE__RUNTIME__NORMALIZED_CACHE_PARENT_DIRECTORY
+#   POSIX_TEST__CACHE__RUNTIME__NORMALIZED_CACHE_PARENT_DIRECTORY
 # STDOUT:
 #   None
 # STDERR:
@@ -133,11 +133,11 @@ DM_TEST__CACHE__RUNTIME__CACHE_PATH='__INVALID__'
 # Status:
 #   0 - Other status is not expected.
 #==============================================================================
-_dm_test__cache__normalize_cache_parent_directory() {
-  ___raw_parent="$DM_TEST__CONFIG__OPTIONAL__CACHE_PARENT_DIRECTORY"
+_posix_test__cache__normalize_cache_parent_directory() {
+  ___raw_parent="$POSIX_TEST__CONFIG__OPTIONAL__CACHE_PARENT_DIRECTORY"
   ___parent="$(posix_adapter__realpath --no-symlinks "$___raw_parent")"
 
-  dm_test__debug '_dm_test__cache__normalize_cache_parent_directory' \
+  posix_test__debug '_posix_test__cache__normalize_cache_parent_directory' \
     "normalizing raw cache parent directory: '${___raw_parent}'"
 
   # Check if the parent directory exists or not. If not, create it!
@@ -149,7 +149,7 @@ _dm_test__cache__normalize_cache_parent_directory() {
     then
       :
     else
-      dm_test__report_error_and_exit \
+      posix_test__report_error_and_exit \
         'Cache system initialization failed!' \
         "Cache parent directory '${___parent}' cannot be created!" \
         "$___output"
@@ -161,15 +161,15 @@ _dm_test__cache__normalize_cache_parent_directory() {
   then
     :
   else
-    dm_test__report_error_and_exit \
+    posix_test__report_error_and_exit \
       'Cache system initialization failed!' \
       'Cache parent directory exists but you have no write permission!' \
       "unable to write into '${___parent}': Permission denied"
   fi
 
-  DM_TEST__CACHE__RUNTIME__NORMALIZED_CACHE_PARENT_DIRECTORY="$___parent"
+  POSIX_TEST__CACHE__RUNTIME__NORMALIZED_CACHE_PARENT_DIRECTORY="$___parent"
 
-  dm_test__debug '_dm_test__cache__normalize_cache_parent_directory' \
+  posix_test__debug '_posix_test__cache__normalize_cache_parent_directory' \
     "raw cache parent directory normalized: '${___parent}'"
 }
 
@@ -178,16 +178,16 @@ _dm_test__cache__normalize_cache_parent_directory() {
 # corresponding global variable.
 #------------------------------------------------------------------------------
 # Globals:
-#   DM_TEST__CACHE__RUNTIME__NORMALIZED_CACHE_PARENT_DIRECTORY
-#   DM_TEST__CACHE__CONFIG__MKTEMP_TEMPLATE
-#   DM_TEST__CACHE__RUNTIME__CACHE_PATH
+#   POSIX_TEST__CACHE__RUNTIME__NORMALIZED_CACHE_PARENT_DIRECTORY
+#   POSIX_TEST__CACHE__CONFIG__MKTEMP_TEMPLATE
+#   POSIX_TEST__CACHE__RUNTIME__CACHE_PATH
 # Arguments:
 #   None
 # STDIN:
 #   None
 #------------------------------------------------------------------------------
 # Output variables:
-#   DM_TEST__CACHE__RUNTIME__CACHE_PATH
+#   POSIX_TEST__CACHE__RUNTIME__CACHE_PATH
 # STDOUT:
 #   None
 # STDERR:
@@ -195,25 +195,25 @@ _dm_test__cache__normalize_cache_parent_directory() {
 # Status:
 #   0 - Other status is not expected.
 #==============================================================================
-_dm_test__cache__create_base_cache_directory() {
+_posix_test__cache__create_base_cache_directory() {
   if ___mktemp_output="$( \
     posix_adapter__mktemp \
       --directory \
-      --tmpdir "$DM_TEST__CACHE__RUNTIME__NORMALIZED_CACHE_PARENT_DIRECTORY" \
-      "$DM_TEST__CACHE__CONFIG__MKTEMP_TEMPLATE" \
+      --tmpdir "$POSIX_TEST__CACHE__RUNTIME__NORMALIZED_CACHE_PARENT_DIRECTORY" \
+      "$POSIX_TEST__CACHE__CONFIG__MKTEMP_TEMPLATE" \
       2>&1 \
   )"
   then
-    DM_TEST__CACHE__RUNTIME__CACHE_PATH="$___mktemp_output"
+    POSIX_TEST__CACHE__RUNTIME__CACHE_PATH="$___mktemp_output"
   else
-    dm_test__report_error_and_exit \
+    posix_test__report_error_and_exit \
       'Cache system initialization failed!' \
       'Cache base directory cannot be created!' \
       "$___mktemp_output"
   fi
 
-  dm_test__debug '_dm_test__cache__create_base_cache_directory' \
-    "base cache directory created: '${DM_TEST__CACHE__RUNTIME__CACHE_PATH}'"
+  posix_test__debug '_posix_test__cache__create_base_cache_directory' \
+    "base cache directory created: '${POSIX_TEST__CACHE__RUNTIME__CACHE_PATH}'"
 }
 
 #==============================================================================
@@ -236,11 +236,11 @@ _dm_test__cache__create_base_cache_directory() {
 # Status:
 #   0 - Other status is not expected.
 #==============================================================================
-dm_test__cache__cleanup() {
-  dm_test__debug 'dm_test__cache__cleanup' \
+posix_test__cache__cleanup() {
+  posix_test__debug 'posix_test__cache__cleanup' \
     'cleanup process started..'
 
-  if ! ___cleanup_targets="$(_dm_test__cache__cleanup__find_targets)"
+  if ! ___cleanup_targets="$(_posix_test__cache__cleanup__find_targets)"
   then
     ___status="$?"
     exit "$___status"
@@ -251,12 +251,12 @@ dm_test__cache__cleanup() {
 
     for ___target in $___cleanup_targets
     do
-      _dm_test__cache__cleanup__delete_target "$___target"
+      _posix_test__cache__cleanup__delete_target "$___target"
     done
 
-    dm_test__debug 'dm_test__cache__cleanup' 'cleanup finished'
+    posix_test__debug 'posix_test__cache__cleanup' 'cleanup finished'
   else
-    dm_test__debug 'dm_test__cache__cleanup' 'nothing to clean up'
+    posix_test__debug 'posix_test__cache__cleanup' 'nothing to clean up'
   fi
 }
 
@@ -265,8 +265,8 @@ dm_test__cache__cleanup() {
 # directory.
 #------------------------------------------------------------------------------
 # Globals:
-#   DM_TEST__CACHE__RUNTIME__NORMALIZED_CACHE_PARENT_DIRECTORY
-#   DM_TEST__CACHE__CONFIG__DIRECTORY_PREFIX
+#   POSIX_TEST__CACHE__RUNTIME__NORMALIZED_CACHE_PARENT_DIRECTORY
+#   POSIX_TEST__CACHE__CONFIG__DIRECTORY_PREFIX
 # Arguments:
 #   None
 # STDIN:
@@ -281,34 +281,34 @@ dm_test__cache__cleanup() {
 # Status:
 #   0 - Other status is not expected.
 #==============================================================================
-_dm_test__cache__cleanup__find_targets() {
-  dm_test__debug '_dm_test__cache__cleanup__find_targets' \
+_posix_test__cache__cleanup__find_targets() {
+  posix_test__debug '_posix_test__cache__cleanup__find_targets' \
     'looking for deletable cache directories..'
 
   if ___find_output="$( \
-    posix_adapter__find "$DM_TEST__CACHE__RUNTIME__NORMALIZED_CACHE_PARENT_DIRECTORY" \
+    posix_adapter__find "$POSIX_TEST__CACHE__RUNTIME__NORMALIZED_CACHE_PARENT_DIRECTORY" \
       --max-depth '1' \
       --type 'd' \
-      --name "${DM_TEST__CACHE__CONFIG__DIRECTORY_PREFIX}*" \
+      --name "${POSIX_TEST__CACHE__CONFIG__DIRECTORY_PREFIX}*" \
       2>&1 \
   )"
   then
     ___directory_count="$( \
       posix_adapter__echo "$___find_output" | posix_adapter__wc --lines \
     )"
-    dm_test__debug '_dm_test__cache__cleanup__find_targets' \
+    posix_test__debug '_posix_test__cache__cleanup__find_targets' \
       "deletable directory count: ${___directory_count}"
-    dm_test__debug_list '_dm_test__cache__cleanup__find_targets' \
+    posix_test__debug_list '_posix_test__cache__cleanup__find_targets' \
       'target result:' \
       "$___find_output"
     posix_adapter__echo "$___find_output"
 
   else
 
-    dm_test__debug '_dm_test__cache__cleanup__find_targets' \
+    posix_test__debug '_posix_test__cache__cleanup__find_targets' \
       'error happened while looking for cache directories.. exiting!'
 
-    dm_test__report_error_and_exit \
+    posix_test__report_error_and_exit \
       'Cache system clean up failed!' \
       'An unexpected error happened during the clean up target findig process!' \
       "$___find_output"
@@ -335,18 +335,18 @@ _dm_test__cache__cleanup__find_targets() {
 # Status:
 #   0 - Other status is not expected.
 #==============================================================================
-_dm_test__cache__cleanup__delete_target() {
+_posix_test__cache__cleanup__delete_target() {
   ___target="$1"
 
-  dm_test__debug '_dm_test__cache__cleanup__delete_target' \
+  posix_test__debug '_posix_test__cache__cleanup__delete_target' \
     "deleting '${___target}'.."
 
   if ___rm_output="$(posix_adapter__rm --recursive --force "$___target" 2>&1)"
   then
-    dm_test__debug '_dm_test__cache__cleanup__delete_target' \
+    posix_test__debug '_posix_test__cache__cleanup__delete_target' \
       "deleted '${___target}'"
   else
-    dm_test__report_error_and_exit \
+    posix_test__report_error_and_exit \
       'Cache system clean up failed!' \
       "An unexpected error happened while cleaning up '${___target}'!" \
       "$___rm_output"
@@ -370,35 +370,35 @@ _dm_test__cache__cleanup__delete_target() {
 
 # Variable that holds the name of the temporary files directory. This variable
 # is not intended for accessing the directory.
-DM_TEST__CACHE__CONFIG__TEMP_FILES_PATH_NAME='temp_files'
+POSIX_TEST__CACHE__CONFIG__TEMP_FILES_PATH_NAME='temp_files'
 
 # Temporary file name template for the `mktemp` based temporary file
 # generation.
-DM_TEST__CACHE__CONFIG__TEMP_FILE_TEMPLATE='temp_file.XXXXXXXXXXXXXXXX'
+POSIX_TEST__CACHE__CONFIG__TEMP_FILE_TEMPLATE='temp_file.XXXXXXXXXXXXXXXX'
 
 # Postfix that is needed for the unique temporary path creation. It will be
 # appended to the unique temp file path created by `mktemp` to have a unique
 # path that can be returned.
-DM_TEST__CACHE__CONFIG__TEMP_FILE_POSTFIX='.path'
+POSIX_TEST__CACHE__CONFIG__TEMP_FILE_POSTFIX='.path'
 
 # Variable thar holds the runtime path of the temporary files directory. This
 # variable should be used for writing or reading purposes.
-DM_TEST__CACHE__RUNTIME__TEMP_FILES_PATH='__INVALID__'
+POSIX_TEST__CACHE__RUNTIME__TEMP_FILES_PATH='__INVALID__'
 
 #==============================================================================
 # Inner function to initialize the directory for the temporary files.
 #------------------------------------------------------------------------------
 # Globals:
-#   DM_TEST__CACHE__RUNTIME__TEMP_FILES_PATH
-#   DM_TEST__CACHE__RUNTIME__CACHE_PATH
-#   DM_TEST__CACHE__CONFIG__TEMP_FILES_PATH_NAME
+#   POSIX_TEST__CACHE__RUNTIME__TEMP_FILES_PATH
+#   POSIX_TEST__CACHE__RUNTIME__CACHE_PATH
+#   POSIX_TEST__CACHE__CONFIG__TEMP_FILES_PATH_NAME
 # Arguments:
 #   None
 # STDIN:
 #   None
 #------------------------------------------------------------------------------
 # Output variables:
-#   DM_TEST__CACHE__RUNTIME__TEMP_FILES_PATH
+#   POSIX_TEST__CACHE__RUNTIME__TEMP_FILES_PATH
 # STDOUT:
 #   None
 # STDERR:
@@ -406,17 +406,17 @@ DM_TEST__CACHE__RUNTIME__TEMP_FILES_PATH='__INVALID__'
 # Status:
 #   0 - Other status is not expected.
 #==============================================================================
-_dm_test__cache__init__temp_files_base_directory() {
+_posix_test__cache__init__temp_files_base_directory() {
   # Using a subshell here to prevent the long line.
   # shellcheck disable=2116
-  DM_TEST__CACHE__RUNTIME__TEMP_FILES_PATH="$( \
-    posix_adapter__printf '%s' "${DM_TEST__CACHE__RUNTIME__CACHE_PATH}/"; \
-    posix_adapter__echo "$DM_TEST__CACHE__CONFIG__TEMP_FILES_PATH_NAME" \
+  POSIX_TEST__CACHE__RUNTIME__TEMP_FILES_PATH="$( \
+    posix_adapter__printf '%s' "${POSIX_TEST__CACHE__RUNTIME__CACHE_PATH}/"; \
+    posix_adapter__echo "$POSIX_TEST__CACHE__CONFIG__TEMP_FILES_PATH_NAME" \
   )"
-  posix_adapter__mkdir --parents "$DM_TEST__CACHE__RUNTIME__TEMP_FILES_PATH"
+  posix_adapter__mkdir --parents "$POSIX_TEST__CACHE__RUNTIME__TEMP_FILES_PATH"
 
-  dm_test__debug '_dm_test__cache__init__temp_files_base_directory' \
-    "temp files base created: '${DM_TEST__CACHE__RUNTIME__TEMP_FILES_PATH}'"
+  posix_test__debug '_posix_test__cache__init__temp_files_base_directory' \
+    "temp files base created: '${POSIX_TEST__CACHE__RUNTIME__TEMP_FILES_PATH}'"
 }
 
 #==============================================================================
@@ -425,8 +425,8 @@ _dm_test__cache__init__temp_files_base_directory() {
 # file.
 #------------------------------------------------------------------------------
 # Globals:
-#   DM_TEST__CACHE__RUNTIME__TEMP_FILES_PATH
-#   DM_TEST__CACHE__CONFIG__TEMP_FILE_TEMPLATE
+#   POSIX_TEST__CACHE__RUNTIME__TEMP_FILES_PATH
+#   POSIX_TEST__CACHE__CONFIG__TEMP_FILE_TEMPLATE
 # Arguments:
 #   None
 # STDIN:
@@ -441,20 +441,20 @@ _dm_test__cache__init__temp_files_base_directory() {
 # Status:
 #   0 - Other status is not expected.
 #==============================================================================
-dm_test__cache__create_temp_file() {
+posix_test__cache__create_temp_file() {
   if ___mktemp_output="$( \
     posix_adapter__mktemp \
-      --tmpdir "$DM_TEST__CACHE__RUNTIME__TEMP_FILES_PATH" \
-      "$DM_TEST__CACHE__CONFIG__TEMP_FILE_TEMPLATE" \
+      --tmpdir "$POSIX_TEST__CACHE__RUNTIME__TEMP_FILES_PATH" \
+      "$POSIX_TEST__CACHE__CONFIG__TEMP_FILE_TEMPLATE" \
       2>&1 \
   )"
   then
     ___file="$___mktemp_output"
-    dm_test__debug 'dm_test__cache__create_temp_file' \
+    posix_test__debug 'posix_test__cache__create_temp_file' \
       "temp file created: '${___file}'"
     posix_adapter__echo "$___file"
   else
-    dm_test__report_error_and_exit \
+    posix_test__report_error_and_exit \
       'Temporary file generation failed!' \
       'Cannot create a unique temporary file!' \
       "$___mktemp_output"
@@ -469,7 +469,7 @@ dm_test__cache__create_temp_file() {
 # conditions. So in the end we will have an extra empty temporary file.
 #------------------------------------------------------------------------------
 # Globals:
-#   DM_TEST__CACHE__CONFIG__TEMP_FILE_POSTFIX
+#   POSIX_TEST__CACHE__CONFIG__TEMP_FILE_POSTFIX
 # Arguments:
 #   None
 # STDIN:
@@ -484,10 +484,10 @@ dm_test__cache__create_temp_file() {
 # Status:
 #   0 - Other status is not expected.
 #==============================================================================
-dm_test__cache__create_temp_path() {
-  ___file="$(dm_test__cache__create_temp_file)"
-  ___path="${___file}${DM_TEST__CACHE__CONFIG__TEMP_FILE_POSTFIX}"
-  dm_test__debug 'dm_test__cache__create_temp_path' \
+posix_test__cache__create_temp_path() {
+  ___file="$(posix_test__cache__create_temp_file)"
+  ___path="${___file}${POSIX_TEST__CACHE__CONFIG__TEMP_FILE_POSTFIX}"
+  posix_test__debug 'posix_test__cache__create_temp_path' \
     "temp path created: '${___path}'"
   posix_adapter__echo "$___path"
 }
@@ -511,30 +511,30 @@ dm_test__cache__create_temp_path() {
 
 # Variable that holds the name of the temporary directories directory. This
 # variable is not intended for accessing the directory.
-DM_TEST__CACHE__CONFIG__TEMP_DIRS_PATH_NAME='temp_directories'
+POSIX_TEST__CACHE__CONFIG__TEMP_DIRS_PATH_NAME='temp_directories'
 
 # Temporary directory name template for the `mktemp` based temporary directory
 # generation.
-DM_TEST__CACHE__CONFIG__TEMP_DIR_TEMPLATE='temp_directory.XXXXXXXXXXXXXXXX'
+POSIX_TEST__CACHE__CONFIG__TEMP_DIR_TEMPLATE='temp_directory.XXXXXXXXXXXXXXXX'
 
 # Variable thar holds the runtime path of the temporary directories directory.
 # This variable should be used for writing or reading purposes.
-DM_TEST__CACHE__RUNTIME__TEMP_DIRS_PATH='__INVALID__'
+POSIX_TEST__CACHE__RUNTIME__TEMP_DIRS_PATH='__INVALID__'
 
 #==============================================================================
 # Inner function to initialize the directory for the temporary directories.
 #------------------------------------------------------------------------------
 # Globals:
-#   DM_TEST__CACHE__RUNTIME__TEMP_DIRS_PATH
-#   DM_TEST__CACHE__RUNTIME__CACHE_PATH
-#   DM_TEST__CACHE__CONFIG__TEMP_DIRS_PATH_NAME
+#   POSIX_TEST__CACHE__RUNTIME__TEMP_DIRS_PATH
+#   POSIX_TEST__CACHE__RUNTIME__CACHE_PATH
+#   POSIX_TEST__CACHE__CONFIG__TEMP_DIRS_PATH_NAME
 # Arguments:
 #   None
 # STDIN:
 #   None
 #------------------------------------------------------------------------------
 # Output variables:
-#   DM_TEST__CACHE__RUNTIME__TEMP_DIRS_PATH
+#   POSIX_TEST__CACHE__RUNTIME__TEMP_DIRS_PATH
 # STDOUT:
 #   None
 # STDERR:
@@ -542,25 +542,25 @@ DM_TEST__CACHE__RUNTIME__TEMP_DIRS_PATH='__INVALID__'
 # Status:
 #   0 - Other status is not expected.
 #==============================================================================
-_dm_test__cache__init__temp_directories_base_directory() {
+_posix_test__cache__init__temp_directories_base_directory() {
   # Using a subshell here to prevent the long line.
   # shellcheck disable=2116
-  DM_TEST__CACHE__RUNTIME__TEMP_DIRS_PATH="$( \
-    posix_adapter__printf '%s' "${DM_TEST__CACHE__RUNTIME__CACHE_PATH}/"; \
-    posix_adapter__echo "$DM_TEST__CACHE__CONFIG__TEMP_DIRS_PATH_NAME" \
+  POSIX_TEST__CACHE__RUNTIME__TEMP_DIRS_PATH="$( \
+    posix_adapter__printf '%s' "${POSIX_TEST__CACHE__RUNTIME__CACHE_PATH}/"; \
+    posix_adapter__echo "$POSIX_TEST__CACHE__CONFIG__TEMP_DIRS_PATH_NAME" \
   )"
-  posix_adapter__mkdir --parents "$DM_TEST__CACHE__RUNTIME__TEMP_DIRS_PATH"
+  posix_adapter__mkdir --parents "$POSIX_TEST__CACHE__RUNTIME__TEMP_DIRS_PATH"
 
-  dm_test__debug '_dm_test__cache__init__temp_directories_base_directory' \
-    "temp dirs base created: '${DM_TEST__CACHE__RUNTIME__TEMP_DIRS_PATH}'"
+  posix_test__debug '_posix_test__cache__init__temp_directories_base_directory' \
+    "temp dirs base created: '${POSIX_TEST__CACHE__RUNTIME__TEMP_DIRS_PATH}'"
 }
 
 #==============================================================================
 # Creates a temporary directory in the cache directory and returns its path.
 #------------------------------------------------------------------------------
 # Globals:
-#   DM_TEST__CACHE__RUNTIME__TEMP_DIRS_PATH
-#   DM_TEST__CACHE__CONFIG__TEMP_DIR_TEMPLATE
+#   POSIX_TEST__CACHE__RUNTIME__TEMP_DIRS_PATH
+#   POSIX_TEST__CACHE__CONFIG__TEMP_DIR_TEMPLATE
 # Arguments:
 #   None
 # STDIN:
@@ -575,21 +575,21 @@ _dm_test__cache__init__temp_directories_base_directory() {
 # Status:
 #   0 - Other status is not expected.
 #==============================================================================
-dm_test__cache__create_temp_directory() {
+posix_test__cache__create_temp_directory() {
   if ___mktemp_output="$( \
     posix_adapter__mktemp \
       --directory \
-      --tmpdir "$DM_TEST__CACHE__RUNTIME__TEMP_DIRS_PATH" \
-      "$DM_TEST__CACHE__CONFIG__TEMP_DIR_TEMPLATE" \
+      --tmpdir "$POSIX_TEST__CACHE__RUNTIME__TEMP_DIRS_PATH" \
+      "$POSIX_TEST__CACHE__CONFIG__TEMP_DIR_TEMPLATE" \
       2>&1 \
   )"
   then
     ___dir="$___mktemp_output"
-    dm_test__debug 'dm_test__cache__create_temp_directory' \
+    posix_test__debug 'posix_test__cache__create_temp_directory' \
       "temporary directory created: '${___dir}'"
     posix_adapter__echo "$___dir"
   else
-    dm_test__report_error_and_exit \
+    posix_test__report_error_and_exit \
       'Temporary file generation failed!' \
       'Cannot create a unique temporary file!' \
       "$___mktemp_output"

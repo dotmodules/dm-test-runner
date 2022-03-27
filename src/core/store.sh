@@ -28,10 +28,10 @@
 #==============================================================================
 
 # Separator string between the key and the value.
-DM_TEST__STORE__CONSTANT__KEY_VALUE_SEPARATOR='::'
+POSIX_TEST__STORE__CONSTANT__KEY_VALUE_SEPARATOR='::'
 
 # Global store system storage file.
-DM_TEST__STORE__RUNTIME__STORAGE_FILE='__INVALID__'
+POSIX_TEST__STORE__RUNTIME__STORAGE_FILE='__INVALID__'
 
 #==============================================================================
 #     _    ____ ___    __                  _   _
@@ -48,14 +48,14 @@ DM_TEST__STORE__RUNTIME__STORAGE_FILE='__INVALID__'
 # store file.
 #------------------------------------------------------------------------------
 # Globals:
-#   DM_TEST__STORE__RUNTIME__STORAGE_FILE
+#   POSIX_TEST__STORE__RUNTIME__STORAGE_FILE
 # Arguments:
 #   None
 # STDIN:
 #   None
 #------------------------------------------------------------------------------
 # Output variables:
-#   DM_TEST__STORE__RUNTIME__STORAGE_FILE
+#   POSIX_TEST__STORE__RUNTIME__STORAGE_FILE
 # STDOUT:
 #   None
 # STDERR:
@@ -63,15 +63,15 @@ DM_TEST__STORE__RUNTIME__STORAGE_FILE='__INVALID__'
 # Status:
 #   0 - Other status is not expected.
 #==============================================================================
-dm_test__store__init() {
-  dm_test__debug 'dm_test__store__init' \
+posix_test__store__init() {
+  posix_test__debug 'posix_test__store__init' \
     'initializing store system..'
 
-  DM_TEST__STORE__RUNTIME__STORAGE_FILE="$(dm_test__cache__create_temp_file)"
+  POSIX_TEST__STORE__RUNTIME__STORAGE_FILE="$(posix_test__cache__create_temp_file)"
 
-  dm_test__debug_list 'dm_test__store__init' \
+  posix_test__debug_list 'posix_test__store__init' \
     "store system initialized with storage file path:" \
-    "$DM_TEST__STORE__RUNTIME__STORAGE_FILE"
+    "$POSIX_TEST__STORE__RUNTIME__STORAGE_FILE"
 }
 
 #==============================================================================
@@ -94,23 +94,23 @@ dm_test__store__init() {
 # Status:
 #   0 - Other status is not expected.
 #==============================================================================
-dm_test__store__set() {
+posix_test__store__set() {
   ___key="$1"
   ___value="$2"
 
-  dm_test__debug_list 'dm_test__store__set' \
+  posix_test__debug_list 'posix_test__store__set' \
     "storing value for key '${___key}':" "$___value"
 
-  _dm_test__store__log_store_content 'store content before insertion'
+  _posix_test__store__log_store_content 'store content before insertion'
 
-  if _dm_test__store__key_exists "$___key"
+  if _posix_test__store__key_exists "$___key"
   then
-    _dm_test__store__replace "$___key" "$___value"
+    _posix_test__store__replace "$___key" "$___value"
   else
-    _dm_test__store__insert "$___key" "$___value"
+    _posix_test__store__insert "$___key" "$___value"
   fi
 
-  _dm_test__store__log_store_content 'store content after insertion'
+  _posix_test__store__log_store_content 'store content after insertion'
 }
 
 #==============================================================================
@@ -133,12 +133,12 @@ dm_test__store__set() {
 #   0 - Key exists, value returned.
 #   1 - Key does not exist.
 #==============================================================================
-dm_test__store__get() {
+posix_test__store__get() {
   ___key="$1"
 
-  dm_test__debug 'dm_test__store__get' "reading value for key '${___key}'"
+  posix_test__debug 'posix_test__store__get' "reading value for key '${___key}'"
 
-  if ___value="$(_dm_test__store__get_value_for_key "$___key")"
+  if ___value="$(_posix_test__store__get_value_for_key "$___key")"
   then
     posix_adapter__echo "$___value"
     return 0
@@ -161,7 +161,7 @@ dm_test__store__get() {
 # Logs out the content of the store file if debug is enabled.
 #------------------------------------------------------------------------------
 # Globals:
-#   DM_TEST__STORE__RUNTIME__STORAGE_FILE
+#   POSIX_TEST__STORE__RUNTIME__STORAGE_FILE
 # Arguments:
 #   [1] message - Debug message that should be used for the log message.
 # STDIN:
@@ -176,19 +176,19 @@ dm_test__store__get() {
 # Status:
 #   0 - Other status is not expected.
 #==============================================================================
-_dm_test__store__log_store_content() {
+_posix_test__store__log_store_content() {
   ___message="$1"
-  ___store_file="$DM_TEST__STORE__RUNTIME__STORAGE_FILE"
+  ___store_file="$POSIX_TEST__STORE__RUNTIME__STORAGE_FILE"
 
-  if dm_test__config__debug_is_enabled
+  if posix_test__config__debug_is_enabled
   then
     if [ -s "$___store_file" ]
     then
-      dm_test__debug_list '_dm_test__store__log_store_content' \
+      posix_test__debug_list '_posix_test__store__log_store_content' \
         "$___message" \
         "$(posix_adapter__cat "$___store_file")"
     else
-      dm_test__debug '_dm_test__store__log_store_content' 'store file is empty'
+      posix_test__debug '_posix_test__store__log_store_content' 'store file is empty'
     fi
   fi
 }
@@ -197,8 +197,8 @@ _dm_test__store__log_store_content() {
 # Checks if the given key exists in the storage file.
 #------------------------------------------------------------------------------
 # Globals:
-#   DM_TEST__STORE__CONSTANT__KEY_VALUE_SEPARATOR
-#   DM_TEST__STORE__RUNTIME__STORAGE_FILE
+#   POSIX_TEST__STORE__CONSTANT__KEY_VALUE_SEPARATOR
+#   POSIX_TEST__STORE__RUNTIME__STORAGE_FILE
 # Arguments:
 #   [1] key - The key that has to be checked.
 # STDIN:
@@ -214,21 +214,21 @@ _dm_test__store__log_store_content() {
 #   0 - Key found.
 #   1 - Key not fount.
 #==============================================================================
-_dm_test__store__key_exists() {
+_posix_test__store__key_exists() {
   ___key="$1"
-  ___separator="$DM_TEST__STORE__CONSTANT__KEY_VALUE_SEPARATOR"
-  ___store_file="$DM_TEST__STORE__RUNTIME__STORAGE_FILE"
+  ___separator="$POSIX_TEST__STORE__CONSTANT__KEY_VALUE_SEPARATOR"
+  ___store_file="$POSIX_TEST__STORE__RUNTIME__STORAGE_FILE"
 
-  ___encoded_key="$(_dm_test__store__encode "$___key")"
+  ___encoded_key="$(_posix_test__store__encode "$___key")"
 
   ___pattern="^${___encoded_key}${___separator}"
 
   if posix_adapter__grep --silent "$___pattern" "$___store_file"
   then
-    dm_test__debug '_dm_test__store__key_exists' 'key found in the store'
+    posix_test__debug '_posix_test__store__key_exists' 'key found in the store'
     return 0
   else
-    dm_test__debug '_dm_test__store__key_exists' \
+    posix_test__debug '_posix_test__store__key_exists' \
       'key does not exist in the store'
     return 1
   fi
@@ -238,8 +238,8 @@ _dm_test__store__key_exists() {
 # Gets the value from the store for a key is exists.
 #------------------------------------------------------------------------------
 # Globals:
-#   DM_TEST__STORE__CONSTANT__KEY_VALUE_SEPARATOR
-#   DM_TEST__STORE__RUNTIME__STORAGE_FILE
+#   POSIX_TEST__STORE__CONSTANT__KEY_VALUE_SEPARATOR
+#   POSIX_TEST__STORE__RUNTIME__STORAGE_FILE
 # Arguments:
 #   [1] key - The key for the value that should be returned.
 # STDIN:
@@ -256,25 +256,25 @@ _dm_test__store__key_exists() {
 #   1 - Key not fount.
 #   2 - Unexpected error, it should be reported..
 #==============================================================================
-_dm_test__store__get_value_for_key() {
+_posix_test__store__get_value_for_key() {
   ___key="$1"
-  ___separator="$DM_TEST__STORE__CONSTANT__KEY_VALUE_SEPARATOR"
-  ___store_file="$DM_TEST__STORE__RUNTIME__STORAGE_FILE"
+  ___separator="$POSIX_TEST__STORE__CONSTANT__KEY_VALUE_SEPARATOR"
+  ___store_file="$POSIX_TEST__STORE__RUNTIME__STORAGE_FILE"
 
-  ___encoded_key="$(_dm_test__store__encode "$___key")"
+  ___encoded_key="$(_posix_test__store__encode "$___key")"
 
   ___pattern="^${___encoded_key}${___separator}"
 
   if ___result="$(posix_adapter__grep "$___pattern" "$___store_file")"
   then
-    dm_test__debug_list '_dm_test__store__get_value_for_key' \
+    posix_test__debug_list '_posix_test__store__get_value_for_key' \
       'key found in the store:' "$___result"
 
     # This is a very unlikely case, but should be prepared for it..
     ___line_count="$(posix_adapter__echo "$___result" | posix_adapter__wc --lines)"
     if [ "$___line_count" -ne '1' ]
     then
-      dm_test__debug_list '_dm_test__store__get_value_for_key' \
+      posix_test__debug_list '_posix_test__store__get_value_for_key' \
         'unexpected error! more then one matching line found' \
         "$___result"
       return 2
@@ -289,19 +289,19 @@ _dm_test__store__get_value_for_key() {
       posix_adapter__sed --expression "s/${___pattern}//g" \
     )"
 
-    dm_test__debug_list '_dm_test__store__get_value_for_key' \
+    posix_test__debug_list '_posix_test__store__get_value_for_key' \
       'value separated:' "$___encoded_value"
 
-    ___value="$(_dm_test__store__decode "$___encoded_value")"
+    ___value="$(_posix_test__store__decode "$___encoded_value")"
 
-    dm_test__debug_list '_dm_test__store__get_value_for_key' \
+    posix_test__debug_list '_posix_test__store__get_value_for_key' \
       'value decoded:' "$___value"
 
     posix_adapter__echo "$___value"
     return 0
 
   else
-    dm_test__debug '_dm_test__store__get_value_for_key' \
+    posix_test__debug '_posix_test__store__get_value_for_key' \
       'key does not exist in the store, returning (1)..'
     return 1
   fi
@@ -312,8 +312,8 @@ _dm_test__store__get_value_for_key() {
 # file.
 #------------------------------------------------------------------------------
 # Globals:
-#   DM_TEST__STORE__CONSTANT__KEY_VALUE_SEPARATOR
-#   DM_TEST__STORE__RUNTIME__STORAGE_FILE
+#   POSIX_TEST__STORE__CONSTANT__KEY_VALUE_SEPARATOR
+#   POSIX_TEST__STORE__RUNTIME__STORAGE_FILE
 # Arguments:
 #   [1] key - Key for the given value to be stored in.
 #   [2] value - Value that needs to be stored for the given key.
@@ -329,22 +329,22 @@ _dm_test__store__get_value_for_key() {
 # Status:
 #   0 - Other status is not expected.
 #==============================================================================
-_dm_test__store__insert() {
+_posix_test__store__insert() {
   ___key="$1"
   ___value="$2"
-  ___separator="$DM_TEST__STORE__CONSTANT__KEY_VALUE_SEPARATOR"
-  ___store_file="$DM_TEST__STORE__RUNTIME__STORAGE_FILE"
+  ___separator="$POSIX_TEST__STORE__CONSTANT__KEY_VALUE_SEPARATOR"
+  ___store_file="$POSIX_TEST__STORE__RUNTIME__STORAGE_FILE"
 
-  dm_test__debug '_dm_test__store__insert' \
+  posix_test__debug '_posix_test__store__insert' \
     'inserting key-value pair to the store file..'
 
-  ___encoded_key="$(_dm_test__store__encode "$___key")"
-  ___encoded_value="$(_dm_test__store__encode "$___value")"
+  ___encoded_key="$(_posix_test__store__encode "$___key")"
+  ___encoded_value="$(_posix_test__store__encode "$___value")"
 
   ___line="${___encoded_key}${___separator}${___encoded_value}"
   posix_adapter__echo "$___line" >> "$___store_file"
 
-  dm_test__debug '_dm_test__store__insert' \
+  posix_test__debug '_posix_test__store__insert' \
     'key-value pair has been inserted to the store file'
 }
 
@@ -352,8 +352,8 @@ _dm_test__store__insert() {
 # Replaces an existing key with new a key-value pair to the store.
 #------------------------------------------------------------------------------
 # Globals:
-#   DM_TEST__STORE__CONSTANT__KEY_VALUE_SEPARATOR
-#   DM_TEST__STORE__RUNTIME__STORAGE_FILE
+#   POSIX_TEST__STORE__CONSTANT__KEY_VALUE_SEPARATOR
+#   POSIX_TEST__STORE__RUNTIME__STORAGE_FILE
 # Arguments:
 #   [1] key - Key for the given value to be stored in.
 #   [2] value - Value that needs to be stored for the given key.
@@ -369,17 +369,17 @@ _dm_test__store__insert() {
 # Status:
 #   0 - Other status is not expected.
 #==============================================================================
-_dm_test__store__replace() {
+_posix_test__store__replace() {
   ___key="$1"
   ___value="$2"
-  ___separator="$DM_TEST__STORE__CONSTANT__KEY_VALUE_SEPARATOR"
-  ___store_file="$DM_TEST__STORE__RUNTIME__STORAGE_FILE"
+  ___separator="$POSIX_TEST__STORE__CONSTANT__KEY_VALUE_SEPARATOR"
+  ___store_file="$POSIX_TEST__STORE__RUNTIME__STORAGE_FILE"
 
-  dm_test__debug '_dm_test__store__replace' \
+  posix_test__debug '_posix_test__store__replace' \
     'replacing existing key with new value..'
 
-  ___encoded_key="$(_dm_test__store__encode "$___key")"
-  ___encoded_value="$(_dm_test__store__encode "$___value")"
+  ___encoded_key="$(_posix_test__store__encode "$___key")"
+  ___encoded_value="$(_posix_test__store__encode "$___value")"
 
   ___pattern="^${___encoded_key}${___separator}.*"
   ___new="${___encoded_key}${___separator}${___encoded_value}"
@@ -389,7 +389,7 @@ _dm_test__store__replace() {
     --expression "s/${___pattern}/${___new}/g" \
     "$___store_file"
 
-  dm_test__debug '_dm_test__store__replace' \
+  posix_test__debug '_posix_test__store__replace' \
     'key value has been replaced'
 }
 
@@ -415,10 +415,10 @@ _dm_test__store__replace() {
 # Status:
 #   0 - Other status is not expected.
 #==============================================================================
-_dm_test__store__encode() {
+_posix_test__store__encode() {
   ___value="$1"
 
-  dm_test__debug_list '_dm_test__store__encode' \
+  posix_test__debug_list '_posix_test__store__encode' \
     'encoding input value:' "$___value"
 
   ___encoded="$( \
@@ -427,7 +427,7 @@ _dm_test__store__encode() {
     posix_adapter__tr --delete '\n' \
   )"
 
-  dm_test__debug_list '_dm_test__store__encode' \
+  posix_test__debug_list '_posix_test__store__encode' \
     'input value encoded:' "$___encoded"
 
   posix_adapter__echo "$___encoded"
@@ -453,10 +453,10 @@ _dm_test__store__encode() {
 # Status:
 #   0 - Other status is not expected.
 #==============================================================================
-_dm_test__store__decode() {
+_posix_test__store__decode() {
   ___encoded_value="$1"
 
-  dm_test__debug_list '_dm_test__store__decode' \
+  posix_test__debug_list '_posix_test__store__decode' \
     'decoding input value:' "$___encoded_value"
 
   ___value="$( \
@@ -464,7 +464,7 @@ _dm_test__store__decode() {
     posix_adapter__xxd --revert --plain \
   )"
 
-  dm_test__debug_list '_dm_test__store__decode' \
+  posix_test__debug_list '_posix_test__store__decode' \
     'decoded value:' "$___value"
 
   posix_adapter__echo "$___value"

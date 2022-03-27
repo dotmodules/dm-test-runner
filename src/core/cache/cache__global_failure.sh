@@ -17,7 +17,7 @@
 
 # Variable thar holds the runtime path of the global test case failure count
 # file.
-DM_TEST__CACHE__RUNTIME__GLOBAL_FAILURES='__INVALID__'
+POSIX_TEST__CACHE__RUNTIME__GLOBAL_FAILURES='__INVALID__'
 
 #==============================================================================
 # Inner function to create and initialize the global result file. Writing an
@@ -25,14 +25,14 @@ DM_TEST__CACHE__RUNTIME__GLOBAL_FAILURES='__INVALID__'
 # increased.
 #------------------------------------------------------------------------------
 # Globals:
-#   DM_TEST__CACHE__RUNTIME__GLOBAL_FAILURES
+#   POSIX_TEST__CACHE__RUNTIME__GLOBAL_FAILURES
 # Arguments:
 #   None
 # STDIN:
 #   None
 #------------------------------------------------------------------------------
 # Output variables:
-#   DM_TEST__CACHE__RUNTIME__GLOBAL_FAILURES
+#   POSIX_TEST__CACHE__RUNTIME__GLOBAL_FAILURES
 # STDOUT:
 #   None
 # STDERR:
@@ -40,21 +40,21 @@ DM_TEST__CACHE__RUNTIME__GLOBAL_FAILURES='__INVALID__'
 # Status:
 #   0 - Other status is not expected.
 #==============================================================================
-_dm_test__cache__global_failures__init() {
-  DM_TEST__CACHE__RUNTIME__GLOBAL_FAILURES="$( \
-    dm_test__cache__create_temp_file \
+_posix_test__cache__global_failures__init() {
+  POSIX_TEST__CACHE__RUNTIME__GLOBAL_FAILURES="$( \
+    posix_test__cache__create_temp_file \
   )"
-  posix_adapter__echo '0' > "$DM_TEST__CACHE__RUNTIME__GLOBAL_FAILURES"
+  posix_adapter__echo '0' > "$POSIX_TEST__CACHE__RUNTIME__GLOBAL_FAILURES"
 
-  dm_test__debug '_dm_test__cache__global_failures__init' \
-    "failure count file created: '${DM_TEST__CACHE__RUNTIME__GLOBAL_FAILURES}'"
+  posix_test__debug '_posix_test__cache__global_failures__init' \
+    "failure count file created: '${POSIX_TEST__CACHE__RUNTIME__GLOBAL_FAILURES}'"
 }
 
 #==============================================================================
 # Function to increase the global failure cache file's content.
 #------------------------------------------------------------------------------
 # Globals:
-#   DM_TEST__CACHE__RUNTIME__GLOBAL_FAILURES
+#   POSIX_TEST__CACHE__RUNTIME__GLOBAL_FAILURES
 # Arguments:
 #   None
 # STDIN:
@@ -69,11 +69,11 @@ _dm_test__cache__global_failures__init() {
 # Status:
 #   0 - Other status is not expected.
 #==============================================================================
-dm_test__cache__global_failure__increment() {
-  _dm_test__utils__increment_file_content \
-    "$DM_TEST__CACHE__RUNTIME__GLOBAL_FAILURES"
+posix_test__cache__global_failure__increment() {
+  _posix_test__utils__increment_file_content \
+    "$POSIX_TEST__CACHE__RUNTIME__GLOBAL_FAILURES"
 
-  dm_test__debug 'dm_test__cache__global_failure__increment' \
+  posix_test__debug 'posix_test__cache__global_failure__increment' \
     'global failure count incremented'
 }
 
@@ -81,7 +81,7 @@ dm_test__cache__global_failure__increment() {
 # Function to get the global failures cache file's content.
 #------------------------------------------------------------------------------
 # Globals:
-#   DM_TEST__CACHE__RUNTIME__GLOBAL_FAILURES
+#   POSIX_TEST__CACHE__RUNTIME__GLOBAL_FAILURES
 # Arguments:
 #   None
 # STDIN:
@@ -96,11 +96,11 @@ dm_test__cache__global_failure__increment() {
 # Status:
 #   0 - Other status is not expected.
 #==============================================================================
-dm_test__cache__global_failure__get() {
-  ___count="$(posix_adapter__cat "$DM_TEST__CACHE__RUNTIME__GLOBAL_FAILURES")"
+posix_test__cache__global_failure__get() {
+  ___count="$(posix_adapter__cat "$POSIX_TEST__CACHE__RUNTIME__GLOBAL_FAILURES")"
   posix_adapter__echo "$___count"
 
-  dm_test__debug 'dm_test__cache__global_failure__get' \
+  posix_test__debug 'posix_test__cache__global_failure__get' \
     "global failure count value returned: '${___count}'"
 }
 
@@ -108,7 +108,7 @@ dm_test__cache__global_failure__get() {
 # Function to decide if a failure has happened.
 #------------------------------------------------------------------------------
 # Globals:
-#   DM_TEST__CACHE__RUNTIME__GLOBAL_FAILURES
+#   POSIX_TEST__CACHE__RUNTIME__GLOBAL_FAILURES
 # Arguments:
 #   None
 # STDIN:
@@ -124,13 +124,13 @@ dm_test__cache__global_failure__get() {
 #   0 - Global failures count is nonzero.
 #   1 - Global failures count is zero.
 #==============================================================================
-dm_test__cache__global_failure__failures_happened() {
-  dm_test__debug 'dm_test__cache__global_failure__failures_happened' \
+posix_test__cache__global_failure__failures_happened() {
+  posix_test__debug 'posix_test__cache__global_failure__failures_happened' \
     'checking if there were failures..'
 
   posix_adapter__grep \
     --silent \
     --invert-match \
     '^0$' \
-    "$DM_TEST__CACHE__RUNTIME__GLOBAL_FAILURES"
+    "$POSIX_TEST__CACHE__RUNTIME__GLOBAL_FAILURES"
 }
