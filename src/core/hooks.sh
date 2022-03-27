@@ -389,13 +389,13 @@ _dm_test__hooks__get_hook_flag() {
     "checking hook pattern '${___pattern}' in test file '${___test_file_path}'"
 
   ___result="$( \
-    dm_tools__grep --count "$___pattern" "$___test_file_path" || true \
+    posix_adapter__grep --count "$___pattern" "$___test_file_path" || true \
   )"
 
   dm_test__debug '_dm_test__hooks__get_hook_flag' \
     "${___result} match was found"
 
-  dm_tools__echo "$___result"
+  posix_adapter__echo "$___result"
 }
 
 #==============================================================================
@@ -501,9 +501,9 @@ _dm_test__hooks__check_singular_flag() {
 
   if [ "$___hook_flag" -gt '1' ]
   then
-    dm_tools__printf '%s' \
+    posix_adapter__printf '%s' \
       "WARNING: multiple definitions of hook function '${___hook_name}' "
-    dm_tools__echo 'found, only the last one will be executed.'
+    posix_adapter__echo 'found, only the last one will be executed.'
   fi
 }
 

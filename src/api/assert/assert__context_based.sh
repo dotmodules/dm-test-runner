@@ -91,13 +91,13 @@ run() {
   fi
 
   dm_test__debug_list 'run' 'captured standard output:' \
-    "$(dm_tools__cat "$DM_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD1")"
+    "$(posix_adapter__cat "$DM_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD1")"
   dm_test__debug_list 'run' 'captured standard error:' \
-    "$(dm_tools__cat "$DM_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD2")"
+    "$(posix_adapter__cat "$DM_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD2")"
 
   dm_test__debug 'run' "$( \
-    dm_tools__printf '%s' 'captured status: '; \
-    dm_tools__echo "'${DM_TEST__ASSERT__RUNTIME__LAST_STATUS}'" \
+    posix_adapter__printf '%s' 'captured status: '; \
+    posix_adapter__echo "'${DM_TEST__ASSERT__RUNTIME__LAST_STATUS}'" \
   )"
 }
 
@@ -219,9 +219,9 @@ assert_output() {
 
     ___subject='Inappropriate assertion function'
     ___reason="$( \
-      dm_tools__printf '%s' 'Multiline output should be asserted with '; \
-      dm_tools__printf '%s' "assert_output_line_at_index' or "; \
-      dm_tools__echo "'assert_output_line_partially_at_index'." \
+      posix_adapter__printf '%s' 'Multiline output should be asserted with '; \
+      posix_adapter__printf '%s' "assert_output_line_at_index' or "; \
+      posix_adapter__echo "'assert_output_line_partially_at_index'." \
     )"
     ___assertion='assert_output'
     _dm_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
@@ -258,11 +258,11 @@ assert_no_output() {
 
     ___subject='Standard output was captured.'
     ___reason="$( \
-      dm_tools__printf '%s' 'The tested functionality should not have '; \
-      dm_tools__echo 'emitted content on the standard output: '; \
-      dm_tools__cat "$___target_buffer" | \
-        dm_tools__sed --expression 's/$/\|/' | \
-        dm_tools__sed --expression 's/^/\|/'; \
+      posix_adapter__printf '%s' 'The tested functionality should not have '; \
+      posix_adapter__echo 'emitted content on the standard output: '; \
+      posix_adapter__cat "$___target_buffer" | \
+        posix_adapter__sed --expression 's/$/\|/' | \
+        posix_adapter__sed --expression 's/^/\|/'; \
     )"
     ___assertion='assert_no_output'
     _dm_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
@@ -414,11 +414,11 @@ assert_no_error() {
 
     ___subject='Standard error output was captured.'
     ___reason="$( \
-      dm_tools__printf '%s' 'The tested functionality should not have '; \
-      dm_tools__echo 'emitted content on the standard error output: '; \
-      dm_tools__cat "$___target_buffer" | \
-        dm_tools__sed --expression 's/$/\|/' | \
-        dm_tools__sed --expression 's/^/\|/'; \
+      posix_adapter__printf '%s' 'The tested functionality should not have '; \
+      posix_adapter__echo 'emitted content on the standard error output: '; \
+      posix_adapter__cat "$___target_buffer" | \
+        posix_adapter__sed --expression 's/$/\|/' | \
+        posix_adapter__sed --expression 's/^/\|/'; \
     )"
     ___assertion='assert_no_error'
     _dm_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
@@ -481,9 +481,9 @@ assert_error() {
 
     ___subject='Inappropriate assertion function'
     ___reason="$( \
-      dm_tools__printf '%s' 'Multiline output should be asserted with '; \
-      dm_tools__printf '%s' "'assert_error_line_at_index' or "; \
-      dm_tools__echo "'assert_error_line_partially_at_index'." \
+      posix_adapter__printf '%s' 'Multiline output should be asserted with '; \
+      posix_adapter__printf '%s' "'assert_error_line_at_index' or "; \
+      posix_adapter__echo "'assert_error_line_partially_at_index'." \
     )"
     ___assertion='assert_error'
     _dm_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
@@ -630,9 +630,9 @@ _dm_test__assert__assert_has_output() {
   ___target_buffer="$1"
   ___assertion_name="$2"
 
-  ___result="$(dm_tools__cat "$___target_buffer")"
-  ___line_count="$(dm_tools__wc --lines < "$___target_buffer")"
-  ___char_count="$(dm_tools__wc --chars < "$___target_buffer")"
+  ___result="$(posix_adapter__cat "$___target_buffer")"
+  ___line_count="$(posix_adapter__wc --lines < "$___target_buffer")"
+  ___char_count="$(posix_adapter__wc --chars < "$___target_buffer")"
 
   if [ "$___line_count" -eq '0' ] && [ "$___char_count" -eq '0' ]
   then
@@ -674,9 +674,9 @@ _dm_test__assert__assert_output() {
   ___target_buffer="$2"
   ___assertion_name="$3"
 
-  ___result="$(dm_tools__cat "$___target_buffer")"
-  ___line_count="$(dm_tools__wc --lines < "$___target_buffer")"
-  ___char_count="$(dm_tools__wc --chars < "$___target_buffer")"
+  ___result="$(posix_adapter__cat "$___target_buffer")"
+  ___line_count="$(posix_adapter__wc --lines < "$___target_buffer")"
+  ___char_count="$(posix_adapter__wc --chars < "$___target_buffer")"
 
   if [ "$___line_count" -eq '0' ] && [ "$___char_count" -eq '0' ]
   then
@@ -745,8 +745,8 @@ _dm_test__assert__assert_line_count() {
   ___target_buffer="$2"
   ___assertion_name="$3"
 
-  ___line_count="$(dm_tools__wc --lines < "$___target_buffer")"
-  ___char_count="$(dm_tools__wc --chars < "$___target_buffer")"
+  ___line_count="$(posix_adapter__wc --lines < "$___target_buffer")"
+  ___char_count="$(posix_adapter__wc --chars < "$___target_buffer")"
 
   if [ "$___line_count" -eq '0' ] && [ "$___char_count" -gt '0' ]
   then
@@ -905,7 +905,7 @@ _dm_test__assert__assert_line_partially_at_index() {
   dm_test__debug '_dm_test__assert__assert_line_partially_at_index' \
     "- target:   '${___result}'"
 
-  if dm_tools__echo "$___result" | dm_tools__grep --silent "$___expected"
+  if posix_adapter__echo "$___result" | posix_adapter__grep --silent "$___expected"
   then
     dm_test__debug '_dm_test__assert__assert_line_partially_at_index' \
       '=> assertion succeeded'

@@ -32,8 +32,8 @@ setup_file() {
   # teardown file hooks. There are only two parameters passed to these functions
   # containing the test suite and test file level test directory paths.
 
-  dm_tools__echo "setup file 2 - [test suite]:    ${test_suite_level_test_directory}"
-  dm_tools__echo "setup file 2 - [test file]:     ${test_file_level_test_directory}"
+  posix_adapter__echo "setup file 2 - [test suite]:    ${test_suite_level_test_directory}"
+  posix_adapter__echo "setup file 2 - [test file]:     ${test_file_level_test_directory}"
 }
 
 teardown_file() {
@@ -43,8 +43,8 @@ teardown_file() {
   # teardown file hooks. There are only two parameters passed to these functions
   # containing the test suite and test file level test directory paths.
 
-  dm_tools__echo "teardown file 2 - [test suite]: ${test_suite_level_test_directory}"
-  dm_tools__echo "teardown file 2 - [test file]:  ${test_file_level_test_directory}"
+  posix_adapter__echo "teardown file 2 - [test suite]: ${test_suite_level_test_directory}"
+  posix_adapter__echo "teardown file 2 - [test file]:  ${test_file_level_test_directory}"
 }
 
 setup() {
@@ -52,9 +52,9 @@ setup() {
   test_file_level_test_directory="$2"
   test_case_level_test_directory="$3"
 
-  dm_tools__echo "setup 2 - [test suite]:         ${test_suite_level_test_directory}"
-  dm_tools__echo "setup 2 - [test file]:          ${test_file_level_test_directory}"
-  dm_tools__echo "setup 2 - [test case]:          ${test_case_level_test_directory}"
+  posix_adapter__echo "setup 2 - [test suite]:         ${test_suite_level_test_directory}"
+  posix_adapter__echo "setup 2 - [test file]:          ${test_file_level_test_directory}"
+  posix_adapter__echo "setup 2 - [test case]:          ${test_case_level_test_directory}"
 }
 
 teardown() {
@@ -62,9 +62,9 @@ teardown() {
   test_file_level_test_directory="$2"
   test_case_level_test_directory="$3"
 
-  dm_tools__echo "teardown 2 - [test suite]:      ${test_suite_level_test_directory}"
-  dm_tools__echo "teardown 2 - [test file]:       ${test_file_level_test_directory}"
-  dm_tools__echo "teardown 2 - [test case]:       ${test_case_level_test_directory}"
+  posix_adapter__echo "teardown 2 - [test suite]:      ${test_suite_level_test_directory}"
+  posix_adapter__echo "teardown 2 - [test file]:       ${test_file_level_test_directory}"
+  posix_adapter__echo "teardown 2 - [test case]:       ${test_case_level_test_directory}"
 }
 
 test__test_directories__file_2__case_1() {
@@ -72,9 +72,9 @@ test__test_directories__file_2__case_1() {
   test_file_level_test_directory="$2"
   test_case_level_test_directory="$3"
 
-  dm_tools__echo "test case 2 - [test suite]:     ${test_suite_level_test_directory}"
-  dm_tools__echo "test case 2 - [test file]:      ${test_file_level_test_directory}"
-  dm_tools__echo "test case 2 - [test case]:      ${test_case_level_test_directory}"
+  posix_adapter__echo "test case 2 - [test suite]:     ${test_suite_level_test_directory}"
+  posix_adapter__echo "test case 2 - [test file]:      ${test_file_level_test_directory}"
+  posix_adapter__echo "test case 2 - [test case]:      ${test_case_level_test_directory}"
 }
 
 test__test_directories__file_2__case_2() {
@@ -82,7 +82,7 @@ test__test_directories__file_2__case_2() {
   test_file_level_test_directory="$2"
   test_case_level_test_directory="$3"
 
-  dm_tools__echo "test case 2 - [test suite]:     ${test_suite_level_test_directory}"
-  dm_tools__echo "test case 2 - [test file]:      ${test_file_level_test_directory}"
-  dm_tools__echo "test case 2 - [test case]:      ${test_case_level_test_directory}"
+  posix_adapter__echo "test case 2 - [test suite]:     ${test_suite_level_test_directory}"
+  posix_adapter__echo "test case 2 - [test file]:      ${test_file_level_test_directory}"
+  posix_adapter__echo "test case 2 - [test case]:      ${test_case_level_test_directory}"
 }

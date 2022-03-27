@@ -94,7 +94,7 @@ dm_test__cache__global_errors__has_errors() {
 #   0 - Other status is not expected.
 #==============================================================================
 dm_test__cache__global_errors__print_errors() {
-  dm_tools__cat "$DM_TEST__CACHE__RUNTIME__ERRORS"
+  posix_adapter__cat "$DM_TEST__CACHE__RUNTIME__ERRORS"
 
   dm_test__debug 'dm_test__cache__global_errors__print_errors' \
     'global errors printed'
@@ -121,7 +121,7 @@ dm_test__cache__global_errors__print_errors() {
 #   0 - Other status is not expected.
 #==============================================================================
 dm_test__cache__global_errors__write_errors() {
-  dm_tools__cat - >> "$DM_TEST__CACHE__RUNTIME__ERRORS"
+  posix_adapter__cat - >> "$DM_TEST__CACHE__RUNTIME__ERRORS"
 
   dm_test__debug 'dm_test__cache__global_errors__write_errors' \
     'error saved to the global errors file'

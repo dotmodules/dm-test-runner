@@ -40,10 +40,10 @@
 #==============================================================================
 # To be able to be fully platform independent out-of-the-box, dm-test is
 # relying on another side-side-project (already down three levels in the rabbit
-# hole..) called dm-tools. Every command line tool call in this project is
-# executed through the dm-tools interface after it is loaded (that means the
-# first initialization of the test system runs on pure cli tools, which means
-# special care needs to be taken in order to be platform independent!).
+# hole..) called posix-adapter. Every command line tool call in this project is
+# executed through the posix-adapter interface after it is loaded (that means
+# the first initialization of the test system runs on pure cli tools, which
+# means special care needs to be taken in order to be platform independent!).
 #==============================================================================
 
 #==============================================================================
@@ -135,38 +135,38 @@ fi
 ___path_prefix="${DM_TEST__CONFIG__MANDATORY__SUBMODULE_PATH_PREFIX}"
 
 #==============================================================================
-# DM_TOOLS INTEGRATION
+# POSIX_ADAPTER INTEGRATION
 #==============================================================================
 
 #==============================================================================
-# The first module we are loading is the dm-tools project that would provide the
-# necessary platform independent interface for the command line tools. We are
-# only loading the dm-tools system when it hasn't been loaded by other code (the
-# tested system for example).
+# The first module we are loading is the posix-adapter project that would
+# provide the necessary platform independent interface for the command line
+# tools. We are only loading the posix-adapter system when it hasn't been
+# loaded by other code (the tested system for example).
 #==============================================================================
 
-if [ -z ${DM_TOOLS__READY+x} ]
+if [ -z ${POSIX_ADAPTER__READY+x} ]
 then
-  # If dm_tools has not sourced yet, we have to source it from this repository.
-  # Implementing the dm-tools inporting system variables.
-  ___dm_tools_path_prefix="${___path_prefix}/dependencies/dm-tools"
-  DM_TOOLS__CONFIG__MANDATORY__SUBMODULE_PATH_PREFIX="$___dm_tools_path_prefix"
-  if [ -d "$DM_TOOLS__CONFIG__MANDATORY__SUBMODULE_PATH_PREFIX" ]
+  # If posix_adapter has not sourced yet, we have to source it from this
+  # repository. Implementing the posix-adapter inporting system variables.
+  ___posix_adapter_path_prefix="${___path_prefix}/dependencies/posix-adapter"
+  POSIX_ADAPTER__CONFIG__MANDATORY__SUBMODULE_PATH_PREFIX="$___posix_adapter_path_prefix"
+  if [ -d "$POSIX_ADAPTER__CONFIG__MANDATORY__SUBMODULE_PATH_PREFIX" ]
   then
-    # shellcheck source=./dependencies/dm-tools/dm.tools.sh
-    . "${DM_TOOLS__CONFIG__MANDATORY__SUBMODULE_PATH_PREFIX}/dm.tools.sh"
+    # shellcheck source=./dependencies/posix-adapter/posix_adapter.sh
+    . "${POSIX_ADAPTER__CONFIG__MANDATORY__SUBMODULE_PATH_PREFIX}/posix_adapter.sh"
   else
     dm_test__report_error_and_exit \
       'Initialization failed!' \
-      'dm_tools needs to be initialized but its git submodule is missing!' \
+      'posix_adapter needs to be initialized but its git submodule is missing!' \
       'You need to source it or init its submodule here: git submodule init'
   fi
 fi
 
 #==============================================================================
 # IMPORTANT: After this, every non shell built-in command should be called
-# through the provided dm_tools API to ensure the compatibility on different
-# environments.
+# through the provided posix-adapter API to ensure the compatibility on
+# different environments.
 #==============================================================================
 
 #==============================================================================

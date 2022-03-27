@@ -15,25 +15,25 @@
 #==============================================================================
 
 setup_file() {
-  dm_tools__echo ''
-  dm_tools__echo '--- MULTIPLE HOOK FUNCTIONS -----------------------------------------------------'
-  dm_tools__echo 'echo during [setup file] hook'
+  posix_adapter__echo ''
+  posix_adapter__echo '--- MULTIPLE HOOK FUNCTIONS -----------------------------------------------------'
+  posix_adapter__echo 'echo during [setup file] hook'
 }
 
 setup() {
-  dm_tools__echo 'echo during first [setup] hook function'
+  posix_adapter__echo 'echo during first [setup] hook function'
 }
 
 setup() {
-  dm_tools__echo 'echo during second [setup] hook function'
+  posix_adapter__echo 'echo during second [setup] hook function'
 }
 
 setup() {
   # Only this will be executed!
-  dm_tools__echo 'echo during third [setup] hook function'
+  posix_adapter__echo 'echo during third [setup] hook function'
 }
 
 test__hooks__test_case__multiple_hook_functions() {
-  dm_tools__echo 'echo during test case - error will happen after this to see the logs'
-  dm_tools__cat invalid_file
+  posix_adapter__echo 'echo during test case - error will happen after this to see the logs'
+  posix_adapter__cat invalid_file
 }

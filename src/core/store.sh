@@ -140,7 +140,7 @@ dm_test__store__get() {
 
   if ___value="$(_dm_test__store__get_value_for_key "$___key")"
   then
-    dm_tools__echo "$___value"
+    posix_adapter__echo "$___value"
     return 0
   else
     return 1
@@ -186,7 +186,7 @@ _dm_test__store__log_store_content() {
     then
       dm_test__debug_list '_dm_test__store__log_store_content' \
         "$___message" \
-        "$(dm_tools__cat "$___store_file")"
+        "$(posix_adapter__cat "$___store_file")"
     else
       dm_test__debug '_dm_test__store__log_store_content' 'store file is empty'
     fi
@@ -223,7 +223,7 @@ _dm_test__store__key_exists() {
 
   ___pattern="^${___encoded_key}${___separator}"
 
-  if dm_tools__grep --silent "$___pattern" "$___store_file"
+  if posix_adapter__grep --silent "$___pattern" "$___store_file"
   then
     dm_test__debug '_dm_test__store__key_exists' 'key found in the store'
     return 0
@@ -265,13 +265,13 @@ _dm_test__store__get_value_for_key() {
 
   ___pattern="^${___encoded_key}${___separator}"
 
-  if ___result="$(dm_tools__grep "$___pattern" "$___store_file")"
+  if ___result="$(posix_adapter__grep "$___pattern" "$___store_file")"
   then
     dm_test__debug_list '_dm_test__store__get_value_for_key' \
       'key found in the store:' "$___result"
 
     # This is a very unlikely case, but should be prepared for it..
-    ___line_count="$(dm_tools__echo "$___result" | dm_tools__wc --lines)"
+    ___line_count="$(posix_adapter__echo "$___result" | posix_adapter__wc --lines)"
     if [ "$___line_count" -ne '1' ]
     then
       dm_test__debug_list '_dm_test__store__get_value_for_key' \
@@ -285,8 +285,8 @@ _dm_test__store__get_value_for_key() {
     # by POSIX. Read more: https://stackoverflow.com/a/21913014/1565331
     # shellcheck disable=SC2001
     ___encoded_value="$( \
-      dm_tools__echo "$___result" | \
-      dm_tools__sed --expression "s/${___pattern}//g" \
+      posix_adapter__echo "$___result" | \
+      posix_adapter__sed --expression "s/${___pattern}//g" \
     )"
 
     dm_test__debug_list '_dm_test__store__get_value_for_key' \
@@ -297,7 +297,7 @@ _dm_test__store__get_value_for_key() {
     dm_test__debug_list '_dm_test__store__get_value_for_key' \
       'value decoded:' "$___value"
 
-    dm_tools__echo "$___value"
+    posix_adapter__echo "$___value"
     return 0
 
   else
@@ -342,7 +342,7 @@ _dm_test__store__insert() {
   ___encoded_value="$(_dm_test__store__encode "$___value")"
 
   ___line="${___encoded_key}${___separator}${___encoded_value}"
-  dm_tools__echo "$___line" >> "$___store_file"
+  posix_adapter__echo "$___line" >> "$___store_file"
 
   dm_test__debug '_dm_test__store__insert' \
     'key-value pair has been inserted to the store file'
@@ -384,7 +384,7 @@ _dm_test__store__replace() {
   ___pattern="^${___encoded_key}${___separator}.*"
   ___new="${___encoded_key}${___separator}${___encoded_value}"
 
-  dm_tools__sed \
+  posix_adapter__sed \
     --in-place '' \
     --expression "s/${___pattern}/${___new}/g" \
     "$___store_file"
@@ -422,15 +422,15 @@ _dm_test__store__encode() {
     'encoding input value:' "$___value"
 
   ___encoded="$( \
-    dm_tools__echo "$___value" | \
-    dm_tools__xxd --plain | \
-    dm_tools__tr --delete '\n' \
+    posix_adapter__echo "$___value" | \
+    posix_adapter__xxd --plain | \
+    posix_adapter__tr --delete '\n' \
   )"
 
   dm_test__debug_list '_dm_test__store__encode' \
     'input value encoded:' "$___encoded"
 
-  dm_tools__echo "$___encoded"
+  posix_adapter__echo "$___encoded"
 }
 
 #==============================================================================
@@ -460,12 +460,12 @@ _dm_test__store__decode() {
     'decoding input value:' "$___encoded_value"
 
   ___value="$( \
-    dm_tools__echo "$___encoded_value" | \
-    dm_tools__xxd --revert --plain \
+    posix_adapter__echo "$___encoded_value" | \
+    posix_adapter__xxd --revert --plain \
   )"
 
   dm_test__debug_list '_dm_test__store__decode' \
     'decoded value:' "$___value"
 
-  dm_tools__echo "$___value"
+  posix_adapter__echo "$___value"
 }

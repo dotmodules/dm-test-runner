@@ -44,7 +44,7 @@ _dm_test__cache__global_failures__init() {
   DM_TEST__CACHE__RUNTIME__GLOBAL_FAILURES="$( \
     dm_test__cache__create_temp_file \
   )"
-  dm_tools__echo '0' > "$DM_TEST__CACHE__RUNTIME__GLOBAL_FAILURES"
+  posix_adapter__echo '0' > "$DM_TEST__CACHE__RUNTIME__GLOBAL_FAILURES"
 
   dm_test__debug '_dm_test__cache__global_failures__init' \
     "failure count file created: '${DM_TEST__CACHE__RUNTIME__GLOBAL_FAILURES}'"
@@ -97,8 +97,8 @@ dm_test__cache__global_failure__increment() {
 #   0 - Other status is not expected.
 #==============================================================================
 dm_test__cache__global_failure__get() {
-  ___count="$(dm_tools__cat "$DM_TEST__CACHE__RUNTIME__GLOBAL_FAILURES")"
-  dm_tools__echo "$___count"
+  ___count="$(posix_adapter__cat "$DM_TEST__CACHE__RUNTIME__GLOBAL_FAILURES")"
+  posix_adapter__echo "$___count"
 
   dm_test__debug 'dm_test__cache__global_failure__get' \
     "global failure count value returned: '${___count}'"
@@ -128,7 +128,7 @@ dm_test__cache__global_failure__failures_happened() {
   dm_test__debug 'dm_test__cache__global_failure__failures_happened' \
     'checking if there were failures..'
 
-  dm_tools__grep \
+  posix_adapter__grep \
     --silent \
     --invert-match \
     '^0$' \

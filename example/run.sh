@@ -74,7 +74,7 @@ if command -v shellcheck >/dev/null
 then
   run_shellcheck
 else
-  dm_tools__echo "WARNING: shellcheck won't be executed as it cannot be found."
+  posix_adapter__echo "WARNING: shellcheck won't be executed as it cannot be found."
 fi
 
 #==============================================================================
@@ -82,9 +82,9 @@ fi
 #==============================================================================
 # If we reach this point the runners didn't reported an error so we are safe to
 # say the test suite succeeded.
-dm_tools__echo "${BOLD}${GREEN}"
-dm_tools__echo '==============================================================================='
-dm_tools__echo '                      All example test suite executed with'
-dm_tools__echo '                    the expected test case and failure count.'
-dm_tools__echo '==============================================================================='
-dm_tools__echo "$RESET"
+posix_adapter__echo "${BOLD}${GREEN}"
+posix_adapter__echo '==============================================================================='
+posix_adapter__echo '                      All example test suite executed with'
+posix_adapter__echo '                    the expected test case and failure count.'
+posix_adapter__echo '==============================================================================='
+posix_adapter__echo "$RESET"

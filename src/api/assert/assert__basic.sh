@@ -178,15 +178,15 @@ assert_equal() {
 
     ___subject='Assertion failed'
     ___reason="$( \
-      dm_tools__echo 'The two passed strings are not equal!';
-      dm_tools__echo 'string_a:';
-      dm_tools__echo "${___string_a}" | \
-        dm_tools__sed --expression 's/$/\|/' | \
-        dm_tools__sed --expression 's/^/\|/'; \
-      dm_tools__echo 'string_b:';
-      dm_tools__echo "${___string_b}" | \
-        dm_tools__sed --expression 's/$/\|/' | \
-        dm_tools__sed --expression 's/^/\|/'; \
+      posix_adapter__echo 'The two passed strings are not equal!';
+      posix_adapter__echo 'string_a:';
+      posix_adapter__echo "${___string_a}" | \
+        posix_adapter__sed --expression 's/$/\|/' | \
+        posix_adapter__sed --expression 's/^/\|/'; \
+      posix_adapter__echo 'string_b:';
+      posix_adapter__echo "${___string_b}" | \
+        posix_adapter__sed --expression 's/$/\|/' | \
+        posix_adapter__sed --expression 's/^/\|/'; \
     )"
     ___assertion='assert_equal'
     _dm_test__assert__report_failure "$___subject" "$___reason" "$___assertion"

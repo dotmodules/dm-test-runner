@@ -64,8 +64,8 @@ dm_test__cache__init_test_directory__test_suite_level() {
     'test suite level test dir created:'
   dm_test__debug 'dm_test__cache__init_test_directory__test_suite_level' \
     "$( \
-      dm_tools__printf '%s' 'DM_TEST__CACHE__RUNTIME__TEST_DIR__TEST_SUITE: '; \
-      dm_tools__echo "'${DM_TEST__CACHE__RUNTIME__TEST_DIR__TEST_SUITE}'" \
+      posix_adapter__printf '%s' 'DM_TEST__CACHE__RUNTIME__TEST_DIR__TEST_SUITE: '; \
+      posix_adapter__echo "'${DM_TEST__CACHE__RUNTIME__TEST_DIR__TEST_SUITE}'" \
     )"
 }
 
@@ -96,8 +96,8 @@ dm_test__cache__init_test_directory__test_file_level() {
     'test file level test dir created:'
   dm_test__debug 'dm_test__cache__init_test_directory__test_file_level' \
     "$( \
-      dm_tools__printf '%s' 'DM_TEST__CACHE__RUNTIME__TEST_DIR__TEST_FILE: '; \
-      dm_tools__echo "'${DM_TEST__CACHE__RUNTIME__TEST_DIR__TEST_FILE}'" \
+      posix_adapter__printf '%s' 'DM_TEST__CACHE__RUNTIME__TEST_DIR__TEST_FILE: '; \
+      posix_adapter__echo "'${DM_TEST__CACHE__RUNTIME__TEST_DIR__TEST_FILE}'" \
     )"
 }
 
@@ -128,7 +128,7 @@ dm_test__cache__init_test_directory__test_case_level() {
     'test case level test dir created:'
   dm_test__debug 'dm_test__cache__init_test_directory__test_case_level' \
     "$( \
-      dm_tools__printf '%s' 'DM_TEST__CACHE__RUNTIME__TEST_DIR__TEST_CASE: '; \
-      dm_tools__echo "'${DM_TEST__CACHE__RUNTIME__TEST_DIR__TEST_CASE}'" \
+      posix_adapter__printf '%s' 'DM_TEST__CACHE__RUNTIME__TEST_DIR__TEST_CASE: '; \
+      posix_adapter__echo "'${DM_TEST__CACHE__RUNTIME__TEST_DIR__TEST_CASE}'" \
     )"
 }

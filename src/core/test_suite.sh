@@ -132,8 +132,8 @@ _dm_test__test_suite__execute_test_files() {
   # Using a named pipe here to be able to safely iterate over the file names.
   # See more at shellcheck SC2044.
   ___tmp_pipe="$(dm_test__cache__create_temp_path)"
-  dm_tools__mkfifo "$___tmp_pipe"
-  dm_tools__echo "$___test_files" > "$___tmp_pipe" &
+  posix_adapter__mkfifo "$___tmp_pipe"
+  posix_adapter__echo "$___test_files" > "$___tmp_pipe" &
 
   while IFS= read -r ___test_file_path
   do
@@ -172,7 +172,7 @@ _dm_test__test_suite__get_test_files() {
 
   # Pre checking if there would be matches.
   if ! ___find_output="$( \
-    dm_tools__find \
+    posix_adapter__find \
       "$DM_TEST__CONFIG__MANDATORY__TEST_FILES_ROOT" \
       --type 'f' \
       --name "${DM_TEST__CONFIG__MANDATORY__TEST_FILE_PREFIX}*" \
@@ -186,19 +186,19 @@ _dm_test__test_suite__get_test_files() {
   fi
 
   ___test_files="$( \
-    dm_tools__find \
+    posix_adapter__find \
       "$DM_TEST__CONFIG__MANDATORY__TEST_FILES_ROOT" \
       --type 'f' \
       --name "${DM_TEST__CONFIG__MANDATORY__TEST_FILE_PREFIX}*" \
       --print0 | \
-      dm_tools__sort --zero-terminated --dictionary-order | \
-      dm_tools__xargs --null --max-args '1' \
+      posix_adapter__sort --zero-terminated --dictionary-order | \
+      posix_adapter__xargs --null --max-args '1' \
   )"
   dm_test__debug_list '_dm_test__test_suite__get_test_files' \
     'test files found:' \
     "$___test_files"
 
-  dm_tools__echo "$___test_files"
+  posix_adapter__echo "$___test_files"
 }
 
 #==============================================================================
@@ -294,7 +294,7 @@ _dm_test__test_suite__execute_test_file_in_a_subshell() {
   # Navigating to the directory of the test case to be able to use relative
   # imports there. After this, the '___test_file_path' variable won't be
   # usable directly as a path.
-  cd "$(dm_tools__dirname "$___test_file_path")" || exit
+  cd "$(posix_adapter__dirname "$___test_file_path")" || exit
 
   dm_test__debug '_dm_test__test_suite__execute_test_file_in_a_subshell' \
     'sourcing test file..'
@@ -304,7 +304,7 @@ _dm_test__test_suite__execute_test_file_in_a_subshell() {
   # dynamically loaded here, and we cannot know the exact source path of
   # them before running the test suite.
   # shellcheck disable=SC1090
-  . "./$(dm_tools__basename "$___test_file_path")"
+  . "./$(posix_adapter__basename "$___test_file_path")"
 
   if _dm_test__test_suite__run_and_capture_setup_file_hook
   then
@@ -535,17 +535,17 @@ dm_test__test_suite__print_header() {
   #============================================================================
   # TITLE
   #============================================================================
-  dm_tools__printf '%s' "$DIM"
-  dm_tools__printf '%s' '-----------------------------------------------------'
-  dm_tools__echo '--------------------------'
-  dm_tools__echo '>> DM.TEST <<'
+  posix_adapter__printf '%s' "$DIM"
+  posix_adapter__printf '%s' '-----------------------------------------------------'
+  posix_adapter__echo '--------------------------'
+  posix_adapter__echo '>> DM.TEST <<'
 
   #============================================================================
   # CONFIG SECTION
   #============================================================================
-  dm_tools__printf '%s' '-----------------------------------------------------'
-  dm_tools__echo '--------------------------'
-  dm_tools__printf '%s' "$RESET"
+  posix_adapter__printf '%s' '-----------------------------------------------------'
+  posix_adapter__echo '--------------------------'
+  posix_adapter__printf '%s' "$RESET"
 
   # Mandatory config variables
   _dm_test__test_suite__print_header__print_config \
@@ -589,29 +589,29 @@ dm_test__test_suite__print_header() {
     'DM_TEST__CONFIG__OPTIONAL__DEBUG_ENABLED' \
     "$DM_TEST__CONFIG__OPTIONAL__DEBUG_ENABLED"
 
-  dm_tools__printf '%s' "$DIM"
+  posix_adapter__printf '%s' "$DIM"
   #============================================================================
   # SYSTEM INFO SECTION
   #============================================================================
-  dm_tools__printf '%s' '-----------------------------------------------------'
-  dm_tools__echo '--------------------------'
-  dm_tools__echo '$ uname --kernel-name --kernel-release --machine'
-  dm_tools__uname --kernel-name --kernel-release --machine
+  posix_adapter__printf '%s' '-----------------------------------------------------'
+  posix_adapter__echo '--------------------------'
+  posix_adapter__echo '$ uname --kernel-name --kernel-release --machine'
+  posix_adapter__uname --kernel-name --kernel-release --machine
 
   #============================================================================
   # SHELL INFO SECTION
   #============================================================================
-  dm_tools__printf '%s' '-----------------------------------------------------'
-  dm_tools__echo '--------------------------'
-  dm_tools__echo '$ command -v sh'
+  posix_adapter__printf '%s' '-----------------------------------------------------'
+  posix_adapter__echo '--------------------------'
+  posix_adapter__echo '$ command -v sh'
   command -v sh
 
   #============================================================================
   # FOOTER SECTION
   #============================================================================
-  dm_tools__printf '%s' '-----------------------------------------------------'
-  dm_tools__echo '--------------------------'
-  dm_tools__printf '%s' "$RESET"
+  posix_adapter__printf '%s' '-----------------------------------------------------'
+  posix_adapter__echo '--------------------------'
+  posix_adapter__printf '%s' "$RESET"
 }
 
 #==============================================================================
@@ -651,10 +651,10 @@ _dm_test__test_suite__print_header__print_config() {
   ___value=" ${___value}"
 
   ___name_length="$( \
-    dm_tools__printf '%s' "$___name" | dm_tools__wc --chars \
+    posix_adapter__printf '%s' "$___name" | posix_adapter__wc --chars \
   )"
   ___value_length="$( \
-    dm_tools__printf '%s' "$___value" | dm_tools__wc --chars \
+    posix_adapter__printf '%s' "$___value" | posix_adapter__wc --chars \
   )"
 
   ___pad_length='79'
@@ -664,16 +664,16 @@ _dm_test__test_suite__print_header__print_config() {
   ___pad_length="$(( ___pad_length - ___name_length - ___value_length ))"
 
   # Start the printout.
-  dm_tools__printf '%s' "$DIM"
-  dm_tools__printf '%s' "$___name"
+  posix_adapter__printf '%s' "$DIM"
+  posix_adapter__printf '%s' "$___name"
 
   # Print the padding if there is paddable space left.
   if [ "$___pad_length" -gt '0' ]
   then
-    dm_tools__printf '%*.*s' 0 "$___pad_length" "$___pad"
+    posix_adapter__printf '%*.*s' 0 "$___pad_length" "$___pad"
   fi
 
-  dm_tools__printf '%s\n' "${___value}${RESET}"
+  posix_adapter__printf '%s\n' "${___value}${RESET}"
 }
 
 #==============================================================================
@@ -710,14 +710,14 @@ _dm_test__test_suite__print_report() {
   ___global_count="$(dm_test__cache__global_count__get)"
   ___failure_count="$(dm_test__cache__global_failure__get)"
 
-  dm_tools__echo ''
-  dm_tools__printf '%s'  "${BOLD}${___global_count} tests, "
-  dm_tools__echo "${___failure_count} failed${RESET}"
+  posix_adapter__echo ''
+  posix_adapter__printf '%s'  "${BOLD}${___global_count} tests, "
+  posix_adapter__echo "${___failure_count} failed${RESET}"
 
   if dm_test__cache__global_failure__failures_happened
   then
-    dm_tools__echo "${BOLD}Result: ${RED}FAILURE${RESET}"
-    dm_tools__echo ''
+    posix_adapter__echo "${BOLD}Result: ${RED}FAILURE${RESET}"
+    posix_adapter__echo ''
     if dm_test__cache__global_errors__has_errors
     then
       dm_test__cache__global_errors__print_errors
@@ -736,7 +736,7 @@ _dm_test__test_suite__print_report() {
     fi
 
   else
-    dm_tools__echo "${BOLD}Result: ${GREEN}SUCCESS${RESET}"
-    dm_tools__echo ''
+    posix_adapter__echo "${BOLD}Result: ${GREEN}SUCCESS${RESET}"
+    posix_adapter__echo ''
   fi
 }

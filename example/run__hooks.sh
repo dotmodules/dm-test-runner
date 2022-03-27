@@ -73,18 +73,18 @@ DM_TEST__CONFIG__OPTIONAL__DEBUG_ENABLED=0
 # ENTRY POINT
 #==============================================================================
 
-dm_tools__echo "${DIM}==============================================================================="
-dm_tools__echo '   _    _             _'
-dm_tools__echo '  | |  | |           | |'
-dm_tools__echo '  | |__| | ___   ___ | | _____'
-dm_tools__echo '  |  __  |/ _ \ / _ \| |/ / __|'
-dm_tools__echo '  | |  | | (_) | (_) |   <\__ \'
-dm_tools__echo '  |_|  |_|\___/ \___/|_|\_\___/'
-dm_tools__echo ''
-dm_tools__echo '==============================================================================='
-dm_tools__echo '  HOOK CASES'
-dm_tools__echo '==============================================================================='
-dm_tools__echo "${RESET}"
+posix_adapter__echo "${DIM}==============================================================================="
+posix_adapter__echo '   _    _             _'
+posix_adapter__echo '  | |  | |           | |'
+posix_adapter__echo '  | |__| | ___   ___ | | _____'
+posix_adapter__echo '  |  __  |/ _ \ / _ \| |/ / __|'
+posix_adapter__echo '  | |  | | (_) | (_) |   <\__ \'
+posix_adapter__echo '  |_|  |_|\___/ \___/|_|\_\___/'
+posix_adapter__echo ''
+posix_adapter__echo '==============================================================================='
+posix_adapter__echo '  HOOK CASES'
+posix_adapter__echo '==============================================================================='
+posix_adapter__echo "${RESET}"
 
 dm_test__run_suite
 

@@ -72,7 +72,7 @@ _dm_test__cache__test_result__init() {
 #   0 - Other status is not expected.
 #==============================================================================
 dm_test__cache__test_result__init() {
-  dm_tools__echo "$DM_TEST__CONSTANT__TEST_RESULT__SUCCESS" > \
+  posix_adapter__echo "$DM_TEST__CONSTANT__TEST_RESULT__SUCCESS" > \
     "$DM_TEST__CACHE__RUNTIME__TEST_RESULTS"
 
   dm_test__debug 'dm_test__cache__test_result__init' \
@@ -100,7 +100,7 @@ dm_test__cache__test_result__init() {
 #   0 - Other status is not expected.
 #==============================================================================
 dm_test__cache__test_result__mark_as_failed() {
-  dm_tools__echo "$DM_TEST__CONSTANT__TEST_RESULT__FAILURE" > \
+  posix_adapter__echo "$DM_TEST__CONSTANT__TEST_RESULT__FAILURE" > \
     "$DM_TEST__CACHE__RUNTIME__TEST_RESULTS"
 
   dm_test__debug 'dm_test__cache__test_result__mark_as_failed' \
@@ -129,7 +129,7 @@ dm_test__cache__test_result__mark_as_failed() {
 #   1 - Test case was failed.
 #==============================================================================
 dm_test__cache__test_result__was_success() {
-  if dm_tools__grep --silent \
+  if posix_adapter__grep --silent \
     "$DM_TEST__CONSTANT__TEST_RESULT__SUCCESS" \
     "$DM_TEST__CACHE__RUNTIME__TEST_RESULTS"
   then

@@ -306,7 +306,7 @@ assert_directory_empty() {
 
   if [ -d "$___directory_path" ]
   then
-    if [ -z "$(dm_tools__ls --almost-all "$___directory_path")" ]
+    if [ -z "$(posix_adapter__ls --almost-all "$___directory_path")" ]
     then
       dm_test__debug 'assert_directory_empty' '=> assertion succeeded'
     else
@@ -357,7 +357,7 @@ assert_directory_not_empty() {
 
   if [ -d "$___directory_path" ]
   then
-    if [ -n "$(dm_tools__ls --almost-all "$___directory_path")" ]
+    if [ -n "$(posix_adapter__ls --almost-all "$___directory_path")" ]
     then
       dm_test__debug 'assert_directory_not_empty' '=> assertion succeeded'
     else
@@ -489,7 +489,7 @@ assert_symlink_target() {
 
   if [ -L "$___link_path" ]
   then
-    ___actual_target="$(dm_tools__readlink "$___link_path")"
+    ___actual_target="$(posix_adapter__readlink "$___link_path")"
     if [ "$___target_path" = "$___actual_target" ]
     then
       dm_test__debug 'assert_symlink_target' '=> assertion succeeded'

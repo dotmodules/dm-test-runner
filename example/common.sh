@@ -9,24 +9,25 @@
 # shellcheck disable=SC2034
 
 #==============================================================================
-# DM_TOOLS INTEGRATION
+# POSIX_ADAPTER INTEGRATION
 #==============================================================================
 
-if [ -z ${DM_TOOLS__READY+x} ]
+if [ -z ${POSIX_ADAPTER__READY+x} ]
 then
-  # If dm_tools has not sourced yet, we have to source it from this repository.
-  DM_TOOLS__CONFIG__MANDATORY__SUBMODULE_PATH_PREFIX='../dependencies/dm-tools'
-  if [ -d  "$DM_TOOLS__CONFIG__MANDATORY__SUBMODULE_PATH_PREFIX" ]
+  # If posix_adapter has not sourced yet, we have to source it from this repository.
+  POSIX_ADAPTER__CONFIG__MANDATORY__SUBMODULE_PATH_PREFIX='../dependencies/posix-adapter'
+  if [ -d  "$POSIX_ADAPTER__CONFIG__MANDATORY__SUBMODULE_PATH_PREFIX" ]
   then
-    # shellcheck source=../dependencies/dm-tools/dm.tools.sh
-    . "${DM_TOOLS__CONFIG__MANDATORY__SUBMODULE_PATH_PREFIX}/dm.tools.sh"
+    # shellcheck source=../dependencies/posix-adapter/posix_adapter.sh
+    . "${POSIX_ADAPTER__CONFIG__MANDATORY__SUBMODULE_PATH_PREFIX}/posix_adapter.sh"
   else
-    echo 'dm-tools submodule needs to be initialized. run make init'
+    echo 'posix_adapter submodule needs to be initialized. run make init'
+    exit
   fi
 fi
 
 # IMPORTANT: After this, every non shell built-in command should be called
-# through the provided dm_tools API to ensure the compatibility on different
+# through the provided posix_adapter API to ensure the compatibility on different
 # environments.
 
 #==============================================================================
@@ -36,14 +37,14 @@ fi
 # Checking the availibility and usability of tput. If it is available and
 # usable we can set the global coloring variables with it by expecting a
 # possibly missing color/modifier.
-if dm_tools__tput__is_available
+if posix_adapter__tput__is_available
 then
-  RED="$(dm_tools__tput setaf 1)"
-  GREEN="$(dm_tools__tput setaf 2)"
-  BLUE="$(dm_tools__tput setaf 4)"
-  RESET="$(dm_tools__tput sgr0)"
-  BOLD="$(dm_tools__tput bold)"
-  DIM="$(dm_tools__tput dim)"
+  RED="$(posix_adapter__tput setaf 1)"
+  GREEN="$(posix_adapter__tput setaf 2)"
+  BLUE="$(posix_adapter__tput setaf 4)"
+  RESET="$(posix_adapter__tput sgr0)"
+  BOLD="$(posix_adapter__tput bold)"
+  DIM="$(posix_adapter__tput dim)"
 else
   RED=''
   GREEN=''
@@ -55,17 +56,17 @@ fi
 
 log_task() {
   message="$1"
-    dm_tools__echo "${BOLD}[ ${BLUE}..${RESET}${BOLD} ]${RESET} ${message}"
+    posix_adapter__echo "${BOLD}[ ${BLUE}..${RESET}${BOLD} ]${RESET} ${message}"
 }
 
 log_success() {
   message="$1"
-    dm_tools__echo "${BOLD}[ ${GREEN}OK${RESET}${BOLD} ]${RESET} ${message}"
+    posix_adapter__echo "${BOLD}[ ${GREEN}OK${RESET}${BOLD} ]${RESET} ${message}"
 }
 
 log_failure() {
   message="$1"
-    dm_tools__echo "${BOLD}[ ${RED}!!${RESET}${BOLD} ]${RESET} ${message}"
+    posix_adapter__echo "${BOLD}[ ${RED}!!${RESET}${BOLD} ]${RESET} ${message}"
 }
 
 #==============================================================================
@@ -84,11 +85,11 @@ assert_test_case_count() {
   else
     log_failure "actual count was: ${BOLD}${___count}${RESET}"
 
-    dm_tools__echo "${BOLD}${RED}"
-    dm_tools__echo '==============================================================================='
-    dm_tools__echo '                         Unexpected test case count!'
-    dm_tools__echo '==============================================================================='
-    dm_tools__echo "$RESET"
+    posix_adapter__echo "${BOLD}${RED}"
+    posix_adapter__echo '==============================================================================='
+    posix_adapter__echo '                         Unexpected test case count!'
+    posix_adapter__echo '==============================================================================='
+    posix_adapter__echo "$RESET"
 
     exit 1
   fi
@@ -103,15 +104,15 @@ assert_failure_count() {
   if [ "$___count" -eq "$___expected_count" ]
   then
     log_success "actual count was ${BOLD}${___count}${RESET}"
-    dm_tools__echo ""
+    posix_adapter__echo ""
   else
     log_failure "actual count was: ${BOLD}${___count}${RESET}"
 
-    dm_tools__echo "${BOLD}${RED}"
-    dm_tools__echo '==============================================================================='
-    dm_tools__echo '                          Unexpected failure count!'
-    dm_tools__echo '==============================================================================='
-    dm_tools__echo "$RESET"
+    posix_adapter__echo "${BOLD}${RED}"
+    posix_adapter__echo '==============================================================================='
+    posix_adapter__echo '                          Unexpected failure count!'
+    posix_adapter__echo '==============================================================================='
+    posix_adapter__echo "$RESET"
 
     exit 1
   fi

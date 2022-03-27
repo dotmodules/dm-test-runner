@@ -38,7 +38,7 @@ dm_test__utils__print_output_if_has_content() {
     dm_test__debug 'dm_test__utils__print_output_if_has_content' \
       'displaying captured output..'
 
-    dm_tools__echo "$___content"
+    posix_adapter__echo "$___content"
   fi
 }
 
@@ -70,9 +70,9 @@ _dm_test__utils__increment_file_content() {
 
   if [ -s "$___file_path" ]
   then
-    ___content="$(dm_tools__cat "$___file_path")"
+    ___content="$(posix_adapter__cat "$___file_path")"
     ___content=$(( ___content + 1 ))
-    dm_tools__echo "$___content" > "$___file_path"
+    posix_adapter__echo "$___content" > "$___file_path"
   fi
 }
 
@@ -104,9 +104,9 @@ _dm_test__utils__decrement_file_content() {
 
   if [ -s "$___file_path" ]
   then
-    ___content="$(dm_tools__cat "$___file_path")"
+    ___content="$(posix_adapter__cat "$___file_path")"
     ___content=$(( ___content - 1 ))
-    dm_tools__echo "$___content" > "$___file_path"
+    posix_adapter__echo "$___content" > "$___file_path"
   fi
 }
 
@@ -140,11 +140,11 @@ _dm_test__utils__strip_colors() {
 
   # Making sure that the running system supports the necessary escape
   # characters.. If not no stripping will be executed.
-  if dm_tools__echo '' | \
-    dm_tools__sed --expression "$___pattern" >/dev/null 2>&1
+  if posix_adapter__echo '' | \
+    posix_adapter__sed --expression "$___pattern" >/dev/null 2>&1
   then
-    dm_tools__cat - | dm_tools__sed --expression "$___pattern"
+    posix_adapter__cat - | posix_adapter__sed --expression "$___pattern"
   else
-    dm_tools__cat -
+    posix_adapter__cat -
   fi
 }

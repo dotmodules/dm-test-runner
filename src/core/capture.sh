@@ -265,12 +265,12 @@ dm_test__capture__get_captured_outputs() {
 
   # Using the timestamps preceding every line for sorting, then removing it.
   {
-    dm_tools__cat "$DM_TEST__CAPTURE__RUNTIME__TEMP_FILE__FD1"
-    dm_tools__cat "$DM_TEST__CAPTURE__RUNTIME__TEMP_FILE__FD2"
-    dm_tools__cat "$DM_TEST__CAPTURE__RUNTIME__TEMP_FILE__FD3"
+    posix_adapter__cat "$DM_TEST__CAPTURE__RUNTIME__TEMP_FILE__FD1"
+    posix_adapter__cat "$DM_TEST__CAPTURE__RUNTIME__TEMP_FILE__FD2"
+    posix_adapter__cat "$DM_TEST__CAPTURE__RUNTIME__TEMP_FILE__FD3"
   } | \
-    dm_tools__sort | \
-    dm_tools__sed --extended --expression 's/^[[:digit:]]+N?[[:space:]]//'
+    posix_adapter__sort | \
+    posix_adapter__sed --extended --expression 's/^[[:digit:]]+N?[[:space:]]//'
     # Due to the lack of nanoseconds support on BSD date command, we have to
     # accept an optional 'N' in the timestamp.. This also means that sorting on
     # old BSD systems will be off..
@@ -344,7 +344,7 @@ dm_test__capture__append_to_standard_error() {
 
   ___timestamp="$(_dm_test__capture__create_timestamp)"
 
-  dm_tools__echo "${___timestamp} ${RED}stderr | ${___message}${RESET}" >> \
+  posix_adapter__echo "${___timestamp} ${RED}stderr | ${___message}${RESET}" >> \
     "$DM_TEST__CAPTURE__RUNTIME__TEMP_FILE__FD2"
 }
 
@@ -386,7 +386,7 @@ _dm_test__capture__create_temp_file() {
   dm_test__debug '_dm_test__capture__create_temp_file' \
     "temporary file created: '${___tmp_path}'"
 
-  dm_tools__echo "$___tmp_path"
+  posix_adapter__echo "$___tmp_path"
 }
 
 #==============================================================================
@@ -413,12 +413,12 @@ _dm_test__capture__create_temp_fifo() {
     'creating temporary fifo..'
 
   ___tmp_path="$(dm_test__cache__create_temp_path)"
-  dm_tools__mkfifo "$___tmp_path"
+  posix_adapter__mkfifo "$___tmp_path"
 
   dm_test__debug '_dm_test__capture__create_temp_fifo' \
     "temporary fifo created: '${___tmp_path}'"
 
-  dm_tools__echo "$___tmp_path"
+  posix_adapter__echo "$___tmp_path"
 }
 
 #==============================================================================
@@ -458,17 +458,17 @@ _dm_test__capture__capture_output_for_domain() {
   while read -r ___worker_line
   do
     ___timestamp="$(_dm_test__capture__create_timestamp)"
-    dm_tools__printf '%s' "${___timestamp} ${___worker_color}"
-    dm_tools__echo "${___worker_domain} | ${___worker_line}${RESET}"
+    posix_adapter__printf '%s' "${___timestamp} ${___worker_color}"
+    posix_adapter__echo "${___worker_domain} | ${___worker_line}${RESET}"
 
     # Skipping the excerpt generation if not in debug mode..
     if dm_test__config__debug_is_enabled
     then
       ___limit="$DM_TEST__CAPTURE__CONSTANT__CAPTURED_LINE_EXCERPT_LIMIT"
       ___excerpt="$( \
-        dm_tools__echo "$___worker_line" | \
+        posix_adapter__echo "$___worker_line" | \
         _dm_test__utils__strip_colors | \
-        dm_tools__cut --characters "1-${___limit}" \
+        posix_adapter__cut --characters "1-${___limit}" \
       )"
       dm_test__debug '_dm_test__capture__capture_output_for_domain' \
         "[${___worker_fd}] captured line excerpt: '${___excerpt}'"
@@ -499,6 +499,6 @@ _dm_test__capture__capture_output_for_domain() {
 #   0 - Other status is not expected.
 #==============================================================================
 _dm_test__capture__create_timestamp() {
-  ___timestamp="$(dm_tools__date +'%s%N')"
-  dm_tools__echo "$___timestamp"
+  ___timestamp="$(posix_adapter__date +'%s%N')"
+  posix_adapter__echo "$___timestamp"
 }

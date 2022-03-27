@@ -135,7 +135,7 @@ DM_TEST__CACHE__RUNTIME__CACHE_PATH='__INVALID__'
 #==============================================================================
 _dm_test__cache__normalize_cache_parent_directory() {
   ___raw_parent="$DM_TEST__CONFIG__OPTIONAL__CACHE_PARENT_DIRECTORY"
-  ___parent="$(dm_tools__realpath --no-symlinks "$___raw_parent")"
+  ___parent="$(posix_adapter__realpath --no-symlinks "$___raw_parent")"
 
   dm_test__debug '_dm_test__cache__normalize_cache_parent_directory' \
     "normalizing raw cache parent directory: '${___raw_parent}'"
@@ -145,7 +145,7 @@ _dm_test__cache__normalize_cache_parent_directory() {
   then
     :
   else
-    if ___output="$(dm_tools__mkdir --parents "$___parent" 2>&1)"
+    if ___output="$(posix_adapter__mkdir --parents "$___parent" 2>&1)"
     then
       :
     else
@@ -197,7 +197,7 @@ _dm_test__cache__normalize_cache_parent_directory() {
 #==============================================================================
 _dm_test__cache__create_base_cache_directory() {
   if ___mktemp_output="$( \
-    dm_tools__mktemp \
+    posix_adapter__mktemp \
       --directory \
       --tmpdir "$DM_TEST__CACHE__RUNTIME__NORMALIZED_CACHE_PARENT_DIRECTORY" \
       "$DM_TEST__CACHE__CONFIG__MKTEMP_TEMPLATE" \
@@ -286,7 +286,7 @@ _dm_test__cache__cleanup__find_targets() {
     'looking for deletable cache directories..'
 
   if ___find_output="$( \
-    dm_tools__find "$DM_TEST__CACHE__RUNTIME__NORMALIZED_CACHE_PARENT_DIRECTORY" \
+    posix_adapter__find "$DM_TEST__CACHE__RUNTIME__NORMALIZED_CACHE_PARENT_DIRECTORY" \
       --max-depth '1' \
       --type 'd' \
       --name "${DM_TEST__CACHE__CONFIG__DIRECTORY_PREFIX}*" \
@@ -294,14 +294,14 @@ _dm_test__cache__cleanup__find_targets() {
   )"
   then
     ___directory_count="$( \
-      dm_tools__echo "$___find_output" | dm_tools__wc --lines \
+      posix_adapter__echo "$___find_output" | posix_adapter__wc --lines \
     )"
     dm_test__debug '_dm_test__cache__cleanup__find_targets' \
       "deletable directory count: ${___directory_count}"
     dm_test__debug_list '_dm_test__cache__cleanup__find_targets' \
       'target result:' \
       "$___find_output"
-    dm_tools__echo "$___find_output"
+    posix_adapter__echo "$___find_output"
 
   else
 
@@ -341,7 +341,7 @@ _dm_test__cache__cleanup__delete_target() {
   dm_test__debug '_dm_test__cache__cleanup__delete_target' \
     "deleting '${___target}'.."
 
-  if ___rm_output="$(dm_tools__rm --recursive --force "$___target" 2>&1)"
+  if ___rm_output="$(posix_adapter__rm --recursive --force "$___target" 2>&1)"
   then
     dm_test__debug '_dm_test__cache__cleanup__delete_target' \
       "deleted '${___target}'"
@@ -410,10 +410,10 @@ _dm_test__cache__init__temp_files_base_directory() {
   # Using a subshell here to prevent the long line.
   # shellcheck disable=2116
   DM_TEST__CACHE__RUNTIME__TEMP_FILES_PATH="$( \
-    dm_tools__printf '%s' "${DM_TEST__CACHE__RUNTIME__CACHE_PATH}/"; \
-    dm_tools__echo "$DM_TEST__CACHE__CONFIG__TEMP_FILES_PATH_NAME" \
+    posix_adapter__printf '%s' "${DM_TEST__CACHE__RUNTIME__CACHE_PATH}/"; \
+    posix_adapter__echo "$DM_TEST__CACHE__CONFIG__TEMP_FILES_PATH_NAME" \
   )"
-  dm_tools__mkdir --parents "$DM_TEST__CACHE__RUNTIME__TEMP_FILES_PATH"
+  posix_adapter__mkdir --parents "$DM_TEST__CACHE__RUNTIME__TEMP_FILES_PATH"
 
   dm_test__debug '_dm_test__cache__init__temp_files_base_directory' \
     "temp files base created: '${DM_TEST__CACHE__RUNTIME__TEMP_FILES_PATH}'"
@@ -443,7 +443,7 @@ _dm_test__cache__init__temp_files_base_directory() {
 #==============================================================================
 dm_test__cache__create_temp_file() {
   if ___mktemp_output="$( \
-    dm_tools__mktemp \
+    posix_adapter__mktemp \
       --tmpdir "$DM_TEST__CACHE__RUNTIME__TEMP_FILES_PATH" \
       "$DM_TEST__CACHE__CONFIG__TEMP_FILE_TEMPLATE" \
       2>&1 \
@@ -452,7 +452,7 @@ dm_test__cache__create_temp_file() {
     ___file="$___mktemp_output"
     dm_test__debug 'dm_test__cache__create_temp_file' \
       "temp file created: '${___file}'"
-    dm_tools__echo "$___file"
+    posix_adapter__echo "$___file"
   else
     dm_test__report_error_and_exit \
       'Temporary file generation failed!' \
@@ -489,7 +489,7 @@ dm_test__cache__create_temp_path() {
   ___path="${___file}${DM_TEST__CACHE__CONFIG__TEMP_FILE_POSTFIX}"
   dm_test__debug 'dm_test__cache__create_temp_path' \
     "temp path created: '${___path}'"
-  dm_tools__echo "$___path"
+  posix_adapter__echo "$___path"
 }
 
 #==============================================================================
@@ -546,10 +546,10 @@ _dm_test__cache__init__temp_directories_base_directory() {
   # Using a subshell here to prevent the long line.
   # shellcheck disable=2116
   DM_TEST__CACHE__RUNTIME__TEMP_DIRS_PATH="$( \
-    dm_tools__printf '%s' "${DM_TEST__CACHE__RUNTIME__CACHE_PATH}/"; \
-    dm_tools__echo "$DM_TEST__CACHE__CONFIG__TEMP_DIRS_PATH_NAME" \
+    posix_adapter__printf '%s' "${DM_TEST__CACHE__RUNTIME__CACHE_PATH}/"; \
+    posix_adapter__echo "$DM_TEST__CACHE__CONFIG__TEMP_DIRS_PATH_NAME" \
   )"
-  dm_tools__mkdir --parents "$DM_TEST__CACHE__RUNTIME__TEMP_DIRS_PATH"
+  posix_adapter__mkdir --parents "$DM_TEST__CACHE__RUNTIME__TEMP_DIRS_PATH"
 
   dm_test__debug '_dm_test__cache__init__temp_directories_base_directory' \
     "temp dirs base created: '${DM_TEST__CACHE__RUNTIME__TEMP_DIRS_PATH}'"
@@ -577,7 +577,7 @@ _dm_test__cache__init__temp_directories_base_directory() {
 #==============================================================================
 dm_test__cache__create_temp_directory() {
   if ___mktemp_output="$( \
-    dm_tools__mktemp \
+    posix_adapter__mktemp \
       --directory \
       --tmpdir "$DM_TEST__CACHE__RUNTIME__TEMP_DIRS_PATH" \
       "$DM_TEST__CACHE__CONFIG__TEMP_DIR_TEMPLATE" \
@@ -587,7 +587,7 @@ dm_test__cache__create_temp_directory() {
     ___dir="$___mktemp_output"
     dm_test__debug 'dm_test__cache__create_temp_directory' \
       "temporary directory created: '${___dir}'"
-    dm_tools__echo "$___dir"
+    posix_adapter__echo "$___dir"
   else
     dm_test__report_error_and_exit \
       'Temporary file generation failed!' \

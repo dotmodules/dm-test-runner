@@ -24,14 +24,14 @@
 
 # Checking the availability and usability of tput. If it is available and
 # usable we can set the global coloring variables with it.
-if dm_tools__tput__is_available
+if posix_adapter__tput__is_available
 then
-  RED="$(dm_tools__tput setaf 1)"
-  GREEN="$(dm_tools__tput setaf 2)"
-  BLUE="$(dm_tools__tput setaf 4)"
-  RESET="$(dm_tools__tput sgr0)"
-  BOLD="$(dm_tools__tput bold)"
-  DIM="$(dm_tools__tput dim)"
+  RED="$(posix_adapter__tput setaf 1)"
+  GREEN="$(posix_adapter__tput setaf 2)"
+  BLUE="$(posix_adapter__tput setaf 4)"
+  RESET="$(posix_adapter__tput sgr0)"
+  BOLD="$(posix_adapter__tput bold)"
+  DIM="$(posix_adapter__tput dim)"
 else
   RED=''
   GREEN=''

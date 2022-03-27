@@ -49,10 +49,10 @@ dm_test__get_line_from_output_buffer_by_index() {
 
   dm_test__debug_list 'dm_test__get_line_from_output_buffer_by_index' \
     "getting line for index '${___line_index}' from output:" \
-    "$(dm_tools__cat "$___buffer")"
+    "$(posix_adapter__cat "$___buffer")"
 
-  ___line_count="$(dm_tools__wc --lines < "$___buffer")"
-  ___char_count="$(dm_tools__wc --chars < "$___buffer")"
+  ___line_count="$(posix_adapter__wc --lines < "$___buffer")"
+  ___char_count="$(posix_adapter__wc --chars < "$___buffer")"
 
   if [ "$___line_count" -eq '0' ] && [ "$___char_count" -eq '0' ]
   then
@@ -79,20 +79,20 @@ dm_test__get_line_from_output_buffer_by_index() {
 
     ___subject='Line index is out of range'
     ___reason="$( \
-      dm_tools__echo "index should be in range: [1-${___line_count}]"; \
-      dm_tools__echo "given index: '${___line_index}'" \
+      posix_adapter__echo "index should be in range: [1-${___line_count}]"; \
+      posix_adapter__echo "given index: '${___line_index}'" \
     )"
     ___assertion='utils__get_line_from_output_by_index'
     _dm_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
   fi
 
   # Getting the indexed line.
-  ___line="$(dm_tools__sed --expression "${___line_index}q;d" "$___buffer")"
+  ___line="$(posix_adapter__sed --expression "${___line_index}q;d" "$___buffer")"
 
   dm_test__debug_list 'dm_test__get_line_from_output_buffer_by_index' \
     'line selected:' "$___line"
 
-  dm_tools__echo "$___line"
+  posix_adapter__echo "$___line"
 }
 
 #==============================================================================
@@ -145,21 +145,21 @@ _dm_test__assert__report_failure() {
   )"
   # Appending the current error report to the error cache file.
   {
-    dm_tools__echo "${RED}${BOLD}${___test_case_identifier}${RESET}";
-    dm_tools__printf '%s' "  ${RED}${___subject}: ";
-    dm_tools__echo "[${BOLD}${___assertion}${RESET}${RED}]${RESET}";
+    posix_adapter__echo "${RED}${BOLD}${___test_case_identifier}${RESET}";
+    posix_adapter__printf '%s' "  ${RED}${___subject}: ";
+    posix_adapter__echo "[${BOLD}${___assertion}${RESET}${RED}]${RESET}";
     # We want to use printf here to display the inline line newlines, so using
     # only the template parameter, shellcheck can be disabled.
     # shellcheck disable=SC2059
-    dm_tools__printf "${RED}${___reason}${RESET}\n" | \
-      dm_tools__sed --expression 's/^/    /';
-    dm_tools__echo "";
+    posix_adapter__printf "${RED}${___reason}${RESET}\n" | \
+      posix_adapter__sed --expression 's/^/    /';
+    posix_adapter__echo "";
   } | dm_test__cache__global_errors__write_errors
 
   # Report the concise error report to the standard error.
-  >&2 dm_tools__printf '%s' "${___assertion} | "
-  >&2 dm_tools__printf '%s' 'Aborting due to failed assertion: '
-  >&2 dm_tools__echo "${BOLD}${___subject}${RESET}."
+  >&2 posix_adapter__printf '%s' "${___assertion} | "
+  >&2 posix_adapter__printf '%s' 'Aborting due to failed assertion: '
+  >&2 posix_adapter__echo "${BOLD}${___subject}${RESET}."
 
   # Only the first  assertion error should be reported, the latter ones could
   # be the direct result of the first one, so they have minimal new information

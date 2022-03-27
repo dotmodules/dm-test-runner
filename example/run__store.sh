@@ -73,18 +73,18 @@ DM_TEST__CONFIG__OPTIONAL__DEBUG_ENABLED=0
 # ENTRY POINT
 #==============================================================================
 
-dm_tools__echo "${DIM}==============================================================================="
-dm_tools__echo '    _____ _'
-dm_tools__echo '   / ____| |'
-dm_tools__echo '  | (___ | |_ ___  _ __ ___'
-dm_tools__echo '   \___ \| __/ _ \| '\''__/ _ \'
-dm_tools__echo '   ____) | || (_) | | |  __/'
-dm_tools__echo '  |_____/ \__\___/|_|  \___|'
-dm_tools__echo ''
-dm_tools__echo '==============================================================================='
-dm_tools__echo '  STORE CASES'
-dm_tools__echo '==============================================================================='
-dm_tools__echo "${RESET}"
+posix_adapter__echo "${DIM}==============================================================================="
+posix_adapter__echo '    _____ _'
+posix_adapter__echo '   / ____| |'
+posix_adapter__echo '  | (___ | |_ ___  _ __ ___'
+posix_adapter__echo '   \___ \| __/ _ \| '\''__/ _ \'
+posix_adapter__echo '   ____) | || (_) | | |  __/'
+posix_adapter__echo '  |_____/ \__\___/|_|  \___|'
+posix_adapter__echo ''
+posix_adapter__echo '==============================================================================='
+posix_adapter__echo '  STORE CASES'
+posix_adapter__echo '==============================================================================='
+posix_adapter__echo "${RESET}"
 
 dm_test__run_suite
 

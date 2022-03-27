@@ -58,12 +58,12 @@ dm_test__test_case__get_test_cases_from_test_file() {
 
   dm_test__debug 'dm_test__test_case__get_test_cases_from_test_file' \
     "$( \
-      dm_tools__printf '%s' 'gathering test cases in test file '; \
-      dm_tools__echo "'${___test_file_path}' based on prefix '${___prefix}'" \
+      posix_adapter__printf '%s' 'gathering test cases in test file '; \
+      posix_adapter__echo "'${___test_file_path}' based on prefix '${___prefix}'" \
     )"
 
   if ___test_cases="$( \
-    dm_tools__grep --extended --match-only \
+    posix_adapter__grep --extended --match-only \
       "^${___prefix}[^\(]+" \
       "$___test_file_path" \
   )"
@@ -78,9 +78,9 @@ dm_test__test_case__get_test_cases_from_test_file() {
       dm_test__debug 'dm_test__test_case__get_test_cases_from_test_file' \
         'sorting test case list to be able to execute in alphabetical order'
 
-      dm_tools__echo "$___test_cases" | dm_tools__sort --dictionary-order
+      posix_adapter__echo "$___test_cases" | posix_adapter__sort --dictionary-order
     else
-      dm_tools__echo "$___test_cases"
+      posix_adapter__echo "$___test_cases"
     fi
   else
     dm_test__debug 'dm_test__test_case__get_test_cases_from_test_file' \
@@ -149,8 +149,8 @@ dm_test__test_case__set_current_test_file() {
   ___test_file_path="$1"
 
   DM_TEST__TEST_CASE__RUNTIME__FILE_UNDER_EXECUTION="$( \
-    dm_tools__echo "$___test_file_path" | \
-    dm_tools__cut --delimiter '/' --fields '2-' \
+    posix_adapter__echo "$___test_file_path" | \
+    posix_adapter__cut --delimiter '/' --fields '2-' \
   )"
 
   dm_test__debug 'dm_test__test_case__set_current_test_file' \
@@ -210,9 +210,9 @@ dm_test__test_case__set_current_test_case() {
 #   0 - Other status is not expected.
 #==============================================================================
 dm_test__test_case__get_current_test_case_identifier() {
-  dm_tools__printf '%s' "$DM_TEST__TEST_CASE__RUNTIME__FILE_UNDER_EXECUTION"
-  dm_tools__printf '%s' ' - '
-  dm_tools__echo "$DM_TEST__TEST_CASE__RUNTIME__TEST_UNDER_EXECUTION"
+  posix_adapter__printf '%s' "$DM_TEST__TEST_CASE__RUNTIME__FILE_UNDER_EXECUTION"
+  posix_adapter__printf '%s' ' - '
+  posix_adapter__echo "$DM_TEST__TEST_CASE__RUNTIME__TEST_UNDER_EXECUTION"
 }
 
 #==============================================================================
@@ -238,11 +238,11 @@ dm_test__test_case__get_current_test_case_identifier() {
 #   0 - Other status is not expected.
 #==============================================================================
 dm_test__test_case__get_current_colorized_test_case_identifier() {
-  dm_tools__printf '%s' "${RESET}"
-  dm_tools__printf '%s' "${DM_TEST__TEST_CASE__RUNTIME__FILE_UNDER_EXECUTION}"
-  dm_tools__printf '%s' ' - '
-  dm_tools__printf '%s' "${BOLD}"
-  dm_tools__echo "${DM_TEST__TEST_CASE__RUNTIME__TEST_UNDER_EXECUTION}${RESET}"
+  posix_adapter__printf '%s' "${RESET}"
+  posix_adapter__printf '%s' "${DM_TEST__TEST_CASE__RUNTIME__FILE_UNDER_EXECUTION}"
+  posix_adapter__printf '%s' ' - '
+  posix_adapter__printf '%s' "${BOLD}"
+  posix_adapter__echo "${DM_TEST__TEST_CASE__RUNTIME__TEST_UNDER_EXECUTION}${RESET}"
 }
 
 #==============================================================================
@@ -658,9 +658,9 @@ _dm_test__print_test_case_identifier() {
 
   if dm_test__config__debug_is_enabled
   then
-    dm_tools__echo "$___identifier"
+    posix_adapter__echo "$___identifier"
   else
-    dm_tools__printf '%s' "$___identifier"
+    posix_adapter__printf '%s' "$___identifier"
   fi
 }
 
@@ -692,9 +692,9 @@ _dm_test__print_test_case_result() {
 
   if dm_test__cache__test_result__was_success
   then
-    dm_tools__echo "  ${BOLD}${GREEN}ok${RESET}"
+    posix_adapter__echo "  ${BOLD}${GREEN}ok${RESET}"
   else
-    dm_tools__echo "  ${BOLD}${RED}NOT OK${RESET}"
+    posix_adapter__echo "  ${BOLD}${RED}NOT OK${RESET}"
   fi
 }
 

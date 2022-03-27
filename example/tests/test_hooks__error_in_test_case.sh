@@ -24,28 +24,28 @@
 #==============================================================================
 
 setup_file() {
-  dm_tools__echo ''
-  dm_tools__echo '--- ERROR DURING TEST CASE ------------------------------------------------------'
-  dm_tools__echo 'echo during [setup file] hook'
+  posix_adapter__echo ''
+  posix_adapter__echo '--- ERROR DURING TEST CASE ------------------------------------------------------'
+  posix_adapter__echo 'echo during [setup file] hook'
 }
 
 setup() {
-  dm_tools__echo 'echo during [setup] hook'
+  posix_adapter__echo 'echo during [setup] hook'
 }
 
 teardown() {
-  dm_tools__echo 'echo during [teardown] hook'
+  posix_adapter__echo 'echo during [teardown] hook'
 }
 
 teardown_file() {
-  dm_tools__echo 'echo during [teardown file] hook'
+  posix_adapter__echo 'echo during [teardown file] hook'
 }
 
 test__hooks__test_case__error_during_test_case__case_1() {
-  dm_tools__echo 'echo during test case 1 - error will happen after this'
-  dm_tools__cat invalid_file
+  posix_adapter__echo 'echo during test case 1 - error will happen after this'
+  posix_adapter__cat invalid_file
 }
 
 test__hooks__test_case__error_during_test_case__case_2() {
-  dm_tools__echo 'echo during test case 2'
+  posix_adapter__echo 'echo during test case 2'
 }
