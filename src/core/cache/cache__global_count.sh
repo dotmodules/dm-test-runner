@@ -41,7 +41,7 @@ POSIX_TEST__CACHE__RUNTIME__GLOBAL_COUNT='__INVALID__'
 #==============================================================================
 _posix_test__cache__global_count__init() {
   POSIX_TEST__CACHE__RUNTIME__GLOBAL_COUNT="$(posix_test__cache__create_temp_file)"
-  posix_adapter__echo '0' > "$POSIX_TEST__CACHE__RUNTIME__GLOBAL_COUNT"
+  echo '0' > "$POSIX_TEST__CACHE__RUNTIME__GLOBAL_COUNT"
 
   posix_test__debug '_posix_test__cache__global_count__init' \
     "global count file initialized: '${POSIX_TEST__CACHE__RUNTIME__GLOBAL_COUNT}'"
@@ -95,7 +95,7 @@ posix_test__cache__global_count__increment() {
 #==============================================================================
 posix_test__cache__global_count__get() {
   ___count="$(posix_adapter__cat "$POSIX_TEST__CACHE__RUNTIME__GLOBAL_COUNT")"
-  posix_adapter__echo "$___count"
+  echo "$___count"
 
   posix_test__debug 'posix_test__cache__global_count__get' \
     "global count value returned: '${___count}'"

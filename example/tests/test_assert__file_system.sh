@@ -32,17 +32,17 @@ test__assert_file__empty_file() {
 }
 
 test__assert_file__non_empty_file() {
-  posix_adapter__echo 'content' > "$dummy_file"
+  echo 'content' > "$dummy_file"
   assert_file "$dummy_file"
 }
 
 should_fail__assert_file__no_file() {
-  posix_adapter__echo 'Expected [assert_file] failure.'
+  echo 'Expected [assert_file] failure.'
   assert_file "$dummy_file"
 }
 
 should_fail__assert_file__has_to_be_a_file() {
-  posix_adapter__echo 'Expected [assert_file] failure.'
+  echo 'Expected [assert_file] failure.'
   posix_adapter__mkdir "$dummy_file"
   assert_file "$dummy_file"
 }
@@ -58,7 +58,7 @@ test__assert_no_file() {
 }
 
 should_fail__assert_no_file() {
-  posix_adapter__echo 'Expected [assert_no_file] failure.'
+  echo 'Expected [assert_no_file] failure.'
   posix_adapter__touch "$dummy_file"
   assert_no_file "$dummy_file"
 }
@@ -70,17 +70,17 @@ should_fail__assert_no_file() {
 #==============================================================================
 
 test__assert_file_has_content() {
-  posix_adapter__echo 'content' > "$dummy_file"
+  echo 'content' > "$dummy_file"
   assert_file_has_content "$dummy_file"
 }
 
 should_fail__assert_file_has_content__file_has_to_exist() {
-  posix_adapter__echo 'Expected [assert_file_has_content] failure.'
+  echo 'Expected [assert_file_has_content] failure.'
   assert_file_has_content "$dummy_file"
 }
 
 should_fail__assert_file_has_content__file_should_not_be_empty() {
-  posix_adapter__echo 'Expected [assert_file_has_content] failure.'
+  echo 'Expected [assert_file_has_content] failure.'
   posix_adapter__touch "$dummy_file"
   assert_file_has_content "$dummy_file"
 }
@@ -97,13 +97,13 @@ test__assert_file_has_no_content() {
 }
 
 should_fail__assert_file_has_no_content__file_should_exist() {
-  posix_adapter__echo 'Expected [assert_file_has_no_content] failure.'
+  echo 'Expected [assert_file_has_no_content] failure.'
   assert_file_has_no_content "$dummy_file"
 }
 
 should_fail__assert_file_has_no_content__file_should_be_empty() {
-  posix_adapter__echo 'Expected [assert_file_has_no_content] failure.'
-  posix_adapter__echo 'content' > "$dummy_file"
+  echo 'Expected [assert_file_has_no_content] failure.'
+  echo 'content' > "$dummy_file"
   assert_file_has_no_content "$dummy_file"
 }
 
@@ -119,12 +119,12 @@ test__assert_directory() {
 }
 
 should_fail__assert_directory__no_directory() {
-  posix_adapter__echo 'Expected [assert_directory] failure.'
+  echo 'Expected [assert_directory] failure.'
   assert_directory "$dummy_directory"
 }
 
 should_fail__assert_directory__not_a_directory() {
-  posix_adapter__echo 'Expected [assert_directory] failure.'
+  echo 'Expected [assert_directory] failure.'
   posix_adapter__touch "$dummy_directory"
   assert_directory "$dummy_directory"
 }
@@ -140,7 +140,7 @@ test__assert_no_directory() {
 }
 
 should_fail__assert_no_directory() {
-  posix_adapter__echo 'Expected [assert_no_directory] failure.'
+  echo 'Expected [assert_no_directory] failure.'
   posix_adapter__mkdir "$dummy_directory"
   assert_no_directory "$dummy_directory"
 }
@@ -157,14 +157,14 @@ test__assert_directory_empty() {
 }
 
 should_fail__assert_directory_empty() {
-  posix_adapter__echo 'Expected [assert_directory_empty] failure.'
+  echo 'Expected [assert_directory_empty] failure.'
   posix_adapter__mkdir "$dummy_directory"
   touch "${dummy_directory}/dummy_file"
   assert_directory_empty "$dummy_directory"
 }
 
 should_fail__assert_directory_empty__directory_should_present() {
-  posix_adapter__echo 'Expected [assert_directory_empty] failure.'
+  echo 'Expected [assert_directory_empty] failure.'
   assert_directory_empty "$dummy_directory"
 }
 
@@ -181,13 +181,13 @@ test__assert_directory_not_empty() {
 }
 
 should_fail__assert_directory_not_empty() {
-  posix_adapter__echo 'Expected [assert_directory_not_empty] failure.'
+  echo 'Expected [assert_directory_not_empty] failure.'
   posix_adapter__mkdir "$dummy_directory"
   assert_directory_not_empty "$dummy_directory"
 }
 
 should_fail__assert_directory_not_empty__directory_should_present() {
-  posix_adapter__echo 'Expected [assert_directory_not_empty] failure.'
+  echo 'Expected [assert_directory_not_empty] failure.'
   assert_directory_not_empty "$dummy_directory"
 }
 
@@ -204,13 +204,13 @@ test__assert_symlink() {
 }
 
 should_fail__assert_symlink__has_to_be_a_link() {
-  posix_adapter__echo 'Expected [assert_symlink] failure.'
+  echo 'Expected [assert_symlink] failure.'
   posix_adapter__touch "$dummy_file"
   assert_symlink "$dummy_file"
 }
 
 should_fail__assert_symlink__has_to_exists() {
-  posix_adapter__echo 'Expected [assert_symlink] failure.'
+  echo 'Expected [assert_symlink] failure.'
   assert_symlink "$dummy_link"
 }
 
@@ -230,7 +230,7 @@ test__assert_no_symlink__not_file() {
 }
 
 should_fail__assert_no_symlink() {
-  posix_adapter__echo 'Expected [assert_no_symlink] failure.'
+  echo 'Expected [assert_no_symlink] failure.'
   posix_adapter__touch "$dummy_file"
   posix_adapter__ln --symbolic --target "$dummy_file" --link-name "$dummy_link"
   assert_no_symlink "$dummy_link"
@@ -249,20 +249,20 @@ test__assert_symlink_target() {
 }
 
 should_fail__assert_symlink_target__target_mismatch() {
-  posix_adapter__echo 'Expected [assert_symlink_target] failure.'
+  echo 'Expected [assert_symlink_target] failure.'
   posix_adapter__touch "$dummy_file"
   posix_adapter__ln --symbolic --target "$dummy_file" --link-name "$dummy_link"
   assert_symlink_target "$dummy_link" "non_existent_target.txt"
 }
 
 should_fail__assert_symlink_target__no_link() {
-  posix_adapter__echo 'Expected [assert_symlink_target] failure.'
+  echo 'Expected [assert_symlink_target] failure.'
   posix_adapter__touch "$dummy_file"
   assert_symlink_target "$dummy_link" "$dummy_file"
 }
 
 should_fail__assert_symlink_target__not_a_link() {
-  posix_adapter__echo 'Expected [assert_symlink_target] failure.'
+  echo 'Expected [assert_symlink_target] failure.'
   posix_adapter__touch "$dummy_file"
   assert_symlink_target "$dummy_link" "$dummy_file"
 }

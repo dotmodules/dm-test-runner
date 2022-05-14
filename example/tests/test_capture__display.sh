@@ -16,24 +16,24 @@
 #==============================================================================
 
 test__captured_output_is_hidden_on_success() {
-  posix_adapter__echo "this message won't be visible"
-  >&3 posix_adapter__echo "this debug message won't be visible"
+  echo "this message won't be visible"
+  >&3 echo "this debug message won't be visible"
 }
 
 test__captured_output_is_visible_on_failure() {
-  posix_adapter__echo 'this message is visible'
-  >&3 posix_adapter__echo 'this debug message is visible'
+  echo 'this message is visible'
+  >&3 echo 'this debug message is visible'
   assert false
 }
 
 test__standard_error_makes_the_testcase_fail() {
-  posix_adapter__echo 'this message is visible'
-  >&2 posix_adapter__echo 'standard error -> test case will fail'
-  >&3 posix_adapter__echo 'this debug message is visible'
+  echo 'this message is visible'
+  >&2 echo 'standard error -> test case will fail'
+  >&3 echo 'this debug message is visible'
 }
 
 test__standard_error_makes_the_testcase_fail__command() {
-  posix_adapter__echo 'this message is visible'
-  >&3 posix_adapter__echo 'this debug message is visible'
+  echo 'this message is visible'
+  >&3 echo 'this debug message is visible'
   posix_adapter__cat 'nonexistent_file'
 }

@@ -58,8 +58,8 @@ posix_test__test_case__get_test_cases_from_test_file() {
 
   posix_test__debug 'posix_test__test_case__get_test_cases_from_test_file' \
     "$( \
-      posix_adapter__printf '%s' 'gathering test cases in test file '; \
-      posix_adapter__echo "'${___test_file_path}' based on prefix '${___prefix}'" \
+      printf '%s' 'gathering test cases in test file '; \
+      echo "'${___test_file_path}' based on prefix '${___prefix}'" \
     )"
 
   if ___test_cases="$( \
@@ -78,9 +78,9 @@ posix_test__test_case__get_test_cases_from_test_file() {
       posix_test__debug 'posix_test__test_case__get_test_cases_from_test_file' \
         'sorting test case list to be able to execute in alphabetical order'
 
-      posix_adapter__echo "$___test_cases" | posix_adapter__sort --dictionary-order
+      echo "$___test_cases" | posix_adapter__sort --dictionary-order
     else
-      posix_adapter__echo "$___test_cases"
+      echo "$___test_cases"
     fi
   else
     posix_test__debug 'posix_test__test_case__get_test_cases_from_test_file' \
@@ -149,7 +149,7 @@ posix_test__test_case__set_current_test_file() {
   ___test_file_path="$1"
 
   POSIX_TEST__TEST_CASE__RUNTIME__FILE_UNDER_EXECUTION="$( \
-    posix_adapter__echo "$___test_file_path" | \
+    echo "$___test_file_path" | \
     posix_adapter__cut --delimiter '/' --fields '2-' \
   )"
 
@@ -210,9 +210,9 @@ posix_test__test_case__set_current_test_case() {
 #   0 - Other status is not expected.
 #==============================================================================
 posix_test__test_case__get_current_test_case_identifier() {
-  posix_adapter__printf '%s' "$POSIX_TEST__TEST_CASE__RUNTIME__FILE_UNDER_EXECUTION"
-  posix_adapter__printf '%s' ' - '
-  posix_adapter__echo "$POSIX_TEST__TEST_CASE__RUNTIME__TEST_UNDER_EXECUTION"
+  printf '%s' "$POSIX_TEST__TEST_CASE__RUNTIME__FILE_UNDER_EXECUTION"
+  printf '%s' ' - '
+  echo "$POSIX_TEST__TEST_CASE__RUNTIME__TEST_UNDER_EXECUTION"
 }
 
 #==============================================================================
@@ -238,11 +238,11 @@ posix_test__test_case__get_current_test_case_identifier() {
 #   0 - Other status is not expected.
 #==============================================================================
 posix_test__test_case__get_current_colorized_test_case_identifier() {
-  posix_adapter__printf '%s' "${RESET}"
-  posix_adapter__printf '%s' "${POSIX_TEST__TEST_CASE__RUNTIME__FILE_UNDER_EXECUTION}"
-  posix_adapter__printf '%s' ' - '
-  posix_adapter__printf '%s' "${BOLD}"
-  posix_adapter__echo "${POSIX_TEST__TEST_CASE__RUNTIME__TEST_UNDER_EXECUTION}${RESET}"
+  printf '%s' "${RESET}"
+  printf '%s' "${POSIX_TEST__TEST_CASE__RUNTIME__FILE_UNDER_EXECUTION}"
+  printf '%s' ' - '
+  printf '%s' "${BOLD}"
+  echo "${POSIX_TEST__TEST_CASE__RUNTIME__TEST_UNDER_EXECUTION}${RESET}"
 }
 
 #==============================================================================
@@ -658,9 +658,9 @@ _posix_test__print_test_case_identifier() {
 
   if posix_test__config__debug_is_enabled
   then
-    posix_adapter__echo "$___identifier"
+    echo "$___identifier"
   else
-    posix_adapter__printf '%s' "$___identifier"
+    printf '%s' "$___identifier"
   fi
 }
 
@@ -692,9 +692,9 @@ _posix_test__print_test_case_result() {
 
   if posix_test__cache__test_result__was_success
   then
-    posix_adapter__echo "  ${BOLD}${GREEN}ok${RESET}"
+    echo "  ${BOLD}${GREEN}ok${RESET}"
   else
-    posix_adapter__echo "  ${BOLD}${RED}NOT OK${RESET}"
+    echo "  ${BOLD}${RED}NOT OK${RESET}"
   fi
 }
 

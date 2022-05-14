@@ -294,14 +294,14 @@ _posix_test__cache__cleanup__find_targets() {
   )"
   then
     ___directory_count="$( \
-      posix_adapter__echo "$___find_output" | posix_adapter__wc --lines \
+      echo "$___find_output" | posix_adapter__wc --lines \
     )"
     posix_test__debug '_posix_test__cache__cleanup__find_targets' \
       "deletable directory count: ${___directory_count}"
     posix_test__debug_list '_posix_test__cache__cleanup__find_targets' \
       'target result:' \
       "$___find_output"
-    posix_adapter__echo "$___find_output"
+    echo "$___find_output"
 
   else
 
@@ -409,10 +409,7 @@ POSIX_TEST__CACHE__RUNTIME__TEMP_FILES_PATH='__INVALID__'
 _posix_test__cache__init__temp_files_base_directory() {
   # Using a subshell here to prevent the long line.
   # shellcheck disable=2116
-  POSIX_TEST__CACHE__RUNTIME__TEMP_FILES_PATH="$( \
-    posix_adapter__printf '%s' "${POSIX_TEST__CACHE__RUNTIME__CACHE_PATH}/"; \
-    posix_adapter__echo "$POSIX_TEST__CACHE__CONFIG__TEMP_FILES_PATH_NAME" \
-  )"
+  POSIX_TEST__CACHE__RUNTIME__TEMP_FILES_PATH="${POSIX_TEST__CACHE__RUNTIME__CACHE_PATH}/${POSIX_TEST__CACHE__CONFIG__TEMP_FILES_PATH_NAME}"
   posix_adapter__mkdir --parents "$POSIX_TEST__CACHE__RUNTIME__TEMP_FILES_PATH"
 
   posix_test__debug '_posix_test__cache__init__temp_files_base_directory' \
@@ -452,7 +449,7 @@ posix_test__cache__create_temp_file() {
     ___file="$___mktemp_output"
     posix_test__debug 'posix_test__cache__create_temp_file' \
       "temp file created: '${___file}'"
-    posix_adapter__echo "$___file"
+    echo "$___file"
   else
     posix_test__report_error_and_exit \
       'Temporary file generation failed!' \
@@ -489,7 +486,7 @@ posix_test__cache__create_temp_path() {
   ___path="${___file}${POSIX_TEST__CACHE__CONFIG__TEMP_FILE_POSTFIX}"
   posix_test__debug 'posix_test__cache__create_temp_path' \
     "temp path created: '${___path}'"
-  posix_adapter__echo "$___path"
+  echo "$___path"
 }
 
 #==============================================================================
@@ -545,10 +542,7 @@ POSIX_TEST__CACHE__RUNTIME__TEMP_DIRS_PATH='__INVALID__'
 _posix_test__cache__init__temp_directories_base_directory() {
   # Using a subshell here to prevent the long line.
   # shellcheck disable=2116
-  POSIX_TEST__CACHE__RUNTIME__TEMP_DIRS_PATH="$( \
-    posix_adapter__printf '%s' "${POSIX_TEST__CACHE__RUNTIME__CACHE_PATH}/"; \
-    posix_adapter__echo "$POSIX_TEST__CACHE__CONFIG__TEMP_DIRS_PATH_NAME" \
-  )"
+  POSIX_TEST__CACHE__RUNTIME__TEMP_DIRS_PATH="${POSIX_TEST__CACHE__RUNTIME__CACHE_PATH}/${POSIX_TEST__CACHE__CONFIG__TEMP_DIRS_PATH_NAME}"
   posix_adapter__mkdir --parents "$POSIX_TEST__CACHE__RUNTIME__TEMP_DIRS_PATH"
 
   posix_test__debug '_posix_test__cache__init__temp_directories_base_directory' \
@@ -587,7 +581,7 @@ posix_test__cache__create_temp_directory() {
     ___dir="$___mktemp_output"
     posix_test__debug 'posix_test__cache__create_temp_directory' \
       "temporary directory created: '${___dir}'"
-    posix_adapter__echo "$___dir"
+    echo "$___dir"
   else
     posix_test__report_error_and_exit \
       'Temporary file generation failed!' \

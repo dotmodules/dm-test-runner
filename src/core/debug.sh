@@ -66,7 +66,7 @@ posix_test__debug__printf() {
   # This function behaves like a proxy thus having parameters in the first
   # argument of printf is okay in this case.
   # shellcheck disable=SC2059
-  >&4 posix_adapter__printf "$@"
+  >&4 printf "$@"
 }
 
 #==============================================================================
@@ -175,7 +175,7 @@ posix_test__debug_list() {
 
     posix_test__debug "$___debug_domain" "$___debug_message"
 
-    posix_adapter__echo "$___debug_list" | while IFS= read -r ___debug_list_item
+    echo "$___debug_list" | while IFS= read -r ___debug_list_item
     do
       posix_test__debug "$___debug_domain" "- '${___debug_list_item}'"
     done

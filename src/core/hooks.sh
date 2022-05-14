@@ -395,7 +395,7 @@ _posix_test__hooks__get_hook_flag() {
   posix_test__debug '_posix_test__hooks__get_hook_flag' \
     "${___result} match was found"
 
-  posix_adapter__echo "$___result"
+  echo "$___result"
 }
 
 #==============================================================================
@@ -501,9 +501,7 @@ _posix_test__hooks__check_singular_flag() {
 
   if [ "$___hook_flag" -gt '1' ]
   then
-    posix_adapter__printf '%s' \
-      "WARNING: multiple definitions of hook function '${___hook_name}' "
-    posix_adapter__echo 'found, only the last one will be executed.'
+    echo "WARNING: multiple definitions of hook function '${___hook_name}' found, only the last one will be executed."
   fi
 }
 

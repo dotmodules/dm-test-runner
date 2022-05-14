@@ -79,8 +79,8 @@ posix_test__get_line_from_output_buffer_by_index() {
 
     ___subject='Line index is out of range'
     ___reason="$( \
-      posix_adapter__echo "index should be in range: [1-${___line_count}]"; \
-      posix_adapter__echo "given index: '${___line_index}'" \
+      echo "index should be in range: [1-${___line_count}]"; \
+      echo "given index: '${___line_index}'" \
     )"
     ___assertion='utils__get_line_from_output_by_index'
     _posix_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
@@ -92,7 +92,7 @@ posix_test__get_line_from_output_buffer_by_index() {
   posix_test__debug_list 'posix_test__get_line_from_output_buffer_by_index' \
     'line selected:' "$___line"
 
-  posix_adapter__echo "$___line"
+  echo "$___line"
 }
 
 #==============================================================================
@@ -145,21 +145,18 @@ _posix_test__assert__report_failure() {
   )"
   # Appending the current error report to the error cache file.
   {
-    posix_adapter__echo "${RED}${BOLD}${___test_case_identifier}${RESET}";
-    posix_adapter__printf '%s' "  ${RED}${___subject}: ";
-    posix_adapter__echo "[${BOLD}${___assertion}${RESET}${RED}]${RESET}";
+    echo "${RED}${BOLD}${___test_case_identifier}${RESET}";
+    echo "  ${RED}${___subject}: [${BOLD}${___assertion}${RESET}${RED}]${RESET}";
     # We want to use printf here to display the inline line newlines, so using
     # only the template parameter, shellcheck can be disabled.
     # shellcheck disable=SC2059
-    posix_adapter__printf "${RED}${___reason}${RESET}\n" | \
+    printf "${RED}${___reason}${RESET}\n" | \
       posix_adapter__sed --expression 's/^/    /';
-    posix_adapter__echo "";
+    echo "";
   } | posix_test__cache__global_errors__write_errors
 
   # Report the concise error report to the standard error.
-  >&2 posix_adapter__printf '%s' "${___assertion} | "
-  >&2 posix_adapter__printf '%s' 'Aborting due to failed assertion: '
-  >&2 posix_adapter__echo "${BOLD}${___subject}${RESET}."
+  >&2 echo "${___assertion} | Aborting due to failed assertion: ${BOLD}${___subject}${RESET}."
 
   # Only the first  assertion error should be reported, the latter ones could
   # be the direct result of the first one, so they have minimal new information

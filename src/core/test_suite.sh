@@ -133,7 +133,7 @@ _posix_test__test_suite__execute_test_files() {
   # See more at shellcheck SC2044.
   ___tmp_pipe="$(posix_test__cache__create_temp_path)"
   posix_adapter__mkfifo "$___tmp_pipe"
-  posix_adapter__echo "$___test_files" > "$___tmp_pipe" &
+  echo "$___test_files" > "$___tmp_pipe" &
 
   while IFS= read -r ___test_file_path
   do
@@ -198,7 +198,7 @@ _posix_test__test_suite__get_test_files() {
     'test files found:' \
     "$___test_files"
 
-  posix_adapter__echo "$___test_files"
+  echo "$___test_files"
 }
 
 #==============================================================================
@@ -535,17 +535,13 @@ posix_test__test_suite__print_header() {
   #============================================================================
   # TITLE
   #============================================================================
-  posix_adapter__printf '%s' "$DIM"
-  posix_adapter__printf '%s' '-----------------------------------------------------'
-  posix_adapter__echo '--------------------------'
-  posix_adapter__echo '>> POSIX-TEST <<'
+  echo "${DIM}-------------------------------------------------------------------------------"
+  echo '>> POSIX-TEST <<'
 
   #============================================================================
   # CONFIG SECTION
   #============================================================================
-  posix_adapter__printf '%s' '-----------------------------------------------------'
-  posix_adapter__echo '--------------------------'
-  posix_adapter__printf '%s' "$RESET"
+  echo "-------------------------------------------------------------------------------${RESET}"
 
   # Mandatory config variables
   _posix_test__test_suite__print_header__print_config \
@@ -589,29 +585,25 @@ posix_test__test_suite__print_header() {
     'POSIX_TEST__CONFIG__OPTIONAL__DEBUG_ENABLED' \
     "$POSIX_TEST__CONFIG__OPTIONAL__DEBUG_ENABLED"
 
-  posix_adapter__printf '%s' "$DIM"
+  printf '%s' "$DIM"
   #============================================================================
   # SYSTEM INFO SECTION
   #============================================================================
-  posix_adapter__printf '%s' '-----------------------------------------------------'
-  posix_adapter__echo '--------------------------'
-  posix_adapter__echo '$ uname --kernel-name --kernel-release --machine'
+  echo '-------------------------------------------------------------------------------'
+  echo '$ uname --kernel-name --kernel-release --machine'
   posix_adapter__uname --kernel-name --kernel-release --machine
 
   #============================================================================
   # SHELL INFO SECTION
   #============================================================================
-  posix_adapter__printf '%s' '-----------------------------------------------------'
-  posix_adapter__echo '--------------------------'
-  posix_adapter__echo '$ command -v sh'
+  echo '-------------------------------------------------------------------------------'
+  echo '$ command -v sh'
   command -v sh
 
   #============================================================================
   # FOOTER SECTION
   #============================================================================
-  posix_adapter__printf '%s' '-----------------------------------------------------'
-  posix_adapter__echo '--------------------------'
-  posix_adapter__printf '%s' "$RESET"
+  echo "-------------------------------------------------------------------------------${RESET}"
 }
 
 #==============================================================================
@@ -651,10 +643,10 @@ _posix_test__test_suite__print_header__print_config() {
   ___value=" ${___value}"
 
   ___name_length="$( \
-    posix_adapter__printf '%s' "$___name" | posix_adapter__wc --chars \
+    printf '%s' "$___name" | posix_adapter__wc --chars \
   )"
   ___value_length="$( \
-    posix_adapter__printf '%s' "$___value" | posix_adapter__wc --chars \
+    printf '%s' "$___value" | posix_adapter__wc --chars \
   )"
 
   ___pad_length='79'
@@ -664,16 +656,16 @@ _posix_test__test_suite__print_header__print_config() {
   ___pad_length="$(( ___pad_length - ___name_length - ___value_length ))"
 
   # Start the printout.
-  posix_adapter__printf '%s' "$DIM"
-  posix_adapter__printf '%s' "$___name"
+  printf '%s' "$DIM"
+  printf '%s' "$___name"
 
   # Print the padding if there is paddable space left.
   if [ "$___pad_length" -gt '0' ]
   then
-    posix_adapter__printf '%*.*s' 0 "$___pad_length" "$___pad"
+    printf '%*.*s' 0 "$___pad_length" "$___pad"
   fi
 
-  posix_adapter__printf '%s\n' "${___value}${RESET}"
+  printf '%s\n' "${___value}${RESET}"
 }
 
 #==============================================================================
@@ -710,14 +702,13 @@ _posix_test__test_suite__print_report() {
   ___global_count="$(posix_test__cache__global_count__get)"
   ___failure_count="$(posix_test__cache__global_failure__get)"
 
-  posix_adapter__echo ''
-  posix_adapter__printf '%s'  "${BOLD}${___global_count} tests, "
-  posix_adapter__echo "${___failure_count} failed${RESET}"
+  echo ''
+  echo "${BOLD}${___global_count} tests, ${___failure_count} failed${RESET}"
 
   if posix_test__cache__global_failure__failures_happened
   then
-    posix_adapter__echo "${BOLD}Result: ${RED}FAILURE${RESET}"
-    posix_adapter__echo ''
+    echo "${BOLD}Result: ${RED}FAILURE${RESET}"
+    echo ''
     if posix_test__cache__global_errors__has_errors
     then
       posix_test__cache__global_errors__print_errors
@@ -736,7 +727,7 @@ _posix_test__test_suite__print_report() {
     fi
 
   else
-    posix_adapter__echo "${BOLD}Result: ${GREEN}SUCCESS${RESET}"
-    posix_adapter__echo ''
+    echo "${BOLD}Result: ${GREEN}SUCCESS${RESET}"
+    echo ''
   fi
 }

@@ -24,7 +24,7 @@
 
 # Checking the availability and usability of tput. If it is available and
 # usable we can set the global coloring variables with it.
-if posix_adapter__tput__is_available
+if posix_adapter__tput --is-available
 then
   RED="$(posix_adapter__tput setaf 1)"
   GREEN="$(posix_adapter__tput setaf 2)"

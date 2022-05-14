@@ -344,7 +344,7 @@ posix_test__capture__append_to_standard_error() {
 
   ___timestamp="$(_posix_test__capture__create_timestamp)"
 
-  posix_adapter__echo "${___timestamp} ${RED}stderr | ${___message}${RESET}" >> \
+  echo "${___timestamp} ${RED}stderr | ${___message}${RESET}" >> \
     "$POSIX_TEST__CAPTURE__RUNTIME__TEMP_FILE__FD2"
 }
 
@@ -386,7 +386,7 @@ _posix_test__capture__create_temp_file() {
   posix_test__debug '_posix_test__capture__create_temp_file' \
     "temporary file created: '${___tmp_path}'"
 
-  posix_adapter__echo "$___tmp_path"
+  echo "$___tmp_path"
 }
 
 #==============================================================================
@@ -418,7 +418,7 @@ _posix_test__capture__create_temp_fifo() {
   posix_test__debug '_posix_test__capture__create_temp_fifo' \
     "temporary fifo created: '${___tmp_path}'"
 
-  posix_adapter__echo "$___tmp_path"
+  echo "$___tmp_path"
 }
 
 #==============================================================================
@@ -458,15 +458,15 @@ _posix_test__capture__capture_output_for_domain() {
   while read -r ___worker_line
   do
     ___timestamp="$(_posix_test__capture__create_timestamp)"
-    posix_adapter__printf '%s' "${___timestamp} ${___worker_color}"
-    posix_adapter__echo "${___worker_domain} | ${___worker_line}${RESET}"
+    printf '%s' "${___timestamp} ${___worker_color}"
+    echo "${___worker_domain} | ${___worker_line}${RESET}"
 
     # Skipping the excerpt generation if not in debug mode..
     if posix_test__config__debug_is_enabled
     then
       ___limit="$POSIX_TEST__CAPTURE__CONSTANT__CAPTURED_LINE_EXCERPT_LIMIT"
       ___excerpt="$( \
-        posix_adapter__echo "$___worker_line" | \
+        echo "$___worker_line" | \
         _posix_test__utils__strip_colors | \
         posix_adapter__cut --characters "1-${___limit}" \
       )"
@@ -500,5 +500,5 @@ _posix_test__capture__capture_output_for_domain() {
 #==============================================================================
 _posix_test__capture__create_timestamp() {
   ___timestamp="$(posix_adapter__date +'%s%N')"
-  posix_adapter__echo "$___timestamp"
+  echo "$___timestamp"
 }

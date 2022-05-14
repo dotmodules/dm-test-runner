@@ -66,8 +66,8 @@ test__store__setting_the_key_multiple_times_wont_create_new_entry() {
 test__store__multiline_values_can_be_stored() {
   key="key"
   value="$( \
-    posix_adapter__echo 'line 1'; \
-    posix_adapter__echo 'line 2'; \
+    echo 'line 1'; \
+    echo 'line 2'; \
   )"
 
   dummy_test_function() {
@@ -85,12 +85,12 @@ test__store__multiline_values_can_be_stored() {
 
 test__store__even_multiline_keys_can_be_used() {
   key="$( \
-    posix_adapter__echo 'key line 1'; \
-    posix_adapter__echo 'key line 2'; \
+    echo 'key line 1'; \
+    echo 'key line 2'; \
   )"
   value="$( \
-    posix_adapter__echo 'line 1'; \
-    posix_adapter__echo 'line 2'; \
+    echo 'line 1'; \
+    echo 'line 2'; \
   )"
 
   dummy_test_function() {

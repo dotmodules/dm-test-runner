@@ -178,13 +178,13 @@ assert_equal() {
 
     ___subject='Assertion failed'
     ___reason="$( \
-      posix_adapter__echo 'The two passed strings are not equal!';
-      posix_adapter__echo 'string_a:';
-      posix_adapter__echo "${___string_a}" | \
+      echo 'The two passed strings are not equal!';
+      echo 'string_a:';
+      echo "${___string_a}" | \
         posix_adapter__sed --expression 's/$/\|/' | \
         posix_adapter__sed --expression 's/^/\|/'; \
-      posix_adapter__echo 'string_b:';
-      posix_adapter__echo "${___string_b}" | \
+      echo 'string_b:';
+      echo "${___string_b}" | \
         posix_adapter__sed --expression 's/$/\|/' | \
         posix_adapter__sed --expression 's/^/\|/'; \
     )"

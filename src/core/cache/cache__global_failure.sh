@@ -44,7 +44,7 @@ _posix_test__cache__global_failures__init() {
   POSIX_TEST__CACHE__RUNTIME__GLOBAL_FAILURES="$( \
     posix_test__cache__create_temp_file \
   )"
-  posix_adapter__echo '0' > "$POSIX_TEST__CACHE__RUNTIME__GLOBAL_FAILURES"
+  echo '0' > "$POSIX_TEST__CACHE__RUNTIME__GLOBAL_FAILURES"
 
   posix_test__debug '_posix_test__cache__global_failures__init' \
     "failure count file created: '${POSIX_TEST__CACHE__RUNTIME__GLOBAL_FAILURES}'"
@@ -98,7 +98,7 @@ posix_test__cache__global_failure__increment() {
 #==============================================================================
 posix_test__cache__global_failure__get() {
   ___count="$(posix_adapter__cat "$POSIX_TEST__CACHE__RUNTIME__GLOBAL_FAILURES")"
-  posix_adapter__echo "$___count"
+  echo "$___count"
 
   posix_test__debug 'posix_test__cache__global_failure__get' \
     "global failure count value returned: '${___count}'"

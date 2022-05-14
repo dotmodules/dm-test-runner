@@ -24,28 +24,28 @@
 #==============================================================================
 
 setup_file() {
-  posix_adapter__echo ''
-  posix_adapter__echo '--- ERROR DURING TEST CASE ------------------------------------------------------'
-  posix_adapter__echo 'echo during [setup file] hook'
+  echo ''
+  echo '--- ERROR DURING TEST CASE ------------------------------------------------------'
+  echo 'echo during [setup file] hook'
 }
 
 setup() {
-  posix_adapter__echo 'echo during [setup] hook'
+  echo 'echo during [setup] hook'
 }
 
 teardown() {
-  posix_adapter__echo 'echo during [teardown] hook'
+  echo 'echo during [teardown] hook'
 }
 
 teardown_file() {
-  posix_adapter__echo 'echo during [teardown file] hook'
+  echo 'echo during [teardown file] hook'
 }
 
 test__hooks__test_case__error_during_test_case__case_1() {
-  posix_adapter__echo 'echo during test case 1 - error will happen after this'
+  echo 'echo during test case 1 - error will happen after this'
   posix_adapter__cat invalid_file
 }
 
 test__hooks__test_case__error_during_test_case__case_2() {
-  posix_adapter__echo 'echo during test case 2'
+  echo 'echo during test case 2'
 }

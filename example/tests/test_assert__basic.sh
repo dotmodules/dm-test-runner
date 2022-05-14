@@ -23,7 +23,7 @@ test__assert__common_use_case() {
 # These tests are the failure cases picked up by another test runner. In this
 # way the valid and failure cases are in one place.
 should_fail__assert() {
-  posix_adapter__echo 'Expected [assert] failure.'
+  echo 'Expected [assert] failure.'
   assert false
 }
 
@@ -39,7 +39,7 @@ test__assert_success() {
 }
 
 should_fail__assert_success() {
-  posix_adapter__echo 'Expected [assert_success] failure.'
+  echo 'Expected [assert_success] failure.'
   assert_success false
 }
 
@@ -55,7 +55,7 @@ test__assert_failure() {
 }
 
 should_fail__assert_failure() {
-  posix_adapter__echo 'Expected [assert_failure] failure.'
+  echo 'Expected [assert_failure] failure.'
   assert_failure true
 }
 

@@ -63,10 +63,7 @@ posix_test__cache__init_test_directory__test_suite_level() {
   posix_test__debug 'posix_test__cache__init_test_directory__test_suite_level' \
     'test suite level test dir created:'
   posix_test__debug 'posix_test__cache__init_test_directory__test_suite_level' \
-    "$( \
-      posix_adapter__printf '%s' 'POSIX_TEST__CACHE__RUNTIME__TEST_DIR__TEST_SUITE: '; \
-      posix_adapter__echo "'${POSIX_TEST__CACHE__RUNTIME__TEST_DIR__TEST_SUITE}'" \
-    )"
+    "POSIX_TEST__CACHE__RUNTIME__TEST_DIR__TEST_SUITE: '${POSIX_TEST__CACHE__RUNTIME__TEST_DIR__TEST_SUITE}'"
 }
 
 #==============================================================================
@@ -95,10 +92,7 @@ posix_test__cache__init_test_directory__test_file_level() {
   posix_test__debug 'posix_test__cache__init_test_directory__test_file_level' \
     'test file level test dir created:'
   posix_test__debug 'posix_test__cache__init_test_directory__test_file_level' \
-    "$( \
-      posix_adapter__printf '%s' 'POSIX_TEST__CACHE__RUNTIME__TEST_DIR__TEST_FILE: '; \
-      posix_adapter__echo "'${POSIX_TEST__CACHE__RUNTIME__TEST_DIR__TEST_FILE}'" \
-    )"
+    "POSIX_TEST__CACHE__RUNTIME__TEST_DIR__TEST_FILE: '${POSIX_TEST__CACHE__RUNTIME__TEST_DIR__TEST_FILE}'"
 }
 
 #==============================================================================
@@ -127,8 +121,5 @@ posix_test__cache__init_test_directory__test_case_level() {
   posix_test__debug 'posix_test__cache__init_test_directory__test_case_level' \
     'test case level test dir created:'
   posix_test__debug 'posix_test__cache__init_test_directory__test_case_level' \
-    "$( \
-      posix_adapter__printf '%s' 'POSIX_TEST__CACHE__RUNTIME__TEST_DIR__TEST_CASE: '; \
-      posix_adapter__echo "'${POSIX_TEST__CACHE__RUNTIME__TEST_DIR__TEST_CASE}'" \
-    )"
+    "POSIX_TEST__CACHE__RUNTIME__TEST_DIR__TEST_CASE: '${POSIX_TEST__CACHE__RUNTIME__TEST_DIR__TEST_CASE}'"
 }

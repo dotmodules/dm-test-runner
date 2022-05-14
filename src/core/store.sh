@@ -140,7 +140,7 @@ posix_test__store__get() {
 
   if ___value="$(_posix_test__store__get_value_for_key "$___key")"
   then
-    posix_adapter__echo "$___value"
+    echo "$___value"
     return 0
   else
     return 1
@@ -271,7 +271,7 @@ _posix_test__store__get_value_for_key() {
       'key found in the store:' "$___result"
 
     # This is a very unlikely case, but should be prepared for it..
-    ___line_count="$(posix_adapter__echo "$___result" | posix_adapter__wc --lines)"
+    ___line_count="$(echo "$___result" | posix_adapter__wc --lines)"
     if [ "$___line_count" -ne '1' ]
     then
       posix_test__debug_list '_posix_test__store__get_value_for_key' \
@@ -285,7 +285,7 @@ _posix_test__store__get_value_for_key() {
     # by POSIX. Read more: https://stackoverflow.com/a/21913014/1565331
     # shellcheck disable=SC2001
     ___encoded_value="$( \
-      posix_adapter__echo "$___result" | \
+      echo "$___result" | \
       posix_adapter__sed --expression "s/${___pattern}//g" \
     )"
 
@@ -297,7 +297,7 @@ _posix_test__store__get_value_for_key() {
     posix_test__debug_list '_posix_test__store__get_value_for_key' \
       'value decoded:' "$___value"
 
-    posix_adapter__echo "$___value"
+    echo "$___value"
     return 0
 
   else
@@ -342,7 +342,7 @@ _posix_test__store__insert() {
   ___encoded_value="$(_posix_test__store__encode "$___value")"
 
   ___line="${___encoded_key}${___separator}${___encoded_value}"
-  posix_adapter__echo "$___line" >> "$___store_file"
+  echo "$___line" >> "$___store_file"
 
   posix_test__debug '_posix_test__store__insert' \
     'key-value pair has been inserted to the store file'
@@ -422,7 +422,7 @@ _posix_test__store__encode() {
     'encoding input value:' "$___value"
 
   ___encoded="$( \
-    posix_adapter__echo "$___value" | \
+    echo "$___value" | \
     posix_adapter__xxd --plain | \
     posix_adapter__tr --delete '\n' \
   )"
@@ -430,7 +430,7 @@ _posix_test__store__encode() {
   posix_test__debug_list '_posix_test__store__encode' \
     'input value encoded:' "$___encoded"
 
-  posix_adapter__echo "$___encoded"
+  echo "$___encoded"
 }
 
 #==============================================================================
@@ -460,12 +460,12 @@ _posix_test__store__decode() {
     'decoding input value:' "$___encoded_value"
 
   ___value="$( \
-    posix_adapter__echo "$___encoded_value" | \
+    echo "$___encoded_value" | \
     posix_adapter__xxd --revert --plain \
   )"
 
   posix_test__debug_list '_posix_test__store__decode' \
     'decoded value:' "$___value"
 
-  posix_adapter__echo "$___value"
+  echo "$___value"
 }

@@ -37,7 +37,7 @@ fi
 # Checking the availibility and usability of tput. If it is available and
 # usable we can set the global coloring variables with it by expecting a
 # possibly missing color/modifier.
-if posix_adapter__tput__is_available
+if posix_adapter__tput --is-available
 then
   RED="$(posix_adapter__tput setaf 1)"
   GREEN="$(posix_adapter__tput setaf 2)"
@@ -56,17 +56,17 @@ fi
 
 log_task() {
   message="$1"
-    posix_adapter__echo "${BOLD}[ ${BLUE}..${RESET}${BOLD} ]${RESET} ${message}"
+    echo "${BOLD}[ ${BLUE}..${RESET}${BOLD} ]${RESET} ${message}"
 }
 
 log_success() {
   message="$1"
-    posix_adapter__echo "${BOLD}[ ${GREEN}OK${RESET}${BOLD} ]${RESET} ${message}"
+    echo "${BOLD}[ ${GREEN}OK${RESET}${BOLD} ]${RESET} ${message}"
 }
 
 log_failure() {
   message="$1"
-    posix_adapter__echo "${BOLD}[ ${RED}!!${RESET}${BOLD} ]${RESET} ${message}"
+    echo "${BOLD}[ ${RED}!!${RESET}${BOLD} ]${RESET} ${message}"
 }
 
 #==============================================================================
@@ -85,11 +85,11 @@ assert_test_case_count() {
   else
     log_failure "actual count was: ${BOLD}${___count}${RESET}"
 
-    posix_adapter__echo "${BOLD}${RED}"
-    posix_adapter__echo '==============================================================================='
-    posix_adapter__echo '                         Unexpected test case count!'
-    posix_adapter__echo '==============================================================================='
-    posix_adapter__echo "$RESET"
+    echo "${BOLD}${RED}"
+    echo '==============================================================================='
+    echo '                         Unexpected test case count!'
+    echo '==============================================================================='
+    echo "$RESET"
 
     exit 1
   fi
@@ -104,15 +104,15 @@ assert_failure_count() {
   if [ "$___count" -eq "$___expected_count" ]
   then
     log_success "actual count was ${BOLD}${___count}${RESET}"
-    posix_adapter__echo ""
+    echo ""
   else
     log_failure "actual count was: ${BOLD}${___count}${RESET}"
 
-    posix_adapter__echo "${BOLD}${RED}"
-    posix_adapter__echo '==============================================================================='
-    posix_adapter__echo '                          Unexpected failure count!'
-    posix_adapter__echo '==============================================================================='
-    posix_adapter__echo "$RESET"
+    echo "${BOLD}${RED}"
+    echo '==============================================================================='
+    echo '                          Unexpected failure count!'
+    echo '==============================================================================='
+    echo "$RESET"
 
     exit 1
   fi

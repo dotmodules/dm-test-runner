@@ -72,7 +72,7 @@ _posix_test__cache__test_result__init() {
 #   0 - Other status is not expected.
 #==============================================================================
 posix_test__cache__test_result__init() {
-  posix_adapter__echo "$POSIX_TEST__CONSTANT__TEST_RESULT__SUCCESS" > \
+  echo "$POSIX_TEST__CONSTANT__TEST_RESULT__SUCCESS" > \
     "$POSIX_TEST__CACHE__RUNTIME__TEST_RESULTS"
 
   posix_test__debug 'posix_test__cache__test_result__init' \
@@ -100,7 +100,7 @@ posix_test__cache__test_result__init() {
 #   0 - Other status is not expected.
 #==============================================================================
 posix_test__cache__test_result__mark_as_failed() {
-  posix_adapter__echo "$POSIX_TEST__CONSTANT__TEST_RESULT__FAILURE" > \
+  echo "$POSIX_TEST__CONSTANT__TEST_RESULT__FAILURE" > \
     "$POSIX_TEST__CACHE__RUNTIME__TEST_RESULTS"
 
   posix_test__debug 'posix_test__cache__test_result__mark_as_failed' \

@@ -38,7 +38,7 @@ posix_test__utils__print_output_if_has_content() {
     posix_test__debug 'posix_test__utils__print_output_if_has_content' \
       'displaying captured output..'
 
-    posix_adapter__echo "$___content"
+    echo "$___content"
   fi
 }
 
@@ -72,7 +72,7 @@ _posix_test__utils__increment_file_content() {
   then
     ___content="$(posix_adapter__cat "$___file_path")"
     ___content=$(( ___content + 1 ))
-    posix_adapter__echo "$___content" > "$___file_path"
+    echo "$___content" > "$___file_path"
   fi
 }
 
@@ -106,7 +106,7 @@ _posix_test__utils__decrement_file_content() {
   then
     ___content="$(posix_adapter__cat "$___file_path")"
     ___content=$(( ___content - 1 ))
-    posix_adapter__echo "$___content" > "$___file_path"
+    echo "$___content" > "$___file_path"
   fi
 }
 
@@ -140,7 +140,7 @@ _posix_test__utils__strip_colors() {
 
   # Making sure that the running system supports the necessary escape
   # characters.. If not no stripping will be executed.
-  if posix_adapter__echo '' | \
+  if echo '' | \
     posix_adapter__sed --expression "$___pattern" >/dev/null 2>&1
   then
     posix_adapter__cat - | posix_adapter__sed --expression "$___pattern"

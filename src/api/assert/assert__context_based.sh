@@ -95,10 +95,7 @@ run() {
   posix_test__debug_list 'run' 'captured standard error:' \
     "$(posix_adapter__cat "$POSIX_TEST__ASSERT__RUNTIME__OUTPUT_BUFFER__FD2")"
 
-  posix_test__debug 'run' "$( \
-    posix_adapter__printf '%s' 'captured status: '; \
-    posix_adapter__echo "'${POSIX_TEST__ASSERT__RUNTIME__LAST_STATUS}'" \
-  )"
+  posix_test__debug 'run' "captured status: '${POSIX_TEST__ASSERT__RUNTIME__LAST_STATUS}'"
 }
 
 #==============================================================================
@@ -218,11 +215,7 @@ assert_output() {
     posix_test__debug 'assert_output' '=> assertion failed'
 
     ___subject='Inappropriate assertion function'
-    ___reason="$( \
-      posix_adapter__printf '%s' 'Multiline output should be asserted with '; \
-      posix_adapter__printf '%s' "assert_output_line_at_index' or "; \
-      posix_adapter__echo "'assert_output_line_partially_at_index'." \
-    )"
+    ___reason="Multiline output should be asserted with assert_output_line_at_index' or 'assert_output_line_partially_at_index'."
     ___assertion='assert_output'
     _posix_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
   fi
@@ -258,8 +251,7 @@ assert_no_output() {
 
     ___subject='Standard output was captured.'
     ___reason="$( \
-      posix_adapter__printf '%s' 'The tested functionality should not have '; \
-      posix_adapter__echo 'emitted content on the standard output: '; \
+      echo 'The tested functionality should not have emitted content on the standard output: '; \
       posix_adapter__cat "$___target_buffer" | \
         posix_adapter__sed --expression 's/$/\|/' | \
         posix_adapter__sed --expression 's/^/\|/'; \
@@ -414,8 +406,7 @@ assert_no_error() {
 
     ___subject='Standard error output was captured.'
     ___reason="$( \
-      posix_adapter__printf '%s' 'The tested functionality should not have '; \
-      posix_adapter__echo 'emitted content on the standard error output: '; \
+      echo 'The tested functionality should not have emitted content on the standard error output: '; \
       posix_adapter__cat "$___target_buffer" | \
         posix_adapter__sed --expression 's/$/\|/' | \
         posix_adapter__sed --expression 's/^/\|/'; \
@@ -480,11 +471,7 @@ assert_error() {
     posix_test__debug 'assert_error' '=> assertion failed'
 
     ___subject='Inappropriate assertion function'
-    ___reason="$( \
-      posix_adapter__printf '%s' 'Multiline output should be asserted with '; \
-      posix_adapter__printf '%s' "'assert_error_line_at_index' or "; \
-      posix_adapter__echo "'assert_error_line_partially_at_index'." \
-    )"
+    ___reason="Multiline output should be asserted with 'assert_error_line_at_index' or 'assert_error_line_partially_at_index'."
     ___assertion='assert_error'
     _posix_test__assert__report_failure "$___subject" "$___reason" "$___assertion"
   fi
@@ -905,7 +892,7 @@ _posix_test__assert__assert_line_partially_at_index() {
   posix_test__debug '_posix_test__assert__assert_line_partially_at_index' \
     "- target:   '${___result}'"
 
-  if posix_adapter__echo "$___result" | posix_adapter__grep --silent "$___expected"
+  if echo "$___result" | posix_adapter__grep --silent "$___expected"
   then
     posix_test__debug '_posix_test__assert__assert_line_partially_at_index' \
       '=> assertion succeeded'
