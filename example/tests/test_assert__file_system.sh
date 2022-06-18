@@ -199,7 +199,7 @@ should_fail__assert_directory_not_empty__directory_should_present() {
 
 test__assert_symlink() {
   posix_adapter__touch "$dummy_file"
-  posix_adapter__ln --symbolic --path-to-file "$dummy_file" --path-to-link "$dummy_link"
+  posix_adapter__ln --symbolic --path-to-target "$dummy_file" --path-to-link "$dummy_link"
   assert_symlink "$dummy_link"
 }
 
@@ -232,7 +232,7 @@ test__assert_no_symlink__not_file() {
 should_fail__assert_no_symlink() {
   echo 'Expected [assert_no_symlink] failure.'
   posix_adapter__touch "$dummy_file"
-  posix_adapter__ln --symbolic --path-to-file "$dummy_file" --path-to-link "$dummy_link"
+  posix_adapter__ln --symbolic --path-to-target "$dummy_file" --path-to-link "$dummy_link"
   assert_no_symlink "$dummy_link"
 }
 
@@ -244,14 +244,14 @@ should_fail__assert_no_symlink() {
 
 test__assert_symlink_target() {
   posix_adapter__touch "$dummy_file"
-  posix_adapter__ln --symbolic --path-to-file "$dummy_file" --path-to-link "$dummy_link"
+  posix_adapter__ln --symbolic --path-to-target "$dummy_file" --path-to-link "$dummy_link"
   assert_symlink_target "$dummy_link" "$dummy_file"
 }
 
 should_fail__assert_symlink_target__target_mismatch() {
   echo 'Expected [assert_symlink_target] failure.'
   posix_adapter__touch "$dummy_file"
-  posix_adapter__ln --symbolic --path-to-file "$dummy_file" --path-to-link "$dummy_link"
+  posix_adapter__ln --symbolic --path-to-target "$dummy_file" --path-to-link "$dummy_link"
   assert_symlink_target "$dummy_link" "non_existent_target.txt"
 }
 
